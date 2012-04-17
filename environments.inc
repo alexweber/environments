@@ -1,13 +1,13 @@
 <?php
 
 /**
- *
  * Environment-Specific configuration manager
- *
  */
 class DrupalEnvironment {
 
-  const ENVDIR = 'environments/';
+  const ENVDIR = 'environments';
+
+  private static $currentEnvironment = null;
 
   /**
    * @static
@@ -25,17 +25,19 @@ class DrupalEnvironment {
              in shell or in your web-server configuration. Aborting.\n");
     }
 
-    $configFilePath = __DIR__ . '/' . self::ENVDIR . '/' . $envname . ".inc";
+    $configFilePath = __DIR__ . DIRECTORY_SEPARATOR . self::ENVDIR . DIRECTORY_SEPARATOR . $envname . ".inc";
+    self::$currentEnvironment = $envname;
 
     return $configFilePath;
+  }
+
+  public static function getCurrent() {
+    return self::$currentEnvironment;
   }
 
 }
 
 $drupalEnvConfigFilePath = DrupalEnvironment::init();
 
-if(!file_exists($drupalEnvConfigFilePath)) {
-  die ("Environment configuration file $drupalEnvConfigFilePath not found");
-}
-
+// Not checking file_exists here because we need every bit of performance and file_exists() is not that fast.
 require($drupalEnvConfigFilePath);
