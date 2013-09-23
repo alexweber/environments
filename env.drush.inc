@@ -52,6 +52,7 @@ function _env_drush_env($env = NULL) {
       $is_alias = FALSE;
 
       // Check for alias before giving up.
+      // @TODO query database instead
       foreach ($environments as $environment) {
         if ($environment->alias === $env) {
           $env = $environment->name;

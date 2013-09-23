@@ -21,12 +21,10 @@ function _env_task_router($task_info, &$context) {
       $callback($task_info['settings'], $context);
     }
     else {
-      // @TODO something better
       watchdog('env', 'Error loading callback for task: @name', array('@name' => $task_info), WATCHDOG_ERROR);
     }
   }
   else {
-    // @TODO something better
     watchdog('env', 'Error loading task: @name', array('@name' => $task_info), WATCHDOG_ERROR);
   }
 }

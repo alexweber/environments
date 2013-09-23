@@ -10,9 +10,7 @@
 function env_form_environment_add_submit($form, &$form_state) {
   $environment = env_environment_create(array('name' => $form_state['values']['name'], 'admin_title' => $form_state['values']['admin_title']));
 
-  $saved = env_environment_save($environment, TRUE);
-
-  if ($saved) {
+  if (env_environment_save($environment)) {
     drupal_set_message(t('Environment %admin_title was created.', array('%admin_title' => $environment->admin_title)));
     $form_state['redirect'] = 'admin/config/development/env/edit/' . $environment->name;
   }
@@ -229,8 +227,8 @@ function env_form_tasks_submit($form, &$form_state) {
     drupal_set_message(t('Task order updated!'), 'status', FALSE);
   }
   else {
-    // @TODO something better.
-    drupal_set_message(t('Error saving task order.'), 'error', FALSE);
+    drupal_set_message(t('Error updating task order.'), 'error', FALSE);
+    watchdog('env', 'Error updating task order for environment: @name', array('@name' => $environment->admin_title), WATCHDOG_ERROR);
   }
 
 }
@@ -270,8 +268,8 @@ function env_form_tasks_delete_submit($form, &$form_state) {
     }
   }
 
-  // @TODO something better
   drupal_set_message(t('Error deleting task.'), 'error', FALSE);
+  watchdog('env', 'Error deleting task: @name', array('@name' => $task), WATCHDOG_ERROR);
 }
 
 /**
@@ -412,8 +410,8 @@ function env_form_tasks_edit_submit($form, &$form_state) {
       return;
     }
 
-    // @TODO something better.
     drupal_set_message(t('Error updating task'), 'error', FALSE);
+    watchdog('env', 'Error updating task: @name', array('@name' => $id), WATCHDOG_ERROR);
   }
   // Add.
   else {
@@ -438,8 +436,8 @@ function env_form_tasks_edit_submit($form, &$form_state) {
       }
     }
 
-    // @TODO something better.
-    drupal_set_message(t('Error adding task'), 'error', FALSE);
+    drupal_set_message(t('Error adding task: @name', array('@name' => $task['name'])), 'error', FALSE);
+    watchdog('env', 'Error adding task: @name', array('@name' => $task['name']), WATCHDOG_ERROR);
   }
 }
 
@@ -516,4 +514,73 @@ function env_form_site_environment_submit($form, &$form_state) {
   // Persist CSS/JS settings.
   variable_set('env_css', $form_state['values']['env_css']);
   variable_set('env_js', $form_state['values']['env_js']);
+}
+
+/**
+ * Returns all available Drupal modules. Used by the "module_enable" and
+ * "module_disable" tasks. This is as a lightweight replacement for using
+ * Drupal core APIs.
+ *
+ * @return array
+ *   An array of module names, keyed by machine_name.
+ */
+function _env_get_modules() {
+  static $modules = array();
+
+  if (empty($modules)) {
+    // No value added by using DBTNG.
+    $result = db_query("SELECT name, info FROM {system} ORDER BY name ASC");
+    foreach ($result->fetchAll() as $row) {
+      $info = unserialize($row->info);
+
+      if (!isset($info['hidden']) || !$info['hidden']) {
+        $modules[$row->name] = $info['name'];
+      }
+    }
+  }
+
+  return $modules;
+}
+
+/**
+ * Returns all defined Drupal variables. Used by the "variable_set" and
+ * "variable_del" tasks. This is as a lightweight replacement for using Drupal
+ * core APIs.
+ *
+ * @return array
+ *   An array of variable names.
+ */
+function _env_get_variables() {
+  static $variables = array();
+
+  if (empty($variables)) {
+    // No value added by using DBTNG.
+    $result = db_query("SELECT name FROM {variable} ORDER BY name ASC");
+    $result = $result->fetchAllAssoc('name');
+    $variables = array_keys($result);
+  }
+
+  return $variables;
+}
+
+/**
+ * Returns all available Drupal features. Used by the "features_revert". This
+ * is as a convenience function to prepare a list of features for a "select"
+ * Form API element.
+ *
+ * @return array
+ *   An array of module names, keyed by machine_name.
+ */
+function _env_get_features() {
+  static $features_options = array();
+
+  if (empty($features)) {
+    $features = features_get_features();
+
+    foreach ($features as $name => $info) {
+      $features_options[$name] = $info->info['name'];
+    }
+  }
+
+  return $features_options;
 }
