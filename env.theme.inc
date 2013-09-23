@@ -1,0 +1,54 @@
+<?php
+/**
+ * @file
+ * Theme hooks for Env.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Sets current environment message for the notification banner.
+ *
+ * @see env_theme()
+ */
+function env_preprocess_env_banner(&$variables) {
+  if ($environment = env_environment_load($variables['env'])) {
+    $variables['env_message'] = t('Current environment: @name', array('@name' => $environment->admin_title));
+    $variables['env_alias'] = $environment->alias;
+  }
+}
+
+/**
+ * Theme callback.
+ *
+ * Overrides theme for the "Manage Tasks" form.
+ *
+ * @see env_theme()
+ * @see env_form_tasks()
+ */
+function theme_env_form_tasks($variables) {
+  $form = $variables['form'];
+
+  $rows = array();
+
+  foreach (element_children($form['tasks']) as $id) {
+    $form['tasks'][$id]['weight']['#attributes']['class'] = array('env-tasks-order-weight');
+    $rows[] = array(
+      'data' => array(
+        array('class' => array('env-tasks-order-handle')),
+        drupal_render($form['tasks'][$id]['task']),
+        drupal_render($form['tasks'][$id]['settings']),
+        drupal_render($form['tasks'][$id]['weight']),
+        drupal_render($form['tasks'][$id]['op']),
+      ),
+      'class' => array('draggable'),
+    );
+  }
+
+  $header = array('', t('Task'), t('Settings'), t('Weight'), t('Operations'));
+  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'env-tasks-order')));
+  $output .= drupal_render_children($form);
+
+  drupal_add_tabledrag('env-tasks-order', 'order', 'sibling', 'env-tasks-order-weight');
+  return $output;
+}
