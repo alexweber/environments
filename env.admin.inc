@@ -5,21 +5,6 @@
  */
 
 /**
- * Submit handler for adding a new environment.
- */
-function env_form_environment_add_submit($form, &$form_state) {
-  $environment = env_environment_create(array('name' => $form_state['values']['name'], 'admin_title' => $form_state['values']['admin_title']));
-
-  if (env_environment_save($environment)) {
-    drupal_set_message(t('Environment %admin_title was created.', array('%admin_title' => $environment->admin_title)));
-    $form_state['redirect'] = 'admin/config/development/env/edit/' . $environment->name;
-  }
-  else {
-    drupal_set_message(t('Failed to create environment. Please verify your settings.'), 'error');
-  }
-}
-
-/**
  * Form builder; Form to edit a given environment.
  */
 function env_form_environment_edit($form, &$form_state) {
@@ -343,6 +328,11 @@ function env_form_tasks_edit($form, &$form_state, $environment, $task = NULL) {
      'visible' => array(
        'select[name="task"]' => array('empty' => FALSE),
      ),
+    ),
+    '#attached' => array(
+      'js' => array(
+        drupal_get_path('module', 'env') . '/js/env_admin.js',
+      ),
     ),
   );
 
