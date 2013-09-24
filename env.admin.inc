@@ -197,11 +197,14 @@ function env_form_tasks($form, &$form_state, $environment) {
     );
   }
 
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Update Order'),
-  );
+  // Don't allow the form to be submitted if we have no tasks.
+  if (count($form['tasks']) > 1) {
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Update Order'),
+    );
+  }
 
   return $form;
 }
