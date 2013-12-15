@@ -82,11 +82,13 @@ function env_task_module_disable($settings, &$context) {
   }
 
   // Disable modules.
-  module_disable($modules_filtered, $disable_dependents);
+  if (!empty($modules_filtered)) {
+    module_disable($modules_filtered, $disable_dependents);
 
-  // Display this message before all others.
-  array_unshift($messages, t('Disabled modules: %modules.', array('%module' => implode(', ', array_values($modules_filtered)))));
+    // Display this message before all others.
+    array_unshift($messages, t('Disabled modules: %modules.', array('%module' => implode(', ', array_values($modules_filtered)))));
+  }
 
   // Display messages.
-  $context['message'] = implode(' ', $messages);
+  $context['message'] = implode("\n", $messages);
 }

@@ -113,11 +113,13 @@ function env_task_module_enable($settings, &$context) {
   }
 
   // Enable modules.
-  if (module_enable($modules_filtered, $enable_dependencies)) {
-    // Display this message before all others.
-    array_unshift($messages, t('Enabled modules: %modules.', array('%module' => implode(', ', array_values($modules_filtered)))));
+  if (!empty($modules_filtered)) {
+    if (module_enable($modules_filtered, $enable_dependencies)) {
+      // Display this message before all others.
+      array_unshift($messages, t('Enabled modules: %modules.', array('%module' => implode(', ', array_values($modules_filtered)))));
+    }
   }
 
   // Display messages.
-  $context['message'] = implode(' ', $messages);
+  $context['message'] = implode("\n", $messages);
 }
