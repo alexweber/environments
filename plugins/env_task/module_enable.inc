@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of the "module_enable" Env Task.
+ * Contains the "module_enable" Env Task.
  */
 
 
@@ -47,9 +47,6 @@ $plugin = array(
  * Form callback.
  *
  * Returns the settings form for this task.
- *
- * This is not a typical form callback in that we don't get a $form or
- * $form_state.
  *
  * @param stdClass
  *   The current environment.

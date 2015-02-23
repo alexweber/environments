@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of the "variable_set" Env Task.
+ * Contains the "variable_set" Env Task.
  */
 
 $plugin = array(
@@ -19,9 +19,6 @@ $plugin = array(
  * Form callback.
  *
  * Returns the settings form for this task.
- *
- * This is not a typical form callback in that we don't get a $form or
- * $form_state.
  *
  * @param stdClass
  *   The current environment.
@@ -60,6 +57,7 @@ function env_task_variable_set_settings($environment, $task = NULL) {
  *
  * @param array
  *   An array of settings for the task.
+ *
  * @param array
  *   $context is an array that will contain information about the
  *   status of the batch. The values in $context will retain their

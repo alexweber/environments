@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of the "variable_del" Env Task.
+ * Contains the "variable_del" Env Task.
  */
 
 $plugin = array(
@@ -18,9 +18,6 @@ $plugin = array(
  * Form callback.
  *
  * Returns the settings form for this task.
- *
- * This is not a typical form callback in that we don't get a $form or
- * $form_state.
  *
  * @param stdClass
  *   The current environment.

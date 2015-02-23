@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of env_ctools_export_ui.
+ * Contains of env_ctools_export_ui_handler.
  */
 
 class env_ctools_export_ui_handler extends ctools_export_ui {
