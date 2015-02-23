@@ -49,6 +49,14 @@ function env_task_module_uninstall_settings($environment, $task = NULL) {
 		'#default_value' => isset($task['settings']['uninstall_dependents']) ? $task['settings']['uninstall_dependents'] : TRUE,
 	);
 
+	$form['uninstall_enabled'] = array(
+		'#name' => 'settings[uninstall_enabled]',
+		'#type' => 'checkbox',
+		'#title' => t('Uninstall enabled modules'),
+		'#description' => t('If TRUE, enabled modules will automatically be disabled before being uninstalled. If FALSE, attempting to uninstall an enabled module will fail.'),
+		'#default_value' => isset($task['settings']['uninstall_enabled']) ? $task['settings']['uninstall_enabled'] : TRUE,
+	);
+
 	return $form;
 }
 
@@ -65,27 +73,29 @@ function env_task_module_uninstall_settings($environment, $task = NULL) {
 function env_task_module_uninstall($settings, &$context) {
 	$modules = $settings['modules'];
 	$uninstall_dependents = $settings['uninstall_dependents'];
+	$uninstall_enabled = $settings['uninstall_enabled'];
 
 	$messages = array();
 	$modules_disable = array();
 
-	// drupal_uninstall_modules() requires modules to be disabled before being
-	// uninstalled, so find modules we need to manually disable.
-	foreach ($modules as $module) {
-		if (module_exists($module)) {
-			$modules_disable[] = $module;
+	// Check whether we're supposed to disable enabled modules ourselves so that
+	// they can be uninstalled properly.
+	if ($uninstall_enabled) {
+		foreach ($modules as $module) {
+			if (module_exists($module)) {
+				$modules_disable[] = $module;
+			}
 		}
-	}
 
-	// First, disable modules.
-	if (!empty($modules_disable)) {
-		module_disable($modules_disable, $uninstall_dependents);
-		$messages[] = t('The following modules were manually disabled before being uninstalled: %module.', array('%module' => implode(', ', array_values($modules_disable))));
+		// Disable enabled modules first.
+		if (!empty($modules_disable)) {
+			module_disable($modules_disable, $uninstall_dependents);
+			$messages[] = t('The following modules were manually disabled before being uninstalled: %module.', array('%module' => implode(', ', array_values($modules_disable))));
+		}
 	}
 
 	// Finally, uninstall modules.
 	if (drupal_uninstall_modules($modules, $uninstall_dependents)) {
-		// Display this message before all others.
 		$messages[] = t('Uninstalled modules: %modules.', array('%module' => implode(', ', array_values($modules))));
 	}
 
