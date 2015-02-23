@@ -130,11 +130,11 @@ function env_form_tasks($form, &$form_state, $environment) {
 			$settings_summary = array();
 			foreach ($task['settings'] as $name => $value) {
 				if ($value === TRUE) {
-					$value = '1';
+					$value = 'yes';
 				}
 				else {
 					if ($value === FALSE) {
-						$value = '0';
+						$value = 'no';
 					}
 					else {
 						if (is_array($value)) {
@@ -399,22 +399,6 @@ function env_ajax_task_settings($form, &$form_state) {
 	return $form['settings'];
 }
 
-
-/**
- * Submit callback.
- *
- * @see env_form_tasks_edit()
- */
-function env_form_tasks_edit_submit_redirect($form, &$form_state) {
-	$env = $form_state['environment'];
-	$form_state['redirect'] = "admin/config/development/env/list/{$env->name}/tasks";
-
-	if ($form_state['values']['op'] === t('Save and add another')) {
-		$form_state['redirect'] .= '/add';
-		unset($_GET['destination']);
-	}
-}
-
 /**
  * Submit callback.
  *
@@ -426,6 +410,14 @@ function env_form_tasks_edit_submit($form, &$form_state) {
 	$new_settings = array_key_exists('settings', $form_state['values'])
 		? $form_state['values']['settings']
 		: array();
+
+	// Cast boolean values so that we can store them properly and display them
+	// accordingly on summaries.
+	foreach($new_settings as $key => $value) {
+		if (isset($form['settings'][$key]) && $form['settings'][$key]['#type'] === 'checkbox') {
+			$new_settings[$key] = (bool) $value;
+		}
+	}
 
 	// Edit.
 	if (array_key_exists('task', $form_state)) {
@@ -466,6 +458,21 @@ function env_form_tasks_edit_submit($form, &$form_state) {
 
 		drupal_set_message(t('Error adding task: @name', array('@name' => $task['name'])), 'error', FALSE);
 		watchdog('env', 'Error adding task: @name', array('@name' => $task['name']), WATCHDOG_ERROR);
+	}
+}
+
+/**
+ * Submit callback.
+ *
+ * @see env_form_tasks_edit()
+ */
+function env_form_tasks_edit_submit_redirect($form, &$form_state) {
+	$env = $form_state['environment'];
+	$form_state['redirect'] = "admin/config/development/env/list/{$env->name}/tasks";
+
+	if ($form_state['values']['op'] === t('Save and add another')) {
+		$form_state['redirect'] .= '/add';
+		unset($_GET['destination']);
 	}
 }
 

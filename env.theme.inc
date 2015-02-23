@@ -31,7 +31,6 @@ function theme_env_form_tasks($variables) {
 	$form = $variables['form'];
 
 	$rows = array();
-
 	foreach (element_children($form['tasks']) as $id) {
 		$form['tasks'][$id]['weight']['#attributes']['class'] = array('env-tasks-order-weight');
 		$rows[] = array(
