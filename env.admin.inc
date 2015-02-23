@@ -377,8 +377,15 @@ function env_form_tasks_edit($form, &$form_state, $environment, $task = NULL) {
 	$form['actions'] = array('#type' => 'actions');
 	$form['actions']['submit'] = array(
 		'#type' => 'submit',
-		'#value' => t('Save'),
+		'#value' => t('Save task'),
 	);
+	$form['actions']['submit_another'] = array(
+		'#type' => 'submit',
+		'#value' => t('Save and add another'),
+	);
+
+	$form['#submit'][] = 'env_form_tasks_edit_submit';
+	$form['#submit'][] = 'env_form_tasks_edit_submit_redirect';
 
 	return $form;
 }
@@ -390,6 +397,22 @@ function env_form_tasks_edit($form, &$form_state, $environment, $task = NULL) {
  */
 function env_ajax_task_settings($form, &$form_state) {
 	return $form['settings'];
+}
+
+
+/**
+ * Submit callback.
+ *
+ * @see env_form_tasks_edit()
+ */
+function env_form_tasks_edit_submit_redirect($form, &$form_state) {
+	$env = $form_state['environment'];
+	$form_state['redirect'] = "admin/config/development/env/list/{$env->name}/tasks";
+
+	if ($form_state['values']['op'] === t('Save and add another')) {
+		$form_state['redirect'] .= '/add';
+		unset($_GET['destination']);
+	}
 }
 
 /**
