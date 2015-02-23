@@ -1,16 +1,17 @@
 <?php
+
 /**
  * @file
  * Definition of the "features_revert" Env Task.
  */
 
 $plugin = array(
-  'admin_title' => t('Revert features'),
-  'task_callback' => 'env_task_features_revert',
-  'settings' => array(
-    'modules' => array(),
-  ),
-  'settings_callback' => 'env_task_features_revert_settings',
+	'admin_title' => t('Revert features'),
+	'task_callback' => 'env_task_features_revert',
+	'settings' => array(
+		'modules' => array(),
+	),
+	'settings_callback' => 'env_task_features_revert_settings',
 );
 
 /**
@@ -30,19 +31,19 @@ $plugin = array(
  *   A Form API array of task settings.
  */
 function env_task_features_revert_settings($environment, $task = NULL) {
-  $form = array();
+	$form = array();
 
-  $form['modules'] = array(
-    '#name' => 'settings[modules]',
-    '#type' => 'select',
-    '#title' => t('Features'),
-    '#multiple' => TRUE,
-    '#options' => _env_get_features(),
-    '#empty_option' => t(' -Select some features- '),
-    '#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
-  );
+	$form['modules'] = array(
+		'#name' => 'settings[modules]',
+		'#type' => 'select',
+		'#title' => t('Features'),
+		'#multiple' => TRUE,
+		'#options' => _env_get_features(),
+		'#empty_option' => t(' -Select some features- '),
+		'#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
+	);
 
-  return $form;
+	return $form;
 }
 
 /**
@@ -56,39 +57,43 @@ function env_task_features_revert_settings($environment, $task = NULL) {
  *   values as the batch progresses.
  */
 function env_task_features_revert($settings, &$context) {
-  $modules = $settings['modules'];
-  $messages = array();
+	$modules = $settings['modules'];
+	$messages = array();
 
-  foreach ($modules as $module) {
-    if (module_exists($module)) {
-      module_load_include('inc', 'features', 'features.export');
-      $storage = features_get_storage($module);
-      if (in_array($storage, array(FEATURES_OVERRIDDEN, FEATURES_NEEDS_REVIEW, FEATURES_REBUILDABLE))) {
-        if ($feature = features_load_feature($module, TRUE)) {
-          $items[$module] = array();
+	foreach ($modules as $module) {
+		if (module_exists($module)) {
+			module_load_include('inc', 'features', 'features.export');
+			$storage = features_get_storage($module);
+			if (in_array($storage, array(
+				FEATURES_OVERRIDDEN,
+				FEATURES_NEEDS_REVIEW,
+				FEATURES_REBUILDABLE
+			))) {
+				if ($feature = features_load_feature($module, TRUE)) {
+					$items[$module] = array();
 
-          foreach (array_keys($feature->info['features']) as $component) {
-            if (features_hook($component, 'features_revert')) {
-              $items[$module][] = $component;
-            }
-          }
+					foreach (array_keys($feature->info['features']) as $component) {
+						if (features_hook($component, 'features_revert')) {
+							$items[$module][] = $component;
+						}
+					}
 
-          features_revert($items);
-          $messages[] = t('Reverted feature: %feature.', array('%feature' => $module));
-        }
-        else {
-          $messages[] = t('Error loading feature: %feature.', array('%feature' => $module));
-        }
-      }
-      else {
-        $messages[] = t('Feature already matches default state: %feature.', array('%feature' => $module));
-      }
-    }
-    else {
-      $messages[] = t('Can\'t revert a disabled feature: %feature.', array('%feature' => $module));
-    }
-  }
+					features_revert($items);
+					$messages[] = t('Reverted feature: %feature.', array('%feature' => $module));
+				}
+				else {
+					$messages[] = t('Error loading feature: %feature.', array('%feature' => $module));
+				}
+			}
+			else {
+				$messages[] = t('Feature already matches default state: %feature.', array('%feature' => $module));
+			}
+		}
+		else {
+			$messages[] = t('Can\'t revert a disabled feature: %feature.', array('%feature' => $module));
+		}
+	}
 
-  // Display messages.
-  $context['message'] = implode(' ', $messages);
+	// Display messages.
+	$context['message'] = implode(' ', $messages);
 }

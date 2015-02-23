@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Drush integration for Env.
+ * Drush integration.
  */
 
 /**
