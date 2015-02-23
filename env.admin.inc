@@ -151,6 +151,20 @@ function env_form_tasks($form, &$form_state, $environment) {
 			$path = ctools_export_ui_plugin_menu_path($plugin, 'tasks', $environment->name);
 			$destination = drupal_get_destination();
 
+			// Prepare operations links
+			$operations = array(
+				'edit' => array(
+					'title' => t('edit'),
+					'href' => "{$path}/{$id}/edit",
+					'query' => $destination,
+				),
+				'delete' => array(
+					'title' => t('delete'),
+					'href' => "{$path}/{$id}/delete",
+					'query' => $destination,
+				),
+			);
+
 			// Prepare for Draggable Table.
 			$form['tasks'][$id] = array(
 				'task' => array(
@@ -167,19 +181,9 @@ function env_form_tasks($form, &$form_state, $environment) {
 					'#title-display' => 'invisible',
 				),
 				'op' => array(
-					'#theme' => 'links',
-					'#links' => array(
-						'edit' => array(
-							'title' => t('edit'),
-							'href' => "{$path}/{$id}/edit",
-							'query' => $destination,
-						),
-						'delete' => array(
-							'title' => t('delete'),
-							'href' => "{$path}/{$id}/delete",
-							'query' => $destination,
-						),
-					),
+					'#theme' => 'links__ctools_dropbutton',
+					'#links' => $operations,
+					'#attributes' => array('class' => array('links', 'inline')),
 				),
 			);
 		}
