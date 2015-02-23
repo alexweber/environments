@@ -42,7 +42,7 @@ function env_form_environment_edit($form, &$form_state) {
 	$form['alias'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Alias'),
-		'#description' => t('An alias for this environment, to use with Drush. Must only contain letters.'),
+		'#description' => t('An optional alias for this environment to use with Drush. Must only contain letters.'),
 		'#default_value' => $environment->alias,
 		'#size' => 8,
 	);
@@ -463,29 +463,42 @@ function env_form_site_environment($form) {
 
 	$form['env'] = array(
 		'#title' => t('Current environment'),
-		'#description' => t(''),
 		'#type' => 'select',
 		'#options' => $environments_options,
 		'#empty_option' => t('- None -'),
 		'#default_value' => variable_get('env'),
 	);
 
+	if (empty($environments_options)) {
+		$form['env']['#description'] = t("You haven't added any environments yet!");
+		$form['env']['#disabled'] = TRUE;
+	}
+
 	$form['advanced'] = array(
 		'#type' => 'fieldset',
 		'#title' => t('Advanced settings'),
+		'#collapsible' => TRUE,
+		'#collapsed' => TRUE,
 	);
 
-	$form['advanced']['env_css'] = array(
+	$form['advanced']['banner'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('Notification banners'),
+		'#description' => t('These settings are only taken into account if the current environment has banner notifications enabled.'),
+		'#collapsible' => FALSE,
+	);
+
+	$form['advanced']['banner']['env_css'] = array(
 		'#title' => t('Include default CSS'),
 		'#type' => 'checkbox',
 		'#description' => t('Disable this if you want to write your own notification banner styles'),
 		'#default_value' => variable_get('env_css', TRUE),
 	);
 
-	$form['advanced']['env_js'] = array(
+	$form['advanced']['banner']['env_js'] = array(
 		'#title' => t('Include default JS'),
 		'#type' => 'checkbox',
-		'#description' => t('Disable this if you use a Zurb Foundation sub-theme.'),
+		'#description' => t('Disable this if you use a <a href="!url">Zurb Foundation</a> sub-theme.', array('!url' => 'https://www.drupal.org/project/zurb_foundation')),
 		'#default_value' => variable_get('env_js', TRUE),
 	);
 
@@ -512,10 +525,8 @@ function env_form_site_environment_submit($form, &$form_state) {
 		variable_set('env', '');
 	}
 	// If there was actually an environment change, make it happen.
-	else {
-		if ($new_env !== $old_env) {
-			env_set($new_env);
-		}
+	else if ($new_env !== $old_env) {
+		env_set($new_env);
 	}
 
 	// Persist CSS/JS settings.
