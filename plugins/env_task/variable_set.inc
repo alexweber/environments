@@ -6,7 +6,7 @@
  */
 
 $plugin = array(
-  'admin_title' => t('Set variable values'),
+  'admin_title' => t('Set variable value'),
   'task_callback' => 'env_task_variable_set',
   'settings' => array(
     'name' => '',

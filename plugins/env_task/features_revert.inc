@@ -6,7 +6,7 @@
  */
 
 $plugin = array(
-	'admin_title' => t('Revert features'),
+	'admin_title' => t('Revert feature(s)'),
 	'task_callback' => 'env_task_features_revert',
 	'settings' => array(
 		'modules' => array(),

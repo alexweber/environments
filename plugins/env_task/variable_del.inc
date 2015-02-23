@@ -6,7 +6,7 @@
  */
 
 $plugin = array(
-	'admin_title' => t('Delete variables'),
+	'admin_title' => t('Delete variable(s)'),
 	'task_callback' => 'env_task_variable_del',
 	'settings' => array(
 		'variables' => array(),

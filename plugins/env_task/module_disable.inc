@@ -6,7 +6,7 @@
  */
 
 $plugin = array(
-	'admin_title' => t('Disable modules'),
+	'admin_title' => t('Disable module(s)'),
 	'task_callback' => 'env_task_module_disable',
 	'settings' => array(
 		'modules' => array(),

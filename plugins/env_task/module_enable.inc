@@ -11,7 +11,7 @@
  */
 $plugin = array(
 	// Title for Admin UI.
-	'admin_title' => t('Enable modules'),
+	'admin_title' => t('Enable module(s)'),
 	// Batch API callback to execute. You can also define this using the
 	// alternative method below.
 	'task_callback' => 'env_task_module_enable',

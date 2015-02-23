@@ -6,7 +6,7 @@
  */
 
 $plugin = array(
-	'admin_title' => t('Uninstall modules'),
+	'admin_title' => t('Uninstall module(s)'),
 	'task_callback' => 'env_task_module_uninstall',
 	'settings' => array(
 		'modules' => array(),
