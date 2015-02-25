@@ -11,7 +11,7 @@ $environments_path = drupal_get_path('module', 'environments');
  * Define this Export UI plugin.
  */
 $plugin = array(
-  'schema' => 'env_environment', // As defined in hook_schema().
+  'schema' => 'environments', // As defined in hook_schema().
   'access' => 'administer environments', // Define a permission users must have to access these pages.
 
   // Define the menu item.
@@ -133,7 +133,7 @@ function env_ctools_export_ui_form_validate(&$form, &$form_state) {
         ':name' => $form_state['values']['name'],
       );
 
-      $result = db_query("SELECT COUNT(*) FROM {env_environment} WHERE alias = :alias AND name <> :name", $params)
+      $result = db_query("SELECT COUNT(*) FROM {environments} WHERE alias = :alias AND name <> :name", $params)
         ->fetchField();
 
       if ($result != 0) {

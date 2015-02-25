@@ -50,7 +50,7 @@ function _environments_drush_env($env = NULL) {
 	// If we have input, try to change current environment.
 	if (isset($env)) {
 		// Resolve our input.
-		$query = db_select('env_environment', 'e')
+		$query = db_select('environments', 'e')
 			->fields('e', array('name'))
 			->condition(
 				db_or()

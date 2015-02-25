@@ -96,7 +96,7 @@ function env_environment_form_delete_submit($form, &$form_state) {
 	$op = ($environment->export_type & EXPORT_IN_CODE) ? 'reverted' : 'deleted';
 
 	ctools_include('export');
-	ctools_export_crud_delete('env_environment', $environment);
+	ctools_export_crud_delete('environments', $environment);
 
 	drupal_set_message(t('Environment %admin_title was ' . $op . '.', array('%admin_title' => $environment->admin_title)));
 	$form_state['redirect'] = 'admin/config/development/environments';

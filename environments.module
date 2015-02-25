@@ -225,7 +225,7 @@ function env_ctools_plugin_type() {
  */
 function env_ctools_plugin_api($module, $api) {
 	if ($module === 'environments') {
-		if ($api === 'env_environment') {
+		if ($api === 'environments') {
 			return array('version' => 1);
 		}
 		else {
@@ -267,7 +267,7 @@ function env_get_tasks() {
  */
 function environments_create($values = array()) {
 	ctools_include('export');
-	$environment = ctools_export_crud_new('env_environment');
+	$environment = ctools_export_crud_new('environments');
 
 	// Default name.
 	if (isset($values['name'])) {
@@ -309,7 +309,7 @@ function environments_create($values = array()) {
  */
 function env_environment_load_all() {
 	ctools_include('export');
-	return ctools_export_crud_load_all('env_environment');
+	return ctools_export_crud_load_all('environments');
 }
 
 /**
@@ -323,7 +323,7 @@ function env_environment_load_all() {
  */
 function env_environment_load($environment_name) {
 	ctools_include('export');
-	return ctools_export_crud_load('env_environment', $environment_name);
+	return ctools_export_crud_load('environments', $environment_name);
 }
 
 /**
@@ -336,7 +336,7 @@ function env_environment_load($environment_name) {
  */
 function env_environment_exists($environment_name) {
 	ctools_include('export');
-	$environment = ctools_export_crud_load('env_environment', $environment_name);
+	$environment = ctools_export_crud_load('environments', $environment_name);
 	return isset($environment->name);
 }
 
@@ -353,7 +353,7 @@ function env_environment_exists($environment_name) {
  */
 function env_environment_save(&$environment) {
 	ctools_include('export');
-	return ctools_export_crud_save('env_environment', $environment);
+	return ctools_export_crud_save('environments', $environment);
 }
 
 /**
@@ -364,7 +364,7 @@ function env_environment_save(&$environment) {
  */
 function env_environment_delete($environment) {
 	ctools_include('export');
-	return ctools_export_crud_delete('env_environment', $environment);
+	return ctools_export_crud_delete('environments', $environment);
 }
 
 /**

@@ -29,7 +29,7 @@ function env_enable() {
 function env_schema() {
 	$schema = array();
 
-	$schema['env_environment'] = array(
+	$schema['environments'] = array(
 		'description' => 'Env environments.',
 		'export' => array(
 			'key' => 'name',
@@ -37,7 +37,7 @@ function env_schema() {
 			'default hook' => 'env_default_environments',
 			'api' => array(
 				'owner' => 'environments',
-				'api' => 'env_environment',
+				'api' => 'environments',
 				'minimum_version' => 1,
 				'current_version' => 1,
 			),
