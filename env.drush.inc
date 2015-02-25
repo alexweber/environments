@@ -43,40 +43,41 @@ function env_drush_command() {
  * @return bool
  */
 function _env_drush_env($env = NULL) {
-  // Load all environments.
-  $environments = env_environment_load_all();
-
-  // Get current environment.
+  // Determine current environment.
   $current_env = variable_get('env');
 
-  if (isset($env)) {
-    if (!array_key_exists($env, $environments)) {
-      $is_alias = FALSE;
+	// If we have input, try to change current environment.
+	if (isset($env)) {
+		// Resolve our input.
+		$query = db_select('env_environment', 'e')
+			->fields('e', array('name'))
+			->condition(
+				db_or()
+					->condition('e.name', $env, '=')
+					->condition('e.alias', $env, '=')
+			);
 
-      // Check for alias before giving up.
-      // @TODO query database instead
-      foreach ($environments as $environment) {
-        if ($environment->alias === $env) {
-          $env = $environment->name;
-          $is_alias = TRUE;
-          break;
-        }
-      }
+		if ($input_env = $query->execute()->fetchField()) {
+			if ($environment = env_environment_load($input_env)) {
+				if ($input_env != $current_env) {
+					env_set($env);
+					return TRUE;
+				}
+				else {
+					watchdog('env', 'Environment is already set: %env', array('%env' => $environment->admin_title), WATCHDOG_INFO);
+					drush_log(t('Environment is already set: %env', array('%env' => $environment->admin_title)), 'warning');
+					return TRUE;
+				}
+			}
+		}
 
-      if (!$is_alias) {
-        drush_log('Environment not defined: ' . $env, 'error');
-        return FALSE;
-      }
-    }
-
-    if ($env != $current_env) {
-      env_set($env);
-    }
-    else {
-      drush_log('Environment is already set: ' . $environments[$env]->admin_title, 'warning');
-    }
+		watchdog('env', 'Environment not defined: %env', array('%env' => $env), WATCHDOG_ERROR);
+		drush_log('Environment not defined: %env', array('%env' => $env), 'error');
+		return FALSE;
   }
+	// If not, display status.
   else {
+		$environments = env_environment_load_all();
     $output = array();
 
     foreach ($environments as $env_info) {
