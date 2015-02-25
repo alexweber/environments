@@ -13,7 +13,7 @@ function env_form_environment_edit($form, &$form_state) {
 		$environment = $form_state['environment'];
 	}
 	else {
-		$environment = env_environment_create();
+		$environment = environments_create();
 	}
 
 	// Title
@@ -42,10 +42,10 @@ function env_form_environment_edit($form, &$form_state) {
 	$form['alias'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Alias'),
-		'#description' => t('An optional alias for this environment to use with Drush. Must contain !num or less characters and use only letters.', array('!num' => ENV_ALIAS_MAXLENGTH)),
+		'#description' => t('An optional alias for this environment to use with Drush. Must contain !num or less characters and use only letters.', array('!num' => ENVIRONMENTS_ALIAS_MAXLENGTH)),
 		'#default_value' => $environment->alias,
 		'#size' => 8,
-		'#maxlength' => ENV_ALIAS_MAXLENGTH,
+		'#maxlength' => ENVIRONMENTS_ALIAS_MAXLENGTH,
 	);
 
 	// Settings vertical tab group.
@@ -82,7 +82,7 @@ function env_environment_form_delete($form, &$form_state, $environment) {
 			'@action' => t(drupal_strtolower($op)),
 			'%admin_title' => $environment->admin_title
 		)),
-		'admin/config/development/env',
+		'admin/config/development/environments',
 		NULL,
 		t($op), t('Cancel')
 	);
@@ -99,7 +99,7 @@ function env_environment_form_delete_submit($form, &$form_state) {
 	ctools_export_crud_delete('env_environment', $environment);
 
 	drupal_set_message(t('Environment %admin_title was ' . $op . '.', array('%admin_title' => $environment->admin_title)));
-	$form_state['redirect'] = 'admin/config/development/env';
+	$form_state['redirect'] = 'admin/config/development/environments';
 }
 
 /**
@@ -246,7 +246,7 @@ function environment_task_form_delete($form, &$form_state, $environment, $task) 
 	return confirm_form(
 		$form,
 		t('Are you sure you want to delete this task?'),
-		'admin/config/development/env',
+		'admin/config/development/environments',
 		NULL,
 		t('Delete'), t('Cancel')
 	);
@@ -383,7 +383,7 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 		'#type' => 'submit',
 		'#value' => t('Save and add another'),
 	);
-	$path = "admin/config/development/env/list/{$environment->name}/tasks";
+	$path = "admin/config/development/environments/list/{$environment->name}/tasks";
 	$form['actions']['cancel'] = array(
 		'#markup' => l(t('Cancel'), $path, array('absolute' => TRUE)),
 	);
@@ -472,7 +472,7 @@ function environment_task_form_edit_submit($form, &$form_state) {
  */
 function environment_task_form_edit_submit_redirect($form, &$form_state) {
 	$env = $form_state['environment'];
-	$form_state['redirect'] = "admin/config/development/env/list/{$env->name}/tasks";
+	$form_state['redirect'] = "admin/config/development/environments/list/{$env->name}/tasks";
 
 	if ($form_state['values']['op'] === t('Save and add another')) {
 		$form_state['redirect'] .= '/add';
@@ -505,7 +505,7 @@ function env_form_site_environment($form) {
 	);
 
 	if (empty($environments_options)) {
-		$form['env']['#description'] = t("You haven't added any environments yet! Click <a href='!url'>here</a> to add one.", array('!url' => url('admin/config/development/env/add', array('absolute' => TRUE))));
+		$form['env']['#description'] = t("You haven't added any environments yet! Click <a href='!url'>here</a> to add one.", array('!url' => url('admin/config/development/environments/add', array('absolute' => TRUE))));
 		$form['env']['#disabled'] = TRUE;
 	}
 

@@ -12,7 +12,7 @@
  *
  * @see env_set()
  */
-function _env_task_dispatcher($task_info, &$context) {
+function _environments_task_dispatcher($task_info, &$context) {
 	// Load task plugin.
 	if ($full_task = env_get_task($task_info['name'])) {
 		// Resolve callback function.
@@ -41,7 +41,7 @@ function _env_task_dispatcher($task_info, &$context) {
  *
  * @see env_set()
  */
-function _env_task_cleanup($operation, $env, &$context) {
+function _environments_task_cleanup($operation, $env, &$context) {
 	$context['message'] = t('@operation', array('@operation' => $operation));
 	$context['results']['env'] = $env;
 	drupal_flush_all_caches();
@@ -52,7 +52,7 @@ function _env_task_cleanup($operation, $env, &$context) {
  *
  * @see env_set()
  */
-function _env_task_finished($success, $results, $operations) {
+function _environments_task_finished($success, $results, $operations) {
 	if ($success) {
 		if ($env = $results['env']) {
 			if ($environment = env_environment_load($env)) {
