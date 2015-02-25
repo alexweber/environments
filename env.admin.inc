@@ -344,11 +344,6 @@ function env_form_tasks_edit($form, &$form_state, $environment, $task = NULL) {
 				'select[name="task"]' => array('empty' => FALSE),
 			),
 		),
-//		'#attached' => array(
-//			'js' => array(
-//				drupal_get_path('module', 'env') . '/assets/js/env_admin.js',
-//			),
-//		),
 	);
 
 	// Build settings form.
