@@ -130,11 +130,11 @@ function env_form_tasks($form, &$form_state, $environment) {
 			$settings_summary = array();
 			foreach ($task['settings'] as $name => $value) {
 				if ($value === TRUE) {
-					$value = 'yes';
+					$value = 'true';
 				}
 				else {
 					if ($value === FALSE) {
-						$value = 'no';
+						$value = 'false';
 					}
 					else {
 						if (is_array($value)) {

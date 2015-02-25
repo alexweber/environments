@@ -6,7 +6,7 @@
  */
 
 $plugin = array(
-  'admin_title' => t('Set variable value'),
+  'admin_title' => t('Change variable value'),
   'task_callback' => 'env_task_variable_set',
   'settings' => array(
     'name' => '',
@@ -38,15 +38,18 @@ function env_task_variable_set_settings($environment, $task = NULL) {
     '#multiple' => FALSE,
     '#options' => drupal_map_assoc(_env_get_variables()),
     '#empty_option' => t(' -Select a variable- '),
-    '#default_value' => isset($task['settings']['name']) && is_array($task['settings']['name']) ? $task['settings']['name'] : array(),
+    '#default_value' => isset($task['settings']['name']) ? $task['settings']['name'] : array(),
   );
 
-	$default_value = isset($task['settings']['value']) ? $task['settings']['value'] : '';
+	$default_value = array_key_exists('value', $task['settings'])
+		? $task['settings']['value']
+		: '';
 	$default_type = 'string';
 
 	if ($default_value !== '') {
 		if (is_bool($default_value)) {
 			$default_type = 'boolean';
+			$default_value = intval($default_value);
 		}
 		else if (is_numeric($default_value)) {
 			if (strpos('.', $default_value) !== FALSE) {
@@ -59,7 +62,7 @@ function env_task_variable_set_settings($environment, $task = NULL) {
 	}
 
 	$form['value_type'] = array(
-		'#type' => 'radios',
+		'#type' => 'select',
 		'#title' => t('Value type'),
 		'#options' => array(
 			'string' => t('String'),
@@ -74,7 +77,7 @@ function env_task_variable_set_settings($environment, $task = NULL) {
     '#name' => 'settings[value]',
     '#type' => 'textfield',
     '#title' => t('Value'),
-    '#description' => t('Note: Be sure to select the most appropriate type as this value will be type-casted.'),
+    '#description' => t('Note: Be sure to select the most appropriate type as this value will be type-casted. Use "1" and "0" for boolean values.'),
     '#default_value' => $default_value,
 		'#element_validate' => array('_env_task_variable_set_validate_value'),
   );
