@@ -61,7 +61,7 @@ function _env_drush_env($env = NULL) {
 			if ($environment = env_environment_load($input_env)) {
 				if ($input_env != $current_env) {
 					if (drush_confirm(t('Are you sure you want to change your site\'s environment to: @env?', array('@env' => $environment->admin_title)))) {
-						env_set($env);
+						env_set($environment->name);
 						return TRUE;
 					}
 					else {
