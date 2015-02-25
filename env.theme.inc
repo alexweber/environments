@@ -12,7 +12,7 @@
  *
  * @see env_theme()
  */
-function env_preprocess_env_banner(&$variables) {
+function env_preprocess_environments_banner(&$variables) {
 	if ($environment = env_environment_load($variables['env'])) {
 		$variables['env_message'] = t('Current environment: @name', array('@name' => $environment->admin_title));
 		$variables['env_alias'] = $environment->alias;
