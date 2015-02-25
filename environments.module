@@ -127,7 +127,7 @@ function environments_set($env) {
  * Unset the current environment.
  */
 function environments_unset() {
-	variable_set('env', '');
+	variable_set('environments_env', '');
 	watchdog('environments', 'Environment unset.', array(), WATCHDOG_INFO);
 }
 
@@ -135,7 +135,7 @@ function environments_unset() {
  * Implements hook_page_build().
  */
 function env_page_build(&$page) {
-  if ($env = variable_get('env')) {
+  if ($env = variable_get('environments_env')) {
     if ($environment = env_environment_load($env)) {
       // Check if we want to notify in this environment.
       if ($environment->settings['notify']) {
@@ -151,12 +151,12 @@ function env_page_build(&$page) {
           );
 
           // Include default styles.
-          if (variable_get('env_css', TRUE)) {
+          if (variable_get('environments_css', TRUE)) {
             $page['page_top']['environments']['#attached']['css'][] = $path . '/assets/css/environments.css';
           }
 
           // Include default scripts.
-          if (variable_get('env_js', TRUE)) {
+          if (variable_get('environments_js', TRUE)) {
             $page['page_top']['environments']['#attached']['js'][] = $path . '/assets/js/environments.js';
           }
         }

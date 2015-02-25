@@ -56,7 +56,7 @@ function _environments_task_finished($success, $results, $operations) {
 	if ($success) {
 		if ($env = $results['env']) {
 			if ($environment = env_environment_load($env)) {
-				variable_set('env', $env);
+				variable_set('environments_env', $env);
 				watchdog('environments', 'Environment set to: @name', array('@name' => $environment->admin_title), WATCHDOG_INFO);
 				drupal_set_message(t('Environment set to: @name', array('@name' => $environment->admin_title)));
 				return;

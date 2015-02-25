@@ -44,7 +44,7 @@ function env_drush_command() {
  */
 function _env_drush_env($env = NULL) {
   // Determine current environment.
-  $current_env = variable_get('env');
+  $current_env = variable_get('environments_env');
 
 	// If we have input, try to change current environment.
 	if (isset($env)) {

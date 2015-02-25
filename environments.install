@@ -10,9 +10,9 @@
  */
 function env_uninstall() {
 	// Delete our variables.
-	variable_del('env');
-	variable_del('env_css');
-	variable_del('env_js');
+	variable_del('environments_env');
+	variable_del('environments_css');
+	variable_del('environments_js');
 }
 
 /**
@@ -92,7 +92,7 @@ function env_requirements($phase) {
 	$return = array();
 
 	if ($phase === 'runtime') {
-		if ($env = variable_get('env')) {
+		if ($env = variable_get('environments_env')) {
 			if ($environment = env_environment_load($env)) {
 				$return['environments'] = array(
 					'title' => t('Env: current environment'),

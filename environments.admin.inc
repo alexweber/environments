@@ -501,7 +501,7 @@ function env_form_site_environment($form) {
 		'#options' => $environments_options,
 		'#empty_option' => t('- None -'),
 		'#empty_value' => '',
-		'#default_value' => variable_get('env', ''),
+		'#default_value' => variable_get('environments_env', ''),
 	);
 
 	if (empty($environments_options)) {
@@ -523,18 +523,18 @@ function env_form_site_environment($form) {
 		'#collapsible' => FALSE,
 	);
 
-	$form['advanced']['banner']['env_css'] = array(
+	$form['advanced']['banner']['environments_css'] = array(
 		'#title' => t('Include default CSS'),
 		'#type' => 'checkbox',
 		'#description' => t('Disable this if you want to write your own notification banner styles'),
-		'#default_value' => variable_get('env_css', TRUE),
+		'#default_value' => variable_get('environments_css', TRUE),
 	);
 
-	$form['advanced']['banner']['env_js'] = array(
+	$form['advanced']['banner']['environments_js'] = array(
 		'#title' => t('Include default JS'),
 		'#type' => 'checkbox',
 		'#description' => t('Disable this if you use a <a href="!url">Zurb Foundation</a> sub-theme.', array('!url' => 'https://www.drupal.org/project/zurb_foundation')),
-		'#default_value' => variable_get('env_js', TRUE),
+		'#default_value' => variable_get('environments_js', TRUE),
 	);
 
 	$form['actions'] = array('#type' => 'actions');
@@ -553,8 +553,8 @@ function env_form_site_environment($form) {
  */
 function env_form_site_environment_submit($form, &$form_state) {
 	// Persist CSS/JS settings.
-	variable_set('env_css', $form_state['values']['env_css']);
-	variable_set('env_js', $form_state['values']['env_js']);
+	variable_set('environments_css', $form_state['values']['environments_css']);
+	variable_set('environments_js', $form_state['values']['environments_js']);
 
 	// Use the same message as system_settings_form_submit().
 	drupal_set_message(t('The configuration options have been saved.'), 'status', FALSE);
@@ -563,7 +563,7 @@ function env_form_site_environment_submit($form, &$form_state) {
 	$new_env = isset($form_state['values']['env'])
 		? $form_state['values']['env']
 		: NULL;
-	$old_env = variable_get('env');
+	$old_env = variable_get('environments_env');
 
 	if (isset($new_env) && $new_env !== $old_env) {
 		// If we're just removing the environment, do it.
@@ -598,7 +598,7 @@ function env_form_site_environment_confirm($form, &$form_state, $env) {
 	}
 
 	$current = t('None');
-	if ($current_env = variable_get('env')) {
+	if ($current_env = variable_get('environments_env')) {
 		if ($current_env_obj = env_environment_load($current_env)) {
 			$current = $current_env_obj->admin_title;
 		}
