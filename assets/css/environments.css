@@ -1,4 +1,4 @@
-/* line 9, ../scss/env.scss */
+/* line 9, ../scss/environments.scss */
 #env-notify {
   height: 1.2em;
   margin: 0;
@@ -10,7 +10,7 @@
   box-shadow: 0px 0px 3px #000;
   position: relative;
 }
-/* line 21, ../scss/env.scss */
+/* line 21, ../scss/environments.scss */
 #env-notify.alert-box a.close {
   position: absolute;
   top: 0.23em;
@@ -22,7 +22,7 @@
   padding: 5px 4px 4px;
   line-height: 0;
 }
-/* line 34, ../scss/env.scss */
+/* line 34, ../scss/environments.scss */
 #env-notify .message {
   text-align: center;
   font-weight: bold;
@@ -35,19 +35,19 @@
   color: black;
 }
 
-/* line 49, ../scss/env.scss */
+/* line 49, ../scss/environments.scss */
 #env-notify.local, #env-notify.dev, #env-notify.development {
   background: #5FCD66;
 }
-/* line 55, ../scss/env.scss */
+/* line 55, ../scss/environments.scss */
 #env-notify.stg, #env-notify.stage, #env-notify.staging {
   background: #FFC926;
 }
-/* line 61, ../scss/env.scss */
+/* line 61, ../scss/environments.scss */
 #env-notify.prd, #env-notify.prod, #env-notify.production {
   background: #FF2626;
 }
-/* line 66, ../scss/env.scss */
+/* line 66, ../scss/environments.scss */
 #env-notify.prd .message, #env-notify.prd .message, #env-notify.prd .message, #env-notify.prod .message, #env-notify.prod .message, #env-notify.prod .message, #env-notify.production .message, #env-notify.production .message, #env-notify.production .message {
   color: white;
   text-shadow: 1px 1px 1px black;
