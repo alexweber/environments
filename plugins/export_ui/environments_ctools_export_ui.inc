@@ -77,9 +77,9 @@ $plugin = array(
 
   // Define the names of the functions that provide the add/edit forms.
   'form' => array(
-    'settings' => 'env_ctools_export_ui_form',
-    'validate' => 'env_ctools_export_ui_form_validate',
-    'submit' => 'env_ctools_export_ui_form_submit',
+    'settings' => 'environments_ctools_export_ui_form',
+    'validate' => 'environments_ctools_export_ui_form_validate',
+    'submit' => 'environments_ctools_export_ui_form_submit',
   ),
 
   // Override the UI handler.
@@ -98,7 +98,7 @@ $plugin = array(
 /**
  * Export UI form
  */
-function env_ctools_export_ui_form(&$form, &$form_state) {
+function environments_ctools_export_ui_form(&$form, &$form_state) {
   // Load the admin form include.
   module_load_include('inc', 'environments', 'environments.admin');
 
@@ -114,7 +114,7 @@ function env_ctools_export_ui_form(&$form, &$form_state) {
  *
  * @see env_form_environment_edit()
  */
-function env_ctools_export_ui_form_validate(&$form, &$form_state) {
+function environments_ctools_export_ui_form_validate(&$form, &$form_state) {
   $alias = $form_state['values']['alias'];
 
   if (!empty($alias)) {
@@ -148,7 +148,7 @@ function env_ctools_export_ui_form_validate(&$form, &$form_state) {
  *
  * @see env_form_environment_edit()
  */
-function env_ctools_export_ui_form_submit(&$form, &$form_state) {
+function environments_ctools_export_ui_form_submit(&$form, &$form_state) {
   // Edit the reference to $form_state['environment'] which will in turn
   // reference $form_state['item'] which is what CTools is looking for.
   $environment = &$form_state['environment'];
