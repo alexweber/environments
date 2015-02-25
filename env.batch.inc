@@ -58,12 +58,7 @@ function _env_task_finished($success, $results, $operations) {
 			if ($environment = env_environment_load($env)) {
 				variable_set('env', $env);
 				watchdog('env', 'Environment set to: @name', array('@name' => $environment->admin_title), WATCHDOG_INFO);
-
-				// Display a message if we're in the admin ui.
-				if (php_sapi_name() !== 'cli') {
-					drupal_set_message(t('Environment set to: @name', array('@name' => $environment->admin_title)));
-				}
-
+				drupal_set_message(t('Environment set to: @name', array('@name' => $environment->admin_title)));
 				return;
 			}
 		}
