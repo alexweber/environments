@@ -229,7 +229,7 @@ function environment_task_form_submit($form, &$form_state) {
 	}
 	else {
 		drupal_set_message(t('Error updating task order.'), 'error', FALSE);
-		watchdog('env', 'Error updating task order for environment: @name', array('@name' => $environment->admin_title), WATCHDOG_ERROR);
+		watchdog('environments', 'Error updating task order for environment: @name', array('@name' => $environment->admin_title), WATCHDOG_ERROR);
 	}
 
 }
@@ -270,7 +270,7 @@ function environment_task_form_delete_submit($form, &$form_state) {
 	}
 
 	drupal_set_message(t('Error deleting task.'), 'error', FALSE);
-	watchdog('env', 'Error deleting task: @name', array('@name' => $task), WATCHDOG_ERROR);
+	watchdog('environments', 'Error deleting task: @name', array('@name' => $task), WATCHDOG_ERROR);
 }
 
 /**
@@ -435,7 +435,7 @@ function environment_task_form_edit_submit($form, &$form_state) {
 		}
 
 		drupal_set_message(t('Error updating task'), 'error', FALSE);
-		watchdog('env', 'Error updating task: @name', array('@name' => $id), WATCHDOG_ERROR);
+		watchdog('environments', 'Error updating task: @name', array('@name' => $id), WATCHDOG_ERROR);
 	}
 	// Add.
 	else {
@@ -461,7 +461,7 @@ function environment_task_form_edit_submit($form, &$form_state) {
 		}
 
 		drupal_set_message(t('Error adding task: @name', array('@name' => $task['name'])), 'error', FALSE);
-		watchdog('env', 'Error adding task: @name', array('@name' => $task['name']), WATCHDOG_ERROR);
+		watchdog('environments', 'Error adding task: @name', array('@name' => $task['name']), WATCHDOG_ERROR);
 	}
 }
 
@@ -568,12 +568,12 @@ function env_form_site_environment_submit($form, &$form_state) {
 	if (isset($new_env) && $new_env !== $old_env) {
 		// If we're just removing the environment, do it.
 		if (empty($new_env)) {
-			env_unset();
+			environments_unset();
 			drupal_set_message(t('The site\'s environment has been unset.'), 'status', FALSE);
 		}
 		else {
 			unset($_GET['destination']);
-			$form_state['redirect'] = "admin/config/system/env/confirm/{$new_env}";
+			$form_state['redirect'] = "admin/config/system/environments/confirm/{$new_env}";
 		}
 	}
 }
@@ -608,7 +608,7 @@ function env_form_site_environment_confirm($form, &$form_state, $env) {
 
 	return confirm_form($form,
 		t('Are you sure you want to change your site\'s environment to: %env?', array('%env' => $title)),
-		'admin/config/system/env',
+		'admin/config/system/environments',
 		t('Your current site\'s environment is: %env', array('%env' => $current)),
 		t('Change environment'),
 		t('Cancel')
@@ -622,7 +622,7 @@ function env_form_site_environment_confirm($form, &$form_state, $env) {
  */
 function env_form_site_environment_confirm_submit($form, $form_state) {
 	if ($new_env = $form_state['values']['env']) {
-		env_set($new_env);
+		environments_set($new_env);
 
 		$title = $new_env;
 		if ($env = env_environment_load($new_env)) {

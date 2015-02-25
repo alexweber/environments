@@ -5,19 +5,19 @@
  * Export interface plugin for Env.
  */
 
-$env_path = drupal_get_path('module', 'env');
+$env_path = drupal_get_path('module', 'environments');
 
 /**
  * Define this Export UI plugin.
  */
 $plugin = array(
   'schema' => 'env_environment', // As defined in hook_schema().
-  'access' => 'administer env', // Define a permission users must have to access these pages.
+  'access' => 'administer environments', // Define a permission users must have to access these pages.
 
   // Define the menu item.
   'menu' => array(
     'menu prefix' => 'admin/config/development',
-    'menu item' => 'env',
+    'menu item' => 'environments',
     'menu title' => 'Environments',
     'menu description' => 'Administer Environments.',
 
@@ -29,7 +29,7 @@ $plugin = array(
         'title' => 'Manage Tasks',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form', 5),
-        'access arguments' => array('administer env'),
+        'access arguments' => array('administer environments'),
         'file' => 'env.admin.inc',
         'file path' => $env_path,
         'type' => MENU_LOCAL_TASK,
@@ -41,7 +41,7 @@ $plugin = array(
         'title' => 'Add Task',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form_edit', 5),
-        'access arguments' => array('administer env'),
+        'access arguments' => array('administer environments'),
         'file' => 'env.admin.inc',
         'file path' => $env_path,
         'type' => MENU_LOCAL_ACTION,
@@ -52,7 +52,7 @@ $plugin = array(
         'title' => 'Edit Task',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form_edit', 5, 7),
-        'access arguments' => array('administer env'),
+        'access arguments' => array('administer environments'),
         'file' => 'env.admin.inc',
         'file path' => $env_path,
 //        'type' => MENU_CALLBACK,
@@ -63,7 +63,7 @@ $plugin = array(
         'title' => 'Delete Task',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form_delete', 5, 7),
-        'access arguments' => array('administer env'),
+        'access arguments' => array('administer environments'),
         'file' => 'env.admin.inc',
         'file path' => $env_path,
 //        'type' => MENU_CALLBACK,
@@ -102,7 +102,7 @@ $plugin = array(
  */
 function env_ctools_export_ui_form(&$form, &$form_state) {
   // Load the admin form include.
-  module_load_include('inc', 'env', 'env.admin');
+  module_load_include('inc', 'environments', 'env.admin');
 
   // Make environment reference in form_state.
   $form_state['environment'] = &$form_state['item'];

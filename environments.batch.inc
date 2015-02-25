@@ -10,7 +10,7 @@
  *
  * Includes necessary files and executes task callbacks for a given environment.
  *
- * @see env_set()
+ * @see environments_set()
  */
 function _environments_task_dispatcher($task_info, &$context) {
 	// Load task plugin.
@@ -22,11 +22,11 @@ function _environments_task_dispatcher($task_info, &$context) {
 			$callback($task_info['settings'], $context);
 		}
 		else {
-			watchdog('env', 'Error loading callback for task: @name', array('@name' => $task_info), WATCHDOG_ERROR);
+			watchdog('environments', 'Error loading callback for task: @name', array('@name' => $task_info), WATCHDOG_ERROR);
 		}
 	}
 	else {
-		watchdog('env', 'Error loading task: @name', array('@name' => $task_info), WATCHDOG_ERROR);
+		watchdog('environments', 'Error loading task: @name', array('@name' => $task_info), WATCHDOG_ERROR);
 	}
 }
 
@@ -39,7 +39,7 @@ function _environments_task_dispatcher($task_info, &$context) {
  * This is called automatically as the last step to
  * task batch operations.
  *
- * @see env_set()
+ * @see environments_set()
  */
 function _environments_task_cleanup($operation, $env, &$context) {
 	$context['message'] = t('@operation', array('@operation' => $operation));
@@ -50,14 +50,14 @@ function _environments_task_cleanup($operation, $env, &$context) {
 /**
  * Batch API finished callback.
  *
- * @see env_set()
+ * @see environments_set()
  */
 function _environments_task_finished($success, $results, $operations) {
 	if ($success) {
 		if ($env = $results['env']) {
 			if ($environment = env_environment_load($env)) {
 				variable_set('env', $env);
-				watchdog('env', 'Environment set to: @name', array('@name' => $environment->admin_title), WATCHDOG_INFO);
+				watchdog('environments', 'Environment set to: @name', array('@name' => $environment->admin_title), WATCHDOG_INFO);
 				drupal_set_message(t('Environment set to: @name', array('@name' => $environment->admin_title)));
 				return;
 			}

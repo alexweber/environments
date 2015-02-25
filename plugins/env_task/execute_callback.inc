@@ -62,7 +62,7 @@ function env_task_execute_callback($settings, &$context) {
 	else {
 		$message = 'Error executing callback: @name()';
 		$variables = array('@name' => $callback);
-		watchdog('env', $message, $variables, WATCHDOG_ERROR);
+		watchdog('environments', $message, $variables, WATCHDOG_ERROR);
 		$context['message'] = t($callback, $variables);
 	}
 }
