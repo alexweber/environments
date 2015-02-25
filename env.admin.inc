@@ -565,7 +565,7 @@ function env_form_site_environment_submit($form, &$form_state) {
 		: NULL;
 	$old_env = variable_get('env');
 
-	if ($new_env !== $old_env) {
+	if (isset($new_env) && $new_env !== $old_env) {
 		// If we're just removing the environment, do it.
 		if (empty($new_env)) {
 			env_unset();
