@@ -7,7 +7,7 @@
 
 $plugin = array(
 	'admin_title' => t('Clear caches'),
-	'task_callback' => 'env_task_cache_clear',
+	'task_callback' => 'environments_task_cache_clear',
 	// This task has no settings.
 );
 
@@ -21,7 +21,7 @@ $plugin = array(
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
  */
-function env_task_cache_clear($settings, &$context) {
+function environments_task_cache_clear($settings, &$context) {
 	drupal_flush_all_caches();
 	$context['message'] = t('Flushed all caches.');
 }

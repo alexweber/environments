@@ -7,12 +7,12 @@
 
 $plugin = array(
 	'admin_title' => t('Disable module(s)'),
-	'task_callback' => 'env_task_module_disable',
+	'task_callback' => 'environments_task_module_disable',
 	'settings' => array(
 		'modules' => array(),
 		'disable_dependents' => TRUE,
 	),
-	'settings_callback' => 'env_task_module_disable_settings',
+	'settings_callback' => 'environments_task_module_disable_settings',
 );
 
 /**
@@ -28,7 +28,7 @@ $plugin = array(
  * @return array
  *   A Form API array of task settings.
  */
-function env_task_module_disable_settings($environment, $task = NULL) {
+function environments_task_module_disable_settings($environment, $task = NULL) {
 	$form = array();
 
 	$form['modules'] = array(
@@ -62,7 +62,7 @@ function env_task_module_disable_settings($environment, $task = NULL) {
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
  */
-function env_task_module_disable($settings, &$context) {
+function environments_task_module_disable($settings, &$context) {
 	$modules = $settings['modules'];
 	$disable_dependents = $settings['disable_dependents'];
 

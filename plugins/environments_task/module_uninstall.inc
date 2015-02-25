@@ -7,12 +7,12 @@
 
 $plugin = array(
 	'admin_title' => t('Uninstall module(s)'),
-	'task_callback' => 'env_task_module_uninstall',
+	'task_callback' => 'environments_task_module_uninstall',
 	'settings' => array(
 		'modules' => array(),
 		'uninstall_dependents' => TRUE,
 	),
-	'settings_callback' => 'env_task_module_uninstall_settings',
+	'settings_callback' => 'environments_task_module_uninstall_settings',
 );
 
 /**
@@ -28,7 +28,7 @@ $plugin = array(
  * @return array
  *   A Form API array of task settings.
  */
-function env_task_module_uninstall_settings($environment, $task = NULL) {
+function environments_task_module_uninstall_settings($environment, $task = NULL) {
 	$form = array();
 
 	$form['modules'] = array(
@@ -70,7 +70,7 @@ function env_task_module_uninstall_settings($environment, $task = NULL) {
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
  */
-function env_task_module_uninstall($settings, &$context) {
+function environments_task_module_uninstall($settings, &$context) {
 	$modules = $settings['modules'];
 	$uninstall_dependents = $settings['uninstall_dependents'];
 	$uninstall_enabled = $settings['uninstall_enabled'];

@@ -372,7 +372,7 @@ function env_environment_delete($environment) {
  *
  * @see env_task_variable_set_settings()
  */
-function _env_task_variable_set_validate_value($element, &$form_state, $form) {
+function _environments_task_variable_set_validate_value($element, &$form_state, $form) {
 	$value_type = $form_state['values']['settings']['value_type'];
 	$original_value = $value = $form_state['values']['settings']['value'];
 

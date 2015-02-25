@@ -7,11 +7,11 @@
 
 $plugin = array(
 	'admin_title' => t('Delete variable(s)'),
-	'task_callback' => 'env_task_variable_del',
+	'task_callback' => 'environments_task_variable_del',
 	'settings' => array(
 		'variables' => array(),
 	),
-	'settings_callback' => 'env_task_variable_del_settings',
+	'settings_callback' => 'environments_task_variable_del_settings',
 );
 
 /**
@@ -27,7 +27,7 @@ $plugin = array(
  * @return array
  *   A Form API array of task settings.
  */
-function env_task_variable_del_settings($environment, $task = NULL) {
+function environments_task_variable_del_settings($environment, $task = NULL) {
 	$form = array();
 
 	$form['variables'] = array(
@@ -53,7 +53,7 @@ function env_task_variable_del_settings($environment, $task = NULL) {
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
  */
-function env_task_variable_del($settings, &$context) {
+function environments_task_variable_del($settings, &$context) {
 	$variables = $settings['variables'];
 
 	foreach ($variables as $variable) {

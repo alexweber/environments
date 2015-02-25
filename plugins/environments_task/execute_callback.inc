@@ -7,11 +7,11 @@
 
 $plugin = array(
 	'admin_title' => t('Execute callback'),
-	'task_callback' => 'env_task_execute_callback',
+	'task_callback' => 'environments_task_execute_callback',
 	'settings' => array(
 		'callback' => '',
 	),
-	'settings_callback' => 'env_task_execute_callback_settings',
+	'settings_callback' => 'environments_task_execute_callback_settings',
 );
 
 /**
@@ -27,7 +27,7 @@ $plugin = array(
  * @return array
  *   A Form API array of task settings.
  */
-function env_task_execute_callback_settings($environment, $task = NULL) {
+function environments_task_execute_callback_settings($environment, $task = NULL) {
 	$form = array();
 
 	$form['callback'] = array(
@@ -52,7 +52,7 @@ function env_task_execute_callback_settings($environment, $task = NULL) {
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
  */
-function env_task_execute_callback($settings, &$context) {
+function environments_task_execute_callback($settings, &$context) {
 	$callback = $settings['callback'];
 
 	if (function_exists($callback)) {

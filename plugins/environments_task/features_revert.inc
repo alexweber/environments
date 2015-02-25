@@ -7,11 +7,11 @@
 
 $plugin = array(
 	'admin_title' => t('Revert feature(s)'),
-	'task_callback' => 'env_task_features_revert',
+	'task_callback' => 'environments_task_features_revert',
 	'settings' => array(
 		'modules' => array(),
 	),
-	'settings_callback' => 'env_task_features_revert_settings',
+	'settings_callback' => 'environments_task_features_revert_settings',
 );
 
 /**
@@ -27,7 +27,7 @@ $plugin = array(
  * @return array
  *   A Form API array of task settings.
  */
-function env_task_features_revert_settings($environment, $task = NULL) {
+function environments_task_features_revert_settings($environment, $task = NULL) {
 	$form = array();
 
 	$form['modules'] = array(
@@ -53,7 +53,7 @@ function env_task_features_revert_settings($environment, $task = NULL) {
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
  */
-function env_task_features_revert($settings, &$context) {
+function environments_task_features_revert($settings, &$context) {
 	$modules = $settings['modules'];
 	$messages = array();
 

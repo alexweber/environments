@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains the "variable_set" Env Task.
+ * Contains the "variable_add" Env Task.
  */
 
 $plugin = array(
-  'admin_title' => t('Set variable value'),
-  'task_callback' => 'env_task_variable_set',
+  'admin_title' => t('Add new variable'),
+  'task_callback' => 'environments_task_variable_add',
   'settings' => array(
     'name' => '',
     'value' => '',
   ),
-  'settings_callback' => 'env_task_variable_set_settings',
+  'settings_callback' => 'environments_task_variable_add_settings',
 );
 
 /**
@@ -28,19 +28,16 @@ $plugin = array(
  * @return array
  *   A Form API array of task settings.
  */
-function env_task_variable_set_settings($environment, $task = NULL) {
+function environments_task_variable_add_settings($environment, $task = NULL) {
   $form = array();
 
   $form['name'] = array(
     '#name' => 'settings[name]',
-    '#type' => 'select',
+    '#type' => 'textfield',
     '#title' => t('Variable name'),
-		'#description' => t('If the variable you\'re looking for isn\'t in this list, try using the "Add new variable" task instead.'),
-    '#multiple' => FALSE,
-    '#required' => TRUE,
-    '#options' => drupal_map_assoc(_env_get_variables()),
-    '#empty_option' => t(' -Select a variable- '),
-    '#default_value' => isset($task['settings']['name']) ? $task['settings']['name'] : array(),
+		'#description' => t('Specify the variable\'s name, if it already exists it will be overwritten.'),
+		'#required' => TRUE,
+    '#default_value' => isset($task['settings']['name']) ? $task['settings']['name'] : '',
   );
 
 	$default_value = array_key_exists('value', $task['settings'])
@@ -81,7 +78,8 @@ function env_task_variable_set_settings($environment, $task = NULL) {
     '#title' => t('Value'),
     '#description' => t('Note: Be sure to select the most appropriate type as this value will be type-casted. Use "1" and "0" for boolean values.'),
     '#default_value' => $default_value,
-		'#element_validate' => array('_env_task_variable_set_validate_value'),
+		// Use the same validation callback as the variable_set task.
+		'#element_validate' => array('_environments_task_variable_set_validate_value'),
   );
 
   return $form;
@@ -98,10 +96,10 @@ function env_task_variable_set_settings($environment, $task = NULL) {
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
  */
-function env_task_variable_set($settings, &$context) {
+function environments_task_variable_add($settings, &$context) {
   $name = $settings['name'];
   $value = $settings['value'];
-  $value_type = $settings['value_type'];
+	$value_type = $settings['value_type'];
 
   variable_set($name, $value);
 
@@ -110,5 +108,5 @@ function env_task_variable_set($settings, &$context) {
 	}
 
   // Display message.
-  $context['message'] = t('Set variable value @name to @value', array('@name' => $name, '@value' => $value));
+  $context['message'] = t('Variable value @name initialized to @value', array('@name' => $name, '@value' => $value));
 }

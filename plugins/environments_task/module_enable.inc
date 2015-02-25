@@ -14,7 +14,7 @@ $plugin = array(
 	'admin_title' => t('Enable module(s)'),
 	// Batch API callback to execute. You can also define this using the
 	// alternative method below.
-	'task_callback' => 'env_task_module_enable',
+	'task_callback' => 'environments_task_module_enable',
 	// Batch API callback to execute. This is an alternative implementation that
 	// gives you more control over where your callback lives and what it's called.
 	// Which callback to use is automatically determined by CTools.
@@ -33,7 +33,7 @@ $plugin = array(
 	),
 	// Optional Form callback for settings form. You can also define this using
 	// a similar alternative method as with the batch callbacks.
-	'settings_callback' => 'env_task_module_enable_settings',
+	'settings_callback' => 'environments_task_module_enable_settings',
 	// Optional Form callback for settings form. This is the alternative method.
 	// Refer to the explanation for "task_callback" above for more information.
 //  'settings_callback' => array(
@@ -56,7 +56,7 @@ $plugin = array(
  * @return array
  *   A Form API array of task settings.
  */
-function env_task_module_enable_settings($environment, $task = NULL) {
+function environments_task_module_enable_settings($environment, $task = NULL) {
 	$form = array();
 
 	$form['modules'] = array(
@@ -89,7 +89,7 @@ function env_task_module_enable_settings($environment, $task = NULL) {
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
  */
-function env_task_module_enable($settings, &$context) {
+function environments_task_module_enable($settings, &$context) {
 	$modules = $settings['modules'];
 	$enable_dependencies = $settings['enable_dependencies'];
 
