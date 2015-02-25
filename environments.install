@@ -19,8 +19,11 @@ function environments_uninstall() {
  * Implements hook_enable().
  */
 function environments_enable() {
-	// Display a message and link to the configuration page.
-	drupal_set_message(t('You\'ve enabled the Environments module. Click <a href="!url">here</a> to configure up your site environments and tasks.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE)))), 'status', FALSE);
+	// Display a message and link to the configuration page if we're doing this
+	// through the UI.
+	if (php_sapi_name() !== 'cli') {
+		drupal_set_message(t('You\'ve enabled the Environments module. Click <a href="!url">here</a> to configure up your site environments and tasks.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE)))), 'status', FALSE);
+	}
 }
 
 /**
