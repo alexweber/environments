@@ -64,7 +64,7 @@ function environments_task_module_enable_settings($environment, $task = NULL) {
 		'#type' => 'select',
 		'#title' => t('Modules'),
 		'#multiple' => TRUE,
-		'#options' => _env_get_modules(),
+		'#options' => _environments_get_modules(),
 		'#empty_option' => t(' -Select some modules- '),
 		'#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
 	);

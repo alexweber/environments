@@ -35,7 +35,7 @@ function environments_task_features_revert_settings($environment, $task = NULL) 
 		'#type' => 'select',
 		'#title' => t('Features'),
 		'#multiple' => TRUE,
-		'#options' => _env_get_features(),
+		'#options' => _environments_get_features(),
 		'#empty_option' => t(' -Select some features- '),
 		'#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
 	);

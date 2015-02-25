@@ -35,7 +35,7 @@ function environments_task_variable_del_settings($environment, $task = NULL) {
 		'#type' => 'select',
 		'#title' => t('Variables'),
 		'#multiple' => TRUE,
-		'#options' => drupal_map_assoc(_env_get_variables()),
+		'#options' => drupal_map_assoc(_environments_get_variables()),
 		'#empty_option' => t(' -Select some variables- '),
 		'#default_value' => isset($task['settings']['variables']) ? $task['settings']['variables'] : array(),
 	);

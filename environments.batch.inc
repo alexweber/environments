@@ -14,7 +14,7 @@
  */
 function _environments_task_dispatcher($task_info, &$context) {
 	// Load task plugin.
-	if ($full_task = env_get_task($task_info['name'])) {
+	if ($full_task = environments_get_task($task_info['name'])) {
 		// Resolve callback function.
 		if ($callback = ctools_plugin_get_function($full_task, 'task_callback')) {
 			// Execute it. We call it directly instead of using call_user_func() to
@@ -43,7 +43,7 @@ function _environments_task_dispatcher($task_info, &$context) {
  */
 function _environments_task_cleanup($operation, $env, &$context) {
 	$context['message'] = t('@operation', array('@operation' => $operation));
-	$context['results']['env'] = $env;
+	$context['results']['environment'] = $env;
 	drupal_flush_all_caches();
 }
 
@@ -54,8 +54,8 @@ function _environments_task_cleanup($operation, $env, &$context) {
  */
 function _environments_task_finished($success, $results, $operations) {
 	if ($success) {
-		if ($env = $results['env']) {
-			if ($environment = env_environment_load($env)) {
+		if ($env = $results['environment']) {
+			if ($environment = environments_load($env)) {
 				variable_set('environments_env', $env);
 				watchdog('environments', 'Environment set to: @name', array('@name' => $environment->admin_title), WATCHDOG_INFO);
 				drupal_set_message(t('Environment set to: @name', array('@name' => $environment->admin_title)));

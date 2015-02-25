@@ -38,7 +38,7 @@ function environments_task_variable_set_settings($environment, $task = NULL) {
 		'#description' => t('If the variable you\'re looking for isn\'t in this list, try using the "Add new variable" task instead.'),
     '#multiple' => FALSE,
     '#required' => TRUE,
-    '#options' => drupal_map_assoc(_env_get_variables()),
+    '#options' => drupal_map_assoc(_environments_get_variables()),
     '#empty_option' => t(' -Select a variable- '),
     '#default_value' => isset($task['settings']['name']) ? $task['settings']['name'] : array(),
   );

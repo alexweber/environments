@@ -13,7 +13,7 @@ define('ENVIRONMENTS_ALIAS_MAXLENGTH', 12);
 /**
  * Implements hook_permission().
  */
-function env_permission() {
+function environments_permission() {
   return array(
     'administer environments' => array(
       'title' => t('Administer Site Environments'),
@@ -30,14 +30,14 @@ function env_permission() {
 /**
  * Implements hook_menu().
  */
-function env_menu() {
+function environments_menu() {
   $items = array();
 
   $items['admin/config/system/environments'] = array(
     'title' => 'Site environment',
     'description' => 'Manage the current site environment.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('env_form_site_environment'),
+    'page arguments' => array('environments_form_site'),
     'access arguments' => array('administer environments'),
     'file' => 'environments.admin.inc',
   );
@@ -45,7 +45,7 @@ function env_menu() {
   $items['admin/config/system/environments/confirm/%'] = array(
     'title' => 'Confirm site environment change',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('env_form_site_environment_confirm', 5),
+    'page arguments' => array('environments_form_site_confirm', 5),
     'access arguments' => array('administer environments'),
     'file' => 'environments.admin.inc',
   );
@@ -56,12 +56,12 @@ function env_menu() {
 /**
  * Implements hook_help().
  */
-function env_help($path, $arg) {
+function environments_help($path, $arg) {
   switch ($path) {
     case 'admin/help#environments':
 			$path = drupal_get_path('module', 'environments');
 			return file_get_contents("{$path}/README.txt");
-    case 'admin/config/system/environmentsironments':
+    case 'admin/config/system/environments':
       return t('Here you can view and change the current environment, as well as manage other settings. To manage defined environments, go <a href="!url">here</a>.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE))));
     case 'admin/config/development/environments':
       return t('Here you can manage your environments and tasks. To change the current environment or manage other settings, go <a href="!url">here</a>.', array('!url' => url('admin/config/system/environments', array('absolute' => TRUE))));
@@ -77,7 +77,7 @@ function env_help($path, $arg) {
  *   An environment machine_name.
  */
 function environments_set($env) {
-  if ($environment = env_environment_load($env)) {
+  if ($environment = environments_load($env)) {
     $operations = array();
 
 		if (is_array($environment->tasks)) {
@@ -134,9 +134,9 @@ function environments_unset() {
 /**
  * Implements hook_page_build().
  */
-function env_page_build(&$page) {
+function environments_page_build(&$page) {
   if ($env = variable_get('environments_env')) {
-    if ($environment = env_environment_load($env)) {
+    if ($environment = environments_load($env)) {
       // Check if we want to notify in this environment.
       if ($environment->settings['notify']) {
         // Check whether user has access to view notifications. This is done so
@@ -147,7 +147,7 @@ function env_page_build(&$page) {
 
           $page['page_top']['environments'] = array(
             '#theme' => 'environments_banner',
-            '#env' => $env,
+            '#environment' => $env,
           );
 
           // Include default styles.
@@ -168,13 +168,13 @@ function env_page_build(&$page) {
 /**
  * Implements hook_theme().
  */
-function env_theme() {
+function environments_theme() {
   return array(
     'environments_banner' => array(
       'template' => 'templates/banner',
       'file' => 'env.theme.inc',
       'variables' => array(
-        'env' => '',
+        'environment' => '',
       ),
     ),
     'environment_task_form' => array(
@@ -187,13 +187,13 @@ function env_theme() {
 /**
  * Implements hook_ctools_plugin_directory().
  */
-function env_ctools_plugin_directory($module, $type) {
+function environments_ctools_plugin_directory($module, $type) {
 	if ($type == 'export_ui') {
 		return 'plugins/export_ui';
 	}
 	else {
-		if ($type === 'env_task') {
-			return 'plugins/env_task';
+		if ($type === 'environments_task') {
+			return 'plugins/environments_task';
 		}
 	}
 }
@@ -201,8 +201,8 @@ function env_ctools_plugin_directory($module, $type) {
 /**
  * Implements hook_ctools_plugin_type().
  */
-function env_ctools_plugin_type() {
-	$plugins['env_task'] = array(
+function environments_ctools_plugin_type() {
+	$plugins['environments_task'] = array(
 		'cache' => TRUE,
 		'defaults' => array(
 			// Administrative title.
@@ -223,15 +223,13 @@ function env_ctools_plugin_type() {
 /**
  * Implements hook_ctools_plugin_api().
  */
-function env_ctools_plugin_api($module, $api) {
+function environments_ctools_plugin_api($module, $api) {
 	if ($module === 'environments') {
 		if ($api === 'environments') {
 			return array('version' => 1);
 		}
-		else {
-			if ($api === 'env_task') {
-				return array('version' => 1);
-			}
+		else if ($api === 'environments_task') {
+			return array('version' => 1);
 		}
 	}
 }
@@ -244,9 +242,9 @@ function env_ctools_plugin_api($module, $api) {
  *
  * @return array
  */
-function env_get_task($task) {
+function environments_get_task($task) {
 	ctools_include('plugins');
-	return ctools_get_plugins('environments', 'env_task', $task);
+	return ctools_get_plugins('environments', 'environments_task', $task);
 }
 
 /**
@@ -254,16 +252,16 @@ function env_get_task($task) {
  *
  * @return array
  */
-function env_get_tasks() {
+function environments_get_tasks() {
 	ctools_include('plugins');
-	return ctools_get_plugins('environments', 'env_task');
+	return ctools_get_plugins('environments', 'environments_task');
 }
 
 /**
  * Create a new environment object
  *
  * Note that this function does not save the environment to the database.
- * @see env_environment_save()
+ * @see environments_save()
  */
 function environments_create($values = array()) {
 	ctools_include('export');
@@ -307,7 +305,7 @@ function environments_create($values = array()) {
  * Fetches all environments from the database and returns them as an associative
  * array.
  */
-function env_environment_load_all() {
+function environments_load_all() {
 	ctools_include('export');
 	return ctools_export_crud_load_all('environments');
 }
@@ -321,7 +319,7 @@ function env_environment_load_all() {
  * @return stdClass|NULL
  *   The fully-loaded environment object or NULL if it couldn't be loaded.
  */
-function env_environment_load($environment_name) {
+function environments_load($environment_name) {
 	ctools_include('export');
 	return ctools_export_crud_load('environments', $environment_name);
 }
@@ -334,7 +332,7 @@ function env_environment_load($environment_name) {
  * @return boolean
  *   TRUE if there exists an environment with the give name, FALSE otherwise.
  */
-function env_environment_exists($environment_name) {
+function environments_exists($environment_name) {
 	ctools_include('export');
 	$environment = ctools_export_crud_load('environments', $environment_name);
 	return isset($environment->name);
@@ -351,7 +349,7 @@ function env_environment_exists($environment_name) {
  *   SAVED_UPDATED is returned depending on the operation performed. The
  *   $object parameter contains values for any serial fields defined.
  */
-function env_environment_save(&$environment) {
+function environments_save(&$environment) {
 	ctools_include('export');
 	return ctools_export_crud_save('environments', $environment);
 }
@@ -362,7 +360,7 @@ function env_environment_save(&$environment) {
  * @param object
  *   The environment object to delete.
  */
-function env_environment_delete($environment) {
+function environments_delete($environment) {
 	ctools_include('export');
 	return ctools_export_crud_delete('environments', $environment);
 }
@@ -370,7 +368,7 @@ function env_environment_delete($environment) {
 /**
  * Element validation callback; type-casts the submitted value.
  *
- * @see env_task_variable_set_settings()
+ * @see environments_task_variable_set_settings()
  */
 function _environments_task_variable_set_validate_value($element, &$form_state, $form) {
 	$value_type = $form_state['values']['settings']['value_type'];

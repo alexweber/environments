@@ -32,7 +32,7 @@ function environments_form_edit($form, &$form_state) {
 		'#maxlength' => '255',
 		'#machine_name' => array(
 			'source' => array('admin_title'),
-			'exists' => 'env_environment_exists',
+			'exists' => 'environments_exists',
 		),
 		'#required' => TRUE,
 		'#default_value' => $environment->name,
@@ -70,7 +70,7 @@ function environments_form_edit($form, &$form_state) {
 /**
  * Form builder; Form to delete a given environment.
  */
-function env_environment_form_delete($form, &$form_state, $environment) {
+function environments_form_delete($form, &$form_state, $environment) {
 	$form_state['environment'] = &$environment;
 
 	// Deleting an export in code will revert it.
@@ -91,7 +91,7 @@ function env_environment_form_delete($form, &$form_state, $environment) {
 /**
  * Submit handler for deleting an environment.
  */
-function env_environment_form_delete_submit($form, &$form_state) {
+function environments_form_delete_submit($form, &$form_state) {
 	$environment = &$form_state['environment'];
 	$op = ($environment->export_type & EXPORT_IN_CODE) ? 'reverted' : 'deleted';
 
@@ -107,18 +107,18 @@ function env_environment_form_delete_submit($form, &$form_state) {
  *
  * Displays task overview form.
  *
- * @see env_menu()
+ * @see environments_menu()
  */
 function environment_task_form($form, &$form_state, $environment) {
 	if (is_string($environment)) {
-		$environment = env_environment_load($environment);
+		$environment = environments_load($environment);
 	}
 
 	$form_state['environment'] = $environment;
 
 	// List tasks.
 	if (is_object($environment) && !empty($environment->tasks)) {
-		$all_tasks = env_get_tasks();
+		$all_tasks = environments_get_tasks();
 
 		$form['tasks'] = array(
 			'#tree' => TRUE,
@@ -148,7 +148,7 @@ function environment_task_form($form, &$form_state, $environment) {
 			}
 
 			ctools_include('export');
-			$plugin = ctools_get_export_ui('env_ctools_export_ui');
+			$plugin = ctools_get_export_ui('environments_ctools_export_ui');
 			$path = ctools_export_ui_plugin_menu_path($plugin, 'tasks', $environment->name);
 			$destination = drupal_get_destination();
 
@@ -224,7 +224,7 @@ function environment_task_form_submit($form, &$form_state) {
 	// Sort tasks by new weights.
 	uasort($environment->tasks, 'element_sort');
 
-	if (env_environment_save($environment)) {
+	if (environments_save($environment)) {
 		drupal_set_message(t('Task order updated!'), 'status', FALSE);
 	}
 	else {
@@ -263,7 +263,7 @@ function environment_task_form_delete_submit($form, &$form_state) {
 
 	if (array_key_exists($task, $environment->tasks)) {
 		unset($environment->tasks[$task]);
-		if (env_environment_save($environment)) {
+		if (environments_save($environment)) {
 			drupal_set_message(t('Task deleted!'), 'status', FALSE);
 			return;
 		}
@@ -288,7 +288,7 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 		// Grab task instance info.
 		$task_info = $environment->tasks[$task];
 		// Load task plugin.
-		$task = env_get_task($task_info['name']);
+		$task = environments_get_task($task_info['name']);
 		// Override with instance info.
 		$task = array_merge($task, $task_info);
 		// Store task in form state for AJAX.
@@ -297,7 +297,7 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 
 	// Prepare task type options.
 	$task_types = array();
-	foreach (env_get_tasks() as $type) {
+	foreach (environments_get_tasks() as $type) {
 		$task_types[$type['name']] = $type['admin_title'];
 	}
 
@@ -325,8 +325,8 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 		'#default_value' => $default_task,
 		'#options' => $task_types,
 		'#ajax' => array(
-			'callback' => 'env_ajax_task_settings',
-			'wrapper' => 'env-task-settings',
+			'callback' => 'environments_ajax_task_settings',
+			'wrapper' => 'environments-task-settings',
 			'method' => 'replace',
 			'effect' => 'slide',
 		),
@@ -337,7 +337,7 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 		'#type' => 'fieldset',
 		'#title' => t('Settings'),
 		'#tree' => TRUE,
-		'#prefix' => '<div id="env-task-settings">',
+		'#prefix' => '<div id="environments-task-settings">',
 		'#suffix' => '</div>',
 		'#states' => array(
 			'visible' => array(
@@ -360,7 +360,7 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 	}
 	else {
 		if ($current_task) {
-			if ($task_info = env_get_task($current_task)) {
+			if ($task_info = environments_get_task($current_task)) {
 				if ($callback = ctools_plugin_get_function($task_info, 'settings_callback')) {
 					$settings_form = call_user_func($callback, $form_state['environment']);
 					$form['settings'] += $settings_form;
@@ -399,7 +399,7 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
  *
  * Returns task settings form.
  */
-function env_ajax_task_settings($form, &$form_state) {
+function environments_ajax_task_settings($form, &$form_state) {
 	return $form['settings'];
 }
 
@@ -429,7 +429,7 @@ function environment_task_form_edit_submit($form, &$form_state) {
 		$environment->tasks[$id]['name'] = $new_task;
 		$environment->tasks[$id]['settings'] = $new_settings;
 
-		if (env_environment_save($environment)) {
+		if (environments_save($environment)) {
 			drupal_set_message(t('Task Updated'), 'status', FALSE);
 			return;
 		}
@@ -439,7 +439,7 @@ function environment_task_form_edit_submit($form, &$form_state) {
 	}
 	// Add.
 	else {
-		if ($task = env_get_task($new_task)) {
+		if ($task = environments_get_task($new_task)) {
 			// Merge settings with defaults.
 			$settings = array_merge($task['settings'], $new_settings);
 
@@ -454,7 +454,7 @@ function environment_task_form_edit_submit($form, &$form_state) {
 				'#weight' => 0,
 			);
 
-			if (env_environment_save($environment)) {
+			if (environments_save($environment)) {
 				drupal_set_message(t('Task Added'), 'status', FALSE);
 				return;
 			}
@@ -485,17 +485,17 @@ function environment_task_form_edit_submit_redirect($form, &$form_state) {
  *
  * Displays the "Site Environment" form.
  *
- * @see env_menu()
+ * @see environments_menu()
  */
-function env_form_site_environment($form) {
+function environments_form_site($form) {
 	$environments_options = array();
-	$environments = env_environment_load_all();
+	$environments = environments_load_all();
 
 	foreach ($environments as $env) {
 		$environments_options[$env->name] = $env->admin_title;
 	}
 
-	$form['env'] = array(
+	$form['environment'] = array(
 		'#title' => t('Current environment'),
 		'#type' => 'select',
 		'#options' => $environments_options,
@@ -505,8 +505,8 @@ function env_form_site_environment($form) {
 	);
 
 	if (empty($environments_options)) {
-		$form['env']['#description'] = t("You haven't added any environments yet! Click <a href='!url'>here</a> to add one.", array('!url' => url('admin/config/development/environments/add', array('absolute' => TRUE))));
-		$form['env']['#disabled'] = TRUE;
+		$form['environment']['#description'] = t("You haven't added any environments yet! Click <a href='!url'>here</a> to add one.", array('!url' => url('admin/config/development/environments/add', array('absolute' => TRUE))));
+		$form['environment']['#disabled'] = TRUE;
 	}
 
 	$form['advanced'] = array(
@@ -549,9 +549,9 @@ function env_form_site_environment($form) {
 /**
  * Submit callback.
  *
- * @see env_form_site_environment()
+ * @see environments_form_site()
  */
-function env_form_site_environment_submit($form, &$form_state) {
+function environments_form_site_submit($form, &$form_state) {
 	// Persist CSS/JS settings.
 	variable_set('environments_css', $form_state['values']['environments_css']);
 	variable_set('environments_js', $form_state['values']['environments_js']);
@@ -560,20 +560,20 @@ function env_form_site_environment_submit($form, &$form_state) {
 	drupal_set_message(t('The configuration options have been saved.'), 'status', FALSE);
 
 	// Decide whether we're changing environments or not.
-	$new_env = isset($form_state['values']['env'])
-		? $form_state['values']['env']
+	$new_environment = isset($form_state['values']['environment'])
+		? $form_state['values']['environment']
 		: NULL;
-	$old_env = variable_get('environments_env');
+	$old_environment = variable_get('environments_env');
 
-	if (isset($new_env) && $new_env !== $old_env) {
+	if (isset($new_environment) && $new_environment !== $old_environment) {
 		// If we're just removing the environment, do it.
-		if (empty($new_env)) {
+		if (empty($new_environment)) {
 			environments_unset();
 			drupal_set_message(t('The site\'s environment has been unset.'), 'status', FALSE);
 		}
 		else {
 			unset($_GET['destination']);
-			$form_state['redirect'] = "admin/config/system/environments/confirm/{$new_env}";
+			$form_state['redirect'] = "admin/config/system/environments/confirm/{$new_environment}";
 		}
 	}
 }
@@ -581,30 +581,30 @@ function env_form_site_environment_submit($form, &$form_state) {
 /**
  * Form callback; displays the confirmation form for switching environments.
  *
- * @see env_menu()
+ * @see environments_menu()
  */
-function env_form_site_environment_confirm($form, &$form_state, $env) {
+function environments_form_site_confirm($form, &$form_state, $env) {
 	// Prevent the "options saved" message from appearing here as it's confusing.
 	drupal_get_messages('status', TRUE);
 
-	$form['env'] = array(
+	$form['environment'] = array(
 		'#type' => 'value',
 		'#value' => $env
 	);
 
 	$title = $env;
-	if ($environment = env_environment_load($env)) {
+	if ($environment = environments_load($env)) {
 		$title = $environment->admin_title;
 	}
 
 	$current = t('None');
-	if ($current_env = variable_get('environments_env')) {
-		if ($current_env_obj = env_environment_load($current_env)) {
-			$current = $current_env_obj->admin_title;
+	if ($current_environment = variable_get('environments_env')) {
+		if ($current_environment_obj = environments_load($current_environment)) {
+			$current = $current_environment_obj->admin_title;
 		}
 	}
 
-	$form['#submit'][] = 'env_form_site_environment_confirm_submit';
+	$form['#submit'][] = 'environments_form_site_confirm_submit';
 
 	return confirm_form($form,
 		t('Are you sure you want to change your site\'s environment to: %env?', array('%env' => $title)),
@@ -618,14 +618,14 @@ function env_form_site_environment_confirm($form, &$form_state, $env) {
 /**
  * Submit callback; changes site environments.
  *
- * @see env_form_site_environment_confirm()
+ * @see environments_form_site_confirm()
  */
-function env_form_site_environment_confirm_submit($form, $form_state) {
-	if ($new_env = $form_state['values']['env']) {
-		environments_set($new_env);
+function environments_form_site_confirm_submit($form, $form_state) {
+	if ($new_environment = $form_state['values']['environment']) {
+		environments_set($new_environment);
 
-		$title = $new_env;
-		if ($env = env_environment_load($new_env)) {
+		$title = $new_environment;
+		if ($env = environments_load($new_environment)) {
 			$title = $env->admin_title;
 		}
 		drupal_set_message(t('Environment set to: @env', array('@env' => $title)));
@@ -643,7 +643,7 @@ function env_form_site_environment_confirm_submit($form, $form_state) {
  * @return array
  *   An array of module names, keyed by machine_name.
  */
-function _env_get_modules() {
+function _environments_get_modules() {
 	static $modules = array();
 
 	if (empty($modules)) {
@@ -669,7 +669,7 @@ function _env_get_modules() {
  * @return array
  *   An array of variable names.
  */
-function _env_get_variables() {
+function _environments_get_variables() {
 	static $variables = array();
 
 	if (empty($variables)) {
@@ -690,7 +690,7 @@ function _env_get_variables() {
  * @return array
  *   An array of module names, keyed by machine_name.
  */
-function _env_get_features() {
+function _environments_get_features() {
 	static $features_options = array();
 
 	if (empty($features)) {

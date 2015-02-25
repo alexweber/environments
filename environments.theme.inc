@@ -10,12 +10,12 @@
  *
  * Sets current environment message for the notification banner.
  *
- * @see env_theme()
+ * @see environments_theme()
  */
-function env_preprocess_environments_banner(&$variables) {
-	if ($environment = env_environment_load($variables['env'])) {
-		$variables['env_message'] = t('Current environment: @name', array('@name' => $environment->admin_title));
-		$variables['env_alias'] = $environment->alias;
+function environments_preprocess_environments_banner(&$variables) {
+	if ($environment = environments_load($variables['environment'])) {
+		$variables['environment_message'] = t('Current environment: @name', array('@name' => $environment->admin_title));
+		$variables['environment_alias'] = $environment->alias;
 	}
 }
 
@@ -24,7 +24,7 @@ function env_preprocess_environments_banner(&$variables) {
  *
  * Overrides theme for the "Manage Tasks" form.
  *
- * @see env_theme()
+ * @see environments_theme()
  * @see environment_task_form()
  */
 function theme_environment_task_form($variables) {
@@ -32,10 +32,10 @@ function theme_environment_task_form($variables) {
 
 	$rows = array();
 	foreach (element_children($form['tasks']) as $id) {
-		$form['tasks'][$id]['weight']['#attributes']['class'] = array('env-tasks-order-weight');
+		$form['tasks'][$id]['weight']['#attributes']['class'] = array('environments-tasks-order-weight');
 		$rows[] = array(
 			'data' => array(
-				array('class' => array('env-tasks-order-handle')),
+				array('class' => array('environments-tasks-order-handle')),
 				drupal_render($form['tasks'][$id]['task']),
 				drupal_render($form['tasks'][$id]['settings']),
 				drupal_render($form['tasks'][$id]['weight']),
@@ -49,10 +49,10 @@ function theme_environment_task_form($variables) {
 	$output = theme('table', array(
 		'header' => $header,
 		'rows' => $rows,
-		'attributes' => array('id' => 'env-tasks-order')
+		'attributes' => array('id' => 'environments-tasks-order')
 	));
 	$output .= drupal_render_children($form);
 
-	drupal_add_tabledrag('env-tasks-order', 'order', 'sibling', 'env-tasks-order-weight');
+	drupal_add_tabledrag('environments-tasks-order', 'order', 'sibling', 'environments-tasks-order-weight');
 	return $output;
 }

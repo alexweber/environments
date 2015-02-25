@@ -59,7 +59,7 @@ function _environments_drush_env($env = NULL) {
 			);
 
 		if ($input_env = $query->execute()->fetchField()) {
-			if ($environment = env_environment_load($input_env)) {
+			if ($environment = environments_load($input_env)) {
 				if ($input_env != $current_env) {
 					if (drush_confirm(t('Are you sure you want to change your site\'s environment to: @env?', array('@env' => $environment->admin_title)))) {
 						environments_set($environment->name);
@@ -85,13 +85,13 @@ function _environments_drush_env($env = NULL) {
   }
 	// If not, display status.
   else {
-		$environments = env_environment_load_all();
+		$environments = environments_load_all();
     $output = array();
 
-    foreach ($environments as $env_info) {
-      $temp = "{$env_info->admin_title} ({$env_info->alias})";
+    foreach ($environments as $environment) {
+      $temp = "{$environment->admin_title} ({$environment->alias})";
 
-      if ($env_info->name === $current_env) {
+      if ($environment->name === $current_env) {
         $temp .= " *active*";
       }
 

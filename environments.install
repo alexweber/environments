@@ -8,7 +8,7 @@
 /**
  * Implements hook_uninstall().
  */
-function env_uninstall() {
+function environments_uninstall() {
 	// Delete our variables.
 	variable_del('environments_env');
 	variable_del('environments_css');
@@ -18,7 +18,7 @@ function env_uninstall() {
 /**
  * Implements hook_enable().
  */
-function env_enable() {
+function environments_enable() {
 	// Display a message and link to the configuration page.
 	drupal_set_message(t('You\'ve enabled the Environments module. Click <a href="!url">here</a> to configure up your site environments and tasks.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE)))), 'status', FALSE);
 }
@@ -26,7 +26,7 @@ function env_enable() {
 /**
  * Implements hook_schema().
  */
-function env_schema() {
+function environments_schema() {
 	$schema = array();
 
 	$schema['environments'] = array(
@@ -34,7 +34,7 @@ function env_schema() {
 		'export' => array(
 			'key' => 'name',
 			'identifier' => 'environment',
-			'default hook' => 'env_default_environments',
+			'default hook' => 'environments_default_environments',
 			'api' => array(
 				'owner' => 'environments',
 				'api' => 'environments',
@@ -88,21 +88,21 @@ function env_schema() {
 /**
  * Implements hook_requirements().
  */
-function env_requirements($phase) {
+function environments_requirements($phase) {
 	$return = array();
 
 	if ($phase === 'runtime') {
 		if ($env = variable_get('environments_env')) {
-			if ($environment = env_environment_load($env)) {
+			if ($environment = environments_load($env)) {
 				$return['environments'] = array(
-					'title' => t('Env: current environment'),
+					'title' => t('Environments: current environment'),
 					'value' => $environment->admin_title,
 					'severity' => REQUIREMENT_INFO,
 				);
 			}
 			else {
 				$return['environments'] = array(
-					'title' => t('Env: invalid environment'),
+					'title' => t('Environments: invalid environment'),
 					'value' => $env,
 					'severity' => REQUIREMENT_ERROR,
 				);
@@ -110,7 +110,7 @@ function env_requirements($phase) {
 		}
 		else {
 			$return['environments'] = array(
-				'title' => t('Env: current environment'),
+				'title' => t('Environments: current environment'),
 				'value' => t('No environment set'),
 				'severity' => REQUIREMENT_WARNING,
 			);
