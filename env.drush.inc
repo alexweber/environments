@@ -11,7 +11,7 @@
 function env_drush_help($section) {
   switch ($section) {
     case 'env':
-      return 'Switches between website server environments.';
+      return 'Switches between site server environments.';
   }
 }
 
@@ -22,12 +22,13 @@ function env_drush_command() {
   return array(
     'env' => array(
       'callback' => '_env_drush_env',
-      'description' => "Switches between website server environments. If you ommit out the argument the function will list all environments and inform what is the current one.",
+      'description' => 'Switches between site server environments. If you leave out the argument, it will list all environments and inform which is the current one.',
       'arguments' => array(
-        'env' => "Optional. Specify the environment by machine_name. If you ommit the argument the function will list all environments and inform what is the current one.",
+        'env' => 'Optional. Specify the environment by machine_name or alias. If you leave out this argument, it will list all environments and inform which is the current one.',
       ),
       'examples' => array(
-        'drush env dev' => 'Put the site in development mode',
+        'drush env dev' => 'Put the site in development mode (using alias)',
+        'drush env development' => 'Put the site in development mode (using machine_name)',
         'drush env stage' => 'Put the site in staging mode',
         'drush env prod' => 'Put the site in production mode',
       ),
