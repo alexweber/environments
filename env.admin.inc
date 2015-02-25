@@ -109,7 +109,7 @@ function env_environment_form_delete_submit($form, &$form_state) {
  *
  * @see env_menu()
  */
-function env_form_tasks($form, &$form_state, $environment) {
+function environment_task_form($form, &$form_state, $environment) {
 	if (is_string($environment)) {
 		$environment = env_environment_load($environment);
 	}
@@ -212,9 +212,9 @@ function env_form_tasks($form, &$form_state, $environment) {
  *
  * Saves updated order for Tasks.
  *
- * @see env_form_tasks()
+ * @see environment_task_form()
  */
-function env_form_tasks_submit($form, &$form_state) {
+function environment_task_form_submit($form, &$form_state) {
 	$environment = $form_state['environment'];
 
 	foreach ($form_state['values']['tasks'] as $id => $data) {
@@ -239,7 +239,7 @@ function env_form_tasks_submit($form, &$form_state) {
  *
  * Displays delete task form.
  */
-function env_form_tasks_delete($form, &$form_state, $environment, $task) {
+function environment_task_form_delete($form, &$form_state, $environment, $task) {
 	$form_state['environment'] = $environment;
 	$form_state['task'] = $task;
 
@@ -255,9 +255,9 @@ function env_form_tasks_delete($form, &$form_state, $environment, $task) {
 /**
  * Submit callback.
  *
- * @see env_form_tasks_delete()
+ * @see environment_task_form_delete()
  */
-function env_form_tasks_delete_submit($form, &$form_state) {
+function environment_task_form_delete_submit($form, &$form_state) {
 	$environment = $form_state['environment'];
 	$task = $form_state['task'];
 
@@ -278,7 +278,7 @@ function env_form_tasks_delete_submit($form, &$form_state) {
  *
  * Displays add/edit task form.
  */
-function env_form_tasks_edit($form, &$form_state, $environment, $task = NULL) {
+function environment_task_form_edit($form, &$form_state, $environment, $task = NULL) {
 	// Store environment in form state for AJAX.
 	$form_state['environment'] = $environment;
 	$current_task = !empty($form_state['values']['task']) ? $form_state['values']['task'] : '';
@@ -388,8 +388,8 @@ function env_form_tasks_edit($form, &$form_state, $environment, $task = NULL) {
 		'#markup' => l(t('Cancel'), $path, array('absolute' => TRUE)),
 	);
 
-	$form['#submit'][] = 'env_form_tasks_edit_submit';
-	$form['#submit'][] = 'env_form_tasks_edit_submit_redirect';
+	$form['#submit'][] = 'environment_task_form_edit_submit';
+	$form['#submit'][] = 'environment_task_form_edit_submit_redirect';
 
 	return $form;
 }
@@ -406,9 +406,9 @@ function env_ajax_task_settings($form, &$form_state) {
 /**
  * Submit callback.
  *
- * @see env_form_tasks_edit()
+ * @see environment_task_form_edit()
  */
-function env_form_tasks_edit_submit($form, &$form_state) {
+function environment_task_form_edit_submit($form, &$form_state) {
 	$environment = $form_state['environment'];
 	$new_task = $form_state['values']['task'];
 	$new_settings = array_key_exists('settings', $form_state['values'])
@@ -468,9 +468,9 @@ function env_form_tasks_edit_submit($form, &$form_state) {
 /**
  * Submit callback.
  *
- * @see env_form_tasks_edit()
+ * @see environment_task_form_edit()
  */
-function env_form_tasks_edit_submit_redirect($form, &$form_state) {
+function environment_task_form_edit_submit_redirect($form, &$form_state) {
 	$env = $form_state['environment'];
 	$form_state['redirect'] = "admin/config/development/env/list/{$env->name}/tasks";
 

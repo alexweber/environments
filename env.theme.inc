@@ -25,9 +25,9 @@ function env_preprocess_environments_banner(&$variables) {
  * Overrides theme for the "Manage Tasks" form.
  *
  * @see env_theme()
- * @see env_form_tasks()
+ * @see environment_task_form()
  */
-function theme_env_form_tasks($variables) {
+function theme_environment_task_form($variables) {
 	$form = $variables['form'];
 
 	$rows = array();
