@@ -19,7 +19,7 @@ $plugin = array(
     'menu prefix' => 'admin/config/development',
     'menu item' => 'environments',
     'menu title' => 'Environments',
-    'menu description' => 'Administer Environments.',
+    'menu description' => 'Administer site environments.',
 
     // Add extra menu items.
     'items' => array(
