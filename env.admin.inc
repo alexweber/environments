@@ -346,7 +346,7 @@ function env_form_tasks_edit($form, &$form_state, $environment, $task = NULL) {
 		),
 //		'#attached' => array(
 //			'js' => array(
-//				drupal_get_path('module', 'env') . '/js/env_admin.js',
+//				drupal_get_path('module', 'env') . '/assets/js/env_admin.js',
 //			),
 //		),
 	);
