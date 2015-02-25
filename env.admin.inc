@@ -551,21 +551,74 @@ function env_form_site_environment($form) {
  * @see env_form_site_environment()
  */
 function env_form_site_environment_submit($form, &$form_state) {
-	$new_env = $form_state['values']['env'];
-	$old_env = variable_get('env');
-
-	// Un-set environment if none selected.
-	if (empty($new_env)) {
-		variable_set('env', '');
-	}
-	// If there was actually an environment change, make it happen.
-	else if ($new_env !== $old_env) {
-		env_set($new_env);
-	}
-
 	// Persist CSS/JS settings.
 	variable_set('env_css', $form_state['values']['env_css']);
 	variable_set('env_js', $form_state['values']['env_js']);
+
+	// Use the same message as system_settings_form_submit().
+	drupal_set_message(t('The configuration options have been saved.'), 'status', FALSE);
+
+	// Decide whether we're changing environments or not.
+	$new_env = isset($form_state['values']['env'])
+		? $form_state['values']['env']
+		: NULL;
+	$old_env = variable_get('env');
+
+	if ($new_env !== $old_env) {
+		unset($_GET['destination']);
+		$form_state['redirect'] = "admin/config/system/env/confirm/{$new_env}";
+	}
+}
+
+/**
+ * Form callback; displays the confirmation form for switching environments.
+ *
+ * @see env_menu()
+ */
+function env_form_site_environment_confirm($form, &$form_state, $env) {
+	$form['env'] = array(
+		'#type' => 'value',
+		'#value' => $env
+	);
+
+	$title = $env;
+	if ($environment = env_environment_load($env)) {
+		$title = $environment->admin_title;
+	}
+
+	$current = t('None');
+	if ($current_env = variable_get('env')) {
+		if ($current_env_obj = env_environment_load($current_env)) {
+			$current = $current_env_obj->admin_title;
+		}
+	}
+
+	$form['#submit'][] = 'env_form_site_environment_confirm_submit';
+
+	return confirm_form($form,
+		t('Are you sure you want to change your site\'s environment to: %env?', array('%env' => $title)),
+		'admin/config/system/env',
+		t('Your current site\'s environment is: %env', array('%env' => $current)),
+		t('Change environment'),
+		t('Cancel')
+	);
+}
+
+/**
+ * Submit callback; changes site environments.
+ *
+ * @see env_form_site_environment_confirm()
+ */
+function env_form_site_environment_confirm_submit($form, $form_state) {
+	if ($new_env = $form_state['values']['env']) {
+		if (empty($new_env)) {
+			drupal_set_message(t('Your site\'s environment was un-set successfully.'), 'status', FALSE);
+			variable_set('env', '');
+		}
+		else {
+			env_set($new_env);
+		}
+	}
 }
 
 /**
