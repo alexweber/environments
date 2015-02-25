@@ -388,6 +388,10 @@ function env_form_tasks_edit($form, &$form_state, $environment, $task = NULL) {
 		'#type' => 'submit',
 		'#value' => t('Save and add another'),
 	);
+	$path = "admin/config/development/env/list/{$environment->name}/tasks";
+	$form['actions']['cancel'] = array(
+		'#markup' => l(t('Cancel'), $path, array('absolute' => TRUE)),
+	);
 
 	$form['#submit'][] = 'env_form_tasks_edit_submit';
 	$form['#submit'][] = 'env_form_tasks_edit_submit_redirect';
