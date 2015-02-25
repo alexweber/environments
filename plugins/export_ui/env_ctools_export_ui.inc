@@ -30,7 +30,7 @@ $plugin = array(
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form', 5),
         'access arguments' => array('administer environments'),
-        'file' => 'env.admin.inc',
+        'file' => 'environments.admin.inc',
         'file path' => $env_path,
         'type' => MENU_LOCAL_TASK,
         'weight' => -5,
@@ -42,7 +42,7 @@ $plugin = array(
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form_edit', 5),
         'access arguments' => array('administer environments'),
-        'file' => 'env.admin.inc',
+        'file' => 'environments.admin.inc',
         'file path' => $env_path,
         'type' => MENU_LOCAL_ACTION,
       ),
@@ -53,7 +53,7 @@ $plugin = array(
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form_edit', 5, 7),
         'access arguments' => array('administer environments'),
-        'file' => 'env.admin.inc',
+        'file' => 'environments.admin.inc',
         'file path' => $env_path,
 //        'type' => MENU_CALLBACK,
       ),
@@ -64,7 +64,7 @@ $plugin = array(
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form_delete', 5, 7),
         'access arguments' => array('administer environments'),
-        'file' => 'env.admin.inc',
+        'file' => 'environments.admin.inc',
         'file path' => $env_path,
 //        'type' => MENU_CALLBACK,
       ),
@@ -102,7 +102,7 @@ $plugin = array(
  */
 function env_ctools_export_ui_form(&$form, &$form_state) {
   // Load the admin form include.
-  module_load_include('inc', 'environments', 'env.admin');
+  module_load_include('inc', 'environments', 'environments.admin');
 
   // Make environment reference in form_state.
   $form_state['environment'] = &$form_state['item'];
