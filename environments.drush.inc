@@ -8,28 +8,27 @@
 /**
  * Implements hook_drush_help().
  */
-function env_drush_help($section) {
+function environments_drush_help($section) {
   switch ($section) {
-    case 'env':
-      return 'Switches between site server environments.';
+    case 'environments':
+      return 'Switches your site\'s configuration between server environment presets.';
   }
 }
 
 /**
  * Implements hook_drush_command().
  */
-function env_drush_command() {
+function environments_drush_command() {
   return array(
-    'env' => array(
-      'callback' => '_env_drush_env',
-      'description' => 'Switches between site server environments. If you leave out the argument, it will list all environments and inform which is the current one.',
+    'environments' => array(
+      'callback' => '_environments_drush_env',
+      'description' => 'Switches your site\'s configuration between server environment presets. Omit the argument to list all available environments.',
       'arguments' => array(
-        'env' => 'Optional. Specify the environment by machine_name or alias. If you leave out this argument, it will list all environments and inform which is the current one.',
+        'envname' => 'Optional. Specify the environment by it\'s machine_name or alias.',
       ),
       'examples' => array(
-        'drush env dev' => 'Put the site in development mode (using alias)',
         'drush env development' => 'Put the site in development mode (using machine_name)',
-        'drush env stage' => 'Put the site in staging mode',
+				'drush env dev' => 'Put the site in development mode (using alias)',
         'drush env prod' => 'Put the site in production mode',
       ),
     ),
@@ -37,12 +36,14 @@ function env_drush_command() {
 }
 
 /**
- * Router for 'env' drush command.
+ * Drush command callback.
  *
  * @param string $env
  * @return bool
+ *
+ * @see environments_drush_command()
  */
-function _env_drush_env($env = NULL) {
+function _environments_drush_env($env = NULL) {
   // Determine current environment.
   $current_env = variable_get('environments_env');
 
