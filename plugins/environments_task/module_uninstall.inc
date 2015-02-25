@@ -52,7 +52,7 @@ function environments_task_module_uninstall_settings($environment, $task = NULL)
 	$form['uninstall_enabled'] = array(
 		'#name' => 'settings[uninstall_enabled]',
 		'#type' => 'checkbox',
-		'#title' => t('Uninstall enabled modules'),
+		'#title' => t('Disable enabled modules'),
 		'#description' => t('If TRUE, enabled modules will automatically be disabled before being uninstalled. If FALSE, attempting to uninstall an enabled module will fail.'),
 		'#default_value' => isset($task['settings']['uninstall_enabled']) ? $task['settings']['uninstall_enabled'] : TRUE,
 	);
