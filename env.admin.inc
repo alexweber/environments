@@ -569,7 +569,7 @@ function env_form_site_environment_submit($form, &$form_state) {
 		// If we're just removing the environment, do it.
 		if (empty($new_env)) {
 			env_unset();
-			drupal_set_message(t('The site\'s current environment has been unset.'), 'status', FALSE);
+			drupal_set_message(t('The site\'s environment has been unset.'), 'status', FALSE);
 		}
 		else {
 			unset($_GET['destination']);
@@ -584,6 +584,9 @@ function env_form_site_environment_submit($form, &$form_state) {
  * @see env_menu()
  */
 function env_form_site_environment_confirm($form, &$form_state, $env) {
+	// Prevent the "options saved" message from appearing here as it's confusing.
+	drupal_get_messages('status', TRUE);
+
 	$form['env'] = array(
 		'#type' => 'value',
 		'#value' => $env
@@ -620,6 +623,12 @@ function env_form_site_environment_confirm($form, &$form_state, $env) {
 function env_form_site_environment_confirm_submit($form, $form_state) {
 	if ($new_env = $form_state['values']['env']) {
 		env_set($new_env);
+
+		$title = $new_env;
+		if ($env = env_environment_load($new_env)) {
+			$title = $env->admin_title;
+		}
+		drupal_set_message(t('Environment set to: @env', array('@env' => $title)));
 	}
 	else {
 		drupal_set_message(t('An illegal choice has been detected. Please contact the site administrator.'), 'error', FALSE);
