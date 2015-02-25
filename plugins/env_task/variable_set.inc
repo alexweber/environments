@@ -31,17 +31,6 @@ $plugin = array(
 function env_task_variable_set_settings($environment, $task = NULL) {
   $form = array();
 
-	$form['type'] = array(
-		'#type' => 'radios',
-		'#title' => t('Selection mode'),
-		'#description' => t('Since Drupal isn\'t aware of un-initialized variables, you may need to specify the variable name yourself.'),
-		'#options' => array(
-			'list' => t('Pick from list'),
-			'custom' => t('Specify name'),
-		),
-		'#default_value' => isset($task['settings']['name']) && !is_array($task['settings']['name']) ? 'custom' : 'list',
-	);
-
   $form['name'] = array(
     '#name' => 'settings[name]',
     '#type' => 'select',
@@ -50,37 +39,44 @@ function env_task_variable_set_settings($environment, $task = NULL) {
     '#options' => drupal_map_assoc(_env_get_variables()),
     '#empty_option' => t(' -Select a variable- '),
     '#default_value' => isset($task['settings']['name']) && is_array($task['settings']['name']) ? $task['settings']['name'] : array(),
-		'#states' => array(
-		  'visible' => array(
-		    'input[name="settings[type]"]' => array('value' => 'list'),
-		  ),
-		  'enabled' => array(
-		    'input[name="settings[type]"]' => array('value' => 'list'),
-		  ),
-		),
   );
 
-	$form['name_custom'] = array(
-		'#name' => 'settings[name]',
-		'#type' => 'textfield',
-		'#title' => t('Variable name'),
-		'#default_value' => isset($task['settings']['name']) && !is_array($task['settings']['name']) ? $task['settings']['name'] : '',
-		'#states' => array(
-			'visible' => array(
-				'input[name="settings[type]"]' => array('value' => 'custom'),
-			),
-			'enabled' => array(
-				'input[name="settings[type]"]' => array('value' => 'custom'),
-			),
+	$default_value = isset($task['settings']['value']) ? $task['settings']['value'] : '';
+	$default_type = 'string';
+
+	if ($default_value !== '') {
+		if (is_bool($default_value)) {
+			$default_type = 'boolean';
+		}
+		else if (is_numeric($default_value)) {
+			if (strpos('.', $default_value) !== FALSE) {
+				$default_type = 'float';
+			}
+			else {
+				$default_type = 'integer';
+			}
+		}
+	}
+
+	$form['value_type'] = array(
+		'#type' => 'radios',
+		'#title' => t('Value type'),
+		'#options' => array(
+			'string' => t('String'),
+			'boolean' => t('Boolean'),
+			'integer' => t('Integer'),
+			'float' => t('Float'),
 		),
+		'#default_value' => $default_type,
 	);
 
   $form['value'] = array(
     '#name' => 'settings[value]',
     '#type' => 'textfield',
-    '#title' => t('Variable value'),
-    '#description' => t('Note: At the moment this task is limited to setting string values. You can use "1" and "0" for boolean variables too.'),
-    '#default_value' => isset($task['settings']['value']) ? $task['settings']['value'] : array(),
+    '#title' => t('Value'),
+    '#description' => t('Note: Be sure to select the most appropriate type as this value will be type-casted.'),
+    '#default_value' => $default_value,
+		'#element_validate' => array('_env_task_variable_set_validate_value'),
   );
 
   return $form;
