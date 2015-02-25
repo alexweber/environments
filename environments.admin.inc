@@ -607,9 +607,9 @@ function environments_form_site_confirm($form, &$form_state, $env) {
 	$form['#submit'][] = 'environments_form_site_confirm_submit';
 
 	return confirm_form($form,
-		t('Are you sure you want to change your site\'s environment to: %env?', array('%env' => $title)),
+		t('Are you sure you want to change your site\'s environment to: %environment?', array('%environment' => $title)),
 		'admin/config/system/environments',
-		t('Your current site\'s environment is: %env', array('%env' => $current)),
+		t('Your current site\'s environment is: %environment', array('%environment' => $current)),
 		t('Change environment'),
 		t('Cancel')
 	);
@@ -628,7 +628,7 @@ function environments_form_site_confirm_submit($form, $form_state) {
 		if ($env = environments_load($new_environment)) {
 			$title = $env->admin_title;
 		}
-		drupal_set_message(t('Environment set to: @env', array('@env' => $title)));
+		drupal_set_message(t('Environment set to: @environmentironment', array('@environment' => $title)));
 	}
 	else {
 		drupal_set_message(t('An illegal choice has been detected. Please contact the site administrator.'), 'error', FALSE);

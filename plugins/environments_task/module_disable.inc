@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the "module_disable" Env Task.
+ * Contains the "module_disable" Environments Task.
  */
 
 $plugin = array(

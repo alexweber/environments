@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the "variable_add" Env Task.
+ * Contains the "variable_add" Environments Task.
  */
 
 $plugin = array(

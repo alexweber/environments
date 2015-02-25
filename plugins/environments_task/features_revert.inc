@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the "features_revert" Env Task.
+ * Contains the "features_revert" Environments Task.
  */
 
 $plugin = array(

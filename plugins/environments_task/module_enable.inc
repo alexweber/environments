@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the "module_enable" Env Task.
+ * Contains the "module_enable" Environments Task.
  */
 
 

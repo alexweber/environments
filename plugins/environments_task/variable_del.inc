@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the "variable_del" Env Task.
+ * Contains the "variable_del" Environments Task.
  */
 
 $plugin = array(

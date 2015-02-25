@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the "execute_callback" Env Task.
+ * Contains the "execute_callback" Environments Task.
  */
 
 $plugin = array(

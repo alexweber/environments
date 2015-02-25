@@ -21,6 +21,7 @@ function environments_drush_help($section) {
 function environments_drush_command() {
   return array(
     'environments' => array(
+			'aliases' => array('env'),
       'callback' => '_environments_drush_env',
       'description' => 'Switches your site\'s configuration between server environment presets. Omit the argument to list all available environments.',
       'arguments' => array(
@@ -32,7 +33,22 @@ function environments_drush_command() {
         'drush env prod' => 'Put the site in production mode',
       ),
     ),
+		'environments-unset' => array(
+			'aliases' => array('env-unset'),
+			'callback' => '_environments_drush_env_unset',
+			'description' => 'Un-sets your site\'s current environment.',
+		),
   );
+}
+
+/**
+ * Drush command callback.
+ *
+ * @see environments_drush_command()
+ */
+function _environments_drush_env_unset() {
+	environments_unset();
+	drush_log(t('The site\'s environment has been unset.'), 'status');
 }
 
 /**
@@ -61,7 +77,7 @@ function _environments_drush_env($env = NULL) {
 		if ($input_env = $query->execute()->fetchField()) {
 			if ($environment = environments_load($input_env)) {
 				if ($input_env != $current_env) {
-					if (drush_confirm(t('Are you sure you want to change your site\'s environment to: @env?', array('@env' => $environment->admin_title)))) {
+					if (drush_confirm(t('Are you sure you want to change your site\'s environment to: @environment?', array('@environment' => $environment->admin_title)))) {
 						environments_set($environment->name);
 						return TRUE;
 					}
@@ -71,15 +87,15 @@ function _environments_drush_env($env = NULL) {
 					}
 				}
 				else {
-					watchdog('environments', 'Environment is already set: @env', array('@env' => $environment->admin_title), WATCHDOG_INFO);
-					drush_log(t('Environment is already set: @env', array('@env' => $environment->admin_title)), 'warning');
+					watchdog('environments', 'Environment is already set: @environment', array('@environment' => $environment->admin_title), WATCHDOG_INFO);
+					drush_log(t('Environment is already set: @environment', array('@environment' => $environment->admin_title)), 'warning');
 					return TRUE;
 				}
 			}
 		}
 
-		watchdog('environments', 'Environment not defined: @env', array('@env' => $env), WATCHDOG_ERROR);
-		drush_log('Environment not defined: @env', array('@env' => $env), 'error');
+		watchdog('environments', 'Environment not defined: @environment', array('@environment' => $env), WATCHDOG_ERROR);
+		drush_log('Environment not defined: @environment', array('@environment' => $env), 'error');
 		drush_user_abort();
 		return FALSE;
   }

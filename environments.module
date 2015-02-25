@@ -172,7 +172,7 @@ function environments_theme() {
   return array(
     'environments_banner' => array(
       'template' => 'templates/banner',
-      'file' => 'env.theme.inc',
+      'file' => 'environments.theme.inc',
       'variables' => array(
         'environment' => '',
       ),

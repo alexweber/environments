@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the "module_uninstall" Env Task.
+ * Contains the "module_uninstall" Environments Task.
  */
 
 $plugin = array(

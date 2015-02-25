@@ -30,7 +30,7 @@ function environments_schema() {
 	$schema = array();
 
 	$schema['environments'] = array(
-		'description' => 'Env environments.',
+		'description' => 'Site Environments.',
 		'export' => array(
 			'key' => 'name',
 			'identifier' => 'environment',

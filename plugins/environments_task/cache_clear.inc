@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the "cache_clear" Env Task.
+ * Contains the "cache_clear" Environments Task.
  */
 
 $plugin = array(
