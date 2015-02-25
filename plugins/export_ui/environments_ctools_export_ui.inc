@@ -106,13 +106,13 @@ function environments_ctools_export_ui_form(&$form, &$form_state) {
   $form_state['environment'] = &$form_state['item'];
 
   // Load the configuration form.
-  $form = drupal_retrieve_form('env_form_environment_edit', $form_state);
+  $form = drupal_retrieve_form('environments_form_edit', $form_state);
 }
 
 /**
  * Validation handler.
  *
- * @see env_form_environment_edit()
+ * @see environments_form_edit()
  */
 function environments_ctools_export_ui_form_validate(&$form, &$form_state) {
   $alias = $form_state['values']['alias'];
@@ -146,7 +146,7 @@ function environments_ctools_export_ui_form_validate(&$form, &$form_state) {
 /**
  * Submit handler.
  *
- * @see env_form_environment_edit()
+ * @see environments_form_edit()
  */
 function environments_ctools_export_ui_form_submit(&$form, &$form_state) {
   // Edit the reference to $form_state['environment'] which will in turn

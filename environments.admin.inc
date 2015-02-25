@@ -8,7 +8,7 @@
 /**
  * Form builder; Form to edit a given environment.
  */
-function env_form_environment_edit($form, &$form_state) {
+function environments_form_edit($form, &$form_state) {
 	if (!empty($form_state['environment'])) {
 		$environment = $form_state['environment'];
 	}
