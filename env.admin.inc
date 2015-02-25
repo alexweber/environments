@@ -505,7 +505,7 @@ function env_form_site_environment($form) {
 	);
 
 	if (empty($environments_options)) {
-		$form['env']['#description'] = t("You haven't added any environments yet!");
+		$form['env']['#description'] = t("You haven't added any environments yet! Click <a href='!url'>here</a> to add one.", array('!url' => url('admin/config/development/env/add', array('absolute' => TRUE))));
 		$form['env']['#disabled'] = TRUE;
 	}
 
