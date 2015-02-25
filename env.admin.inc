@@ -42,9 +42,10 @@ function env_form_environment_edit($form, &$form_state) {
 	$form['alias'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Alias'),
-		'#description' => t('An optional alias for this environment to use with Drush. Must only contain letters.'),
+		'#description' => t('An optional alias for this environment to use with Drush. Must contain !num or less characters and use only letters.', array('!num' => ENV_ALIAS_MAXLENGTH)),
 		'#default_value' => $environment->alias,
 		'#size' => 8,
+		'#maxlength' => ENV_ALIAS_MAXLENGTH,
 	);
 
 	// Settings vertical tab group.

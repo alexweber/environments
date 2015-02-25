@@ -120,8 +120,12 @@ function env_ctools_export_ui_form_validate(&$form, &$form_state) {
   $alias = $form_state['values']['alias'];
 
   if (!empty($alias)) {
-    // First, check if alias is a valid machine name.
-    if (!ctype_alpha($alias)) {
+		// First check if alias has required length.
+		if (strlen($alias) > ENV_ALIAS_MAXLENGTH) {
+			form_set_error('alias', t('Alias must contain !num or less characters.', array('!num' => ENV_ALIAS_MAXLENGTH)));
+		}
+    // Then, check if alias is a valid machine name.
+    else if (!ctype_alpha($alias)) {
       form_set_error('alias', t('Alias must contain only letters.'));
     }
     else {
