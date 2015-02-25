@@ -129,19 +129,24 @@ function environment_task_form($form, &$form_state, $environment) {
 
 			// Prepare settings summary.
 			$settings_summary = array();
+
+			$value_type = array_key_exists('value_type', $task['settings'])
+				? $task['settings']['value_type']
+				: FALSE;
+
 			foreach ($task['settings'] as $name => $value) {
-				if ($value === TRUE) {
-					$value = 'true';
+				if (is_array($value)) {
+					$value = implode(', ', $value);
 				}
-				else {
-					if ($value === FALSE) {
-						$value = 'false';
+				else if (is_bool($value)) {
+					$value_string = $value ? t('true') : t('false');
+					$value = "<em>{$value_string}</em>";
+				}
+				else if ($name === 'value' && $value_type) {
+					if ($value_type === 'string') {
+						$value = "\"{$value}\"";
 					}
-					else {
-						if (is_array($value)) {
-							$value = implode(', ', $value);
-						}
-					}
+					// Booleans are already handled above.
 				}
 
 				$settings_summary[] = "<strong>{$name}:</strong> {$value}";
