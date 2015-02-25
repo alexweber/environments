@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Export interface plugin for Env.
+ * Export interface plugin for Environments.
  */
 
-$env_path = drupal_get_path('module', 'environments');
+$environments_path = drupal_get_path('module', 'environments');
 
 /**
  * Define this Export UI plugin.
@@ -31,7 +31,7 @@ $plugin = array(
         'page arguments' => array('environment_task_form', 5),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $env_path,
+        'file path' => $environments_path,
         'type' => MENU_LOCAL_TASK,
         'weight' => -5,
       ),
@@ -43,7 +43,7 @@ $plugin = array(
         'page arguments' => array('environment_task_form_edit', 5),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $env_path,
+        'file path' => $environments_path,
         'type' => MENU_LOCAL_ACTION,
       ),
       // Edit task form.
@@ -54,8 +54,7 @@ $plugin = array(
         'page arguments' => array('environment_task_form_edit', 5, 7),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $env_path,
-//        'type' => MENU_CALLBACK,
+        'file path' => $environments_path,
       ),
       // Delete task form.
       'task delete' => array(
@@ -65,8 +64,7 @@ $plugin = array(
         'page arguments' => array('environment_task_form_delete', 5, 7),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $env_path,
-//        'type' => MENU_CALLBACK,
+        'file path' => $environments_path,
       ),
     ),
   ),
