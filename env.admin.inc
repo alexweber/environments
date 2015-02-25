@@ -500,7 +500,8 @@ function env_form_site_environment($form) {
 		'#type' => 'select',
 		'#options' => $environments_options,
 		'#empty_option' => t('- None -'),
-		'#default_value' => variable_get('env'),
+		'#empty_value' => '',
+		'#default_value' => variable_get('env', ''),
 	);
 
 	if (empty($environments_options)) {
@@ -565,8 +566,15 @@ function env_form_site_environment_submit($form, &$form_state) {
 	$old_env = variable_get('env');
 
 	if ($new_env !== $old_env) {
-		unset($_GET['destination']);
-		$form_state['redirect'] = "admin/config/system/env/confirm/{$new_env}";
+		// If we're just removing the environment, do it.
+		if (empty($new_env)) {
+			env_unset();
+			drupal_set_message(t('The site\'s current environment has been unset.'), 'status', FALSE);
+		}
+		else {
+			unset($_GET['destination']);
+			$form_state['redirect'] = "admin/config/system/env/confirm/{$new_env}";
+		}
 	}
 }
 
@@ -611,13 +619,10 @@ function env_form_site_environment_confirm($form, &$form_state, $env) {
  */
 function env_form_site_environment_confirm_submit($form, $form_state) {
 	if ($new_env = $form_state['values']['env']) {
-		if (empty($new_env)) {
-			drupal_set_message(t('Your site\'s environment was un-set successfully.'), 'status', FALSE);
-			variable_set('env', '');
-		}
-		else {
-			env_set($new_env);
-		}
+		env_set($new_env);
+	}
+	else {
+		drupal_set_message(t('An illegal choice has been detected. Please contact the site administrator.'), 'error', FALSE);
 	}
 }
 
