@@ -84,7 +84,7 @@ $plugin = array(
 
   // Override the UI handler.
   'handler' => array(
-    'class' => 'env_ctools_export_ui_handler',
+    'class' => 'environments_ctools_export_ui_handler',
     'parent' => 'ctools_export_ui',
   ),
 

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains of env_ctools_export_ui_handler.
+ * Contains environments_ctools_export_ui_handler.
  */
 
-class env_ctools_export_ui_handler extends ctools_export_ui {
+class environments_ctools_export_ui_handler extends ctools_export_ui {
 
   /**
    * @inheritdoc
