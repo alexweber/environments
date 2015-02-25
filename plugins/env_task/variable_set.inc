@@ -101,9 +101,14 @@ function env_task_variable_set_settings($environment, $task = NULL) {
 function env_task_variable_set($settings, &$context) {
   $name = $settings['name'];
   $value = $settings['value'];
+  $value_type = $settings['value_type'];
 
   variable_set($name, $value);
 
-  // Display messages.
+	if ($value_type === 'boolean') {
+		$value = $value ? t('True') : t('False');
+	}
+
+  // Display message.
   $context['message'] = t('Set variable value @name to @value', array('@name' => $name, '@value' => $value));
 }

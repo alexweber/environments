@@ -99,9 +99,14 @@ function env_task_variable_add_settings($environment, $task = NULL) {
 function env_task_variable_add($settings, &$context) {
   $name = $settings['name'];
   $value = $settings['value'];
+	$value_type = $settings['value_type'];
 
   variable_set($name, $value);
 
-  // Display messages.
-  $context['message'] = t('Added variable value @name initialized to @value', array('@name' => $name, '@value' => $value));
+	if ($value_type === 'boolean') {
+		$value = $value ? t('True') : t('False');
+	}
+
+  // Display message.
+  $context['message'] = t('Variable value @name initialized to @value', array('@name' => $name, '@value' => $value));
 }
