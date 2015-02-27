@@ -99,7 +99,7 @@ function environments_task_module_enable($settings, &$context) {
 
 	foreach ($modules as $module) {
 		if (module_exists($module)) {
-			$messages[] = t('Can\'t enable module %module, it\'s already enabled.', array('%module' => $module));
+			$messages[] = t('No need to enable %module, it\'s already enabled.', array('%module' => $module));
 		}
 		else {
 			$modules_filtered[] = $module;

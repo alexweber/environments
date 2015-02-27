@@ -72,7 +72,7 @@ function environments_task_module_disable($settings, &$context) {
 
 	foreach ($modules as $module) {
 		if (!module_exists($module)) {
-			$messages[] = t('Can\'t disable module %module, it\'s not enabled.', array('%module' => $module));
+			$messages[] = t('No need to disable %module, it\'s not enabled.', array('%module' => $module));
 		}
 		else {
 			$modules_filtered[] = $module;
