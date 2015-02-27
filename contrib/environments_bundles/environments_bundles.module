@@ -44,7 +44,25 @@ function environments_bundles_menu() {
 		'type' => MENU_LOCAL_TASK,
 	);
 
+	$items['admin/config/development/environments-bundles/environments'] = array(
+		'title' => 'Environments',
+		'page callback' => 'drupal_goto',
+		'page arguments' => array('admin/config/development/environments'),
+		'access arguments' => array('administer environments'),
+		'type' => MENU_LOCAL_TASK,
+		'weight' => -50,
+	);
+
   return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function environments_bundles_menu_alter(&$items) {
+	if (isset($items['admin/config/development/environments-bundles/list'])) {
+		$items['admin/config/development/environments-bundles/list']['title'] = t('Task Bundles');
+	}
 }
 
 /**
