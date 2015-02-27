@@ -19,16 +19,15 @@ $plugin = array(
  *
  * Returns the settings form for this task.
  *
- * @param stdClass
- *   The current environment.
  * @param array
- *   The current task.
+ *   A copy of the form_state array.
  *
  * @return array
  *   A Form API array of task settings.
  */
-function environments_task_variable_del_settings($environment, $task = NULL) {
+function environments_task_variable_del_settings($form_state) {
 	$form = array();
+	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
 
 	$form['variables'] = array(
 		'#name' => 'settings[variables]',

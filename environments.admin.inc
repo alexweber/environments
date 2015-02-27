@@ -284,6 +284,9 @@ function environment_task_form_delete_submit($form, &$form_state) {
  * Displays add/edit task form.
  */
 function environment_task_form_edit($form, &$form_state, $environment, $task = NULL) {
+	// Attach our custom styles.
+	$form['#attached']['css'][] = drupal_get_path('module', 'environments') . '/assets/css/environments.admin.css';
+
 	// Store environment in form state for AJAX.
 	$form_state['environment'] = $environment;
 	$current_task = !empty($form_state['values']['task']) ? $form_state['values']['task'] : '';
@@ -354,8 +357,8 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 	// Build settings form.
 	if (isset($form_state['task'])) {
 		if ($callback = ctools_plugin_get_function($form_state['task'], 'settings_callback')) {
-			$settings_form = call_user_func($callback, $form_state['environment'], $form_state['task']);
-			$form['settings'] += $settings_form;
+			// Invoke task's settings form callback.
+			$form['settings'] += call_user_func($callback, $form_state);
 		}
 		else {
 			$form['settings'] += array(
@@ -367,8 +370,8 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 		if ($current_task) {
 			if ($task_info = environments_get_task($current_task)) {
 				if ($callback = ctools_plugin_get_function($task_info, 'settings_callback')) {
-					$settings_form = call_user_func($callback, $form_state['environment']);
-					$form['settings'] += $settings_form;
+					// Invoke task's settings form callback.
+					$form['settings'] += call_user_func($callback, $form_state);
 				}
 				else {
 					$form['settings'] += array(
@@ -403,6 +406,8 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
  * AJAX Callback.
  *
  * Returns task settings form.
+ *
+ * @see environment_task_form_edit()
  */
 function environments_ajax_task_settings($form, &$form_state) {
 	return $form['settings'];
