@@ -17,6 +17,8 @@ function environments_bundles_help($path, $arg) {
       break;
 		case 'admin/config/development/environments/bundles':
 			return t('Here you can manage your task bundles. Task bundles are groups of tasks that can be imported, exported and executed as a unit.');
+		case 'admin/config/development/environments/bundles/list/%/tasks':
+			return t('Here you can add to and manage all of a bundle\'s tasks. <strong>NOTE</strong>: The order in which tasks appear is the exact order in which they will run. Use the handles on the left of each one to drag them around and re-order them and then press the "Update Order" button to save the changes.');
 	}
 }
 
