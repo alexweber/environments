@@ -30,13 +30,8 @@ function environments_task_variable_set_settings($form_state) {
 	$form = array();
 	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
 
-	// Figure out default value.
-	if (isset($form_state['task']['settings']['selection'])) {
-		$selection = $form_state['task']['settings']['selection'];
-	}
-	else {
-		$selection = 'list';
-	}
+	// Always start as a list for new ones and custom when editing.
+	$selection = $task ? 'custom' : 'list';
 
 	// Override with submitted values.
 	if (isset($form_state['values']['settings']['selection'])) {
