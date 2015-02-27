@@ -71,14 +71,39 @@ function environments_task_execute_bundle_settings($form_state) {
 function environments_task_execute_bundle($settings, &$context) {
 	$bundle = $settings['name'];
 
-	// @TODO execute bundle.
+	if ($bundle_object = environments_bundles_load($bundle)) {
+		if (is_array($bundle_object->tasks)) {
+			$operations = array();
 
-	if (function_exists($bundle)) {
-		call_user_func($bundle);
-		$context['message'] = t('Executed bundle: @name()', array('@name' => $bundle));
+			foreach (element_children($bundle_object->tasks, TRUE) as $task) {
+				$task_info = $bundle_object->tasks[$task];
+				$operations[] = array('_environments_task_dispatcher', array($task_info));
+			}
+
+			if (!empty($operations)) {
+				$batch =& batch_get();
+				$batch_set = array(
+					'title' => t('Processing task bundle.'),
+					'operations' => $operations,
+					'finished' => '_environments_task_finished',
+					'init_message' => t('Preparing to execute task bundle.'),
+					'progress_message' => t('Processed @current out of @total tasks.'),
+					'error_message' => t('Error executing task bundle.'),
+					'file' => drupal_get_path('module', 'environments') . '/environments.batch.inc',
+				);
+				$index = $batch['current_set'] + 1;
+				$slice1 = array_slice($batch['sets'], 0, $index);
+				$slice2 = array_slice($batch['sets'], $index);
+				$batch['sets'] = array_merge($slice1, array($batch_set), $slice2);
+				_batch_populate_queue($batch, $index);
+			}
+			else {
+				$context['message'] = t('Task bundle has no tasks: @name()', array('@name' => $bundle_object->admin_title));
+			}
+		}
 	}
 	else {
-		$message = 'Error executing bundle: @name()';
+		$message = 'Error queueing task bundle: @name()';
 		$variables = array('@name' => $bundle);
 		watchdog('environments', $message, $variables, WATCHDOG_ERROR);
 		$context['message'] = t($message, $variables);
