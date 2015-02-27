@@ -109,23 +109,32 @@ function environments_form_delete_submit($form, &$form_state) {
  *
  * @see environments_menu()
  */
-function environment_task_form($form, &$form_state, $environment) {
-	if (is_string($environment)) {
-		$environment = environments_load($environment);
+function environments_task_form($form, &$form_state, $object) {
+	if ($object->table === 'environments_bundles') {
+		$load_callback = 'environments_bundles_load';
+		$export_ui_name = 'environments_bundles';
+	}
+	else {
+		$load_callback = 'environments_load';
+		$export_ui_name = 'environments';
 	}
 
-	$form_state['environment'] = $environment;
+	if (is_string($object)) {
+		$object = call_user_func($load_callback, $object);
+	}
+
+	$form_state['object'] = $object;
 
 	// List tasks.
-	if (is_object($environment) && !empty($environment->tasks)) {
+	if (is_object($object) && !empty($object->tasks)) {
 		$all_tasks = environments_get_tasks();
 
 		$form['tasks'] = array(
 			'#tree' => TRUE,
 		);
 
-		foreach (element_children($environment->tasks) as $id) {
-			$task = $environment->tasks[$id];
+		foreach (element_children($object->tasks) as $id) {
+			$task = $object->tasks[$id];
 
 			// Prepare settings summary.
 			$settings_summary = array();
@@ -153,8 +162,8 @@ function environment_task_form($form, &$form_state, $environment) {
 			}
 
 			ctools_include('export');
-			$plugin = ctools_get_export_ui('environments_ctools_export_ui');
-			$path = ctools_export_ui_plugin_menu_path($plugin, 'tasks', $environment->name);
+			$plugin = ctools_get_export_ui($export_ui_name);
+			$path = ctools_export_ui_plugin_menu_path($plugin, 'tasks', $object->name);
 			$destination = drupal_get_destination();
 
 			// Prepare operations links
@@ -217,26 +226,29 @@ function environment_task_form($form, &$form_state, $environment) {
  *
  * Saves updated order for Tasks.
  *
- * @see environment_task_form()
+ * @see environments_task_form()
  */
-function environment_task_form_submit($form, &$form_state) {
-	$environment = $form_state['environment'];
+function environments_task_form_submit($form, &$form_state) {
+	$object = $form_state['object'];
 
 	foreach ($form_state['values']['tasks'] as $id => $data) {
-		$environment->tasks[$id]['#weight'] = $data['weight'];
+		$object->tasks[$id]['#weight'] = $data['weight'];
 	}
 
 	// Sort tasks by new weights.
-	uasort($environment->tasks, 'element_sort');
+	uasort($object->tasks, 'element_sort');
 
-	if (environments_save($environment)) {
+	$save_callback = $object->table === 'environments_bundles'
+		? 'environments_bundles_save'
+		: 'environments_save';
+
+	if (call_user_func($save_callback, $object)) {
 		drupal_set_message(t('Task order updated!'), 'status', FALSE);
 	}
 	else {
 		drupal_set_message(t('Error updating task order.'), 'error', FALSE);
-		watchdog('environments', 'Error updating task order for environment: @name', array('@name' => $environment->admin_title), WATCHDOG_ERROR);
+		watchdog('environments', 'Error updating task order for: @name', array('@name' => $object->admin_title), WATCHDOG_ERROR);
 	}
-
 }
 
 /**
@@ -244,7 +256,7 @@ function environment_task_form_submit($form, &$form_state) {
  *
  * Displays delete task form.
  */
-function environment_task_form_delete($form, &$form_state, $environment, $task) {
+function environments_task_form_delete($form, &$form_state, $environment, $task) {
 	$form_state['environment'] = $environment;
 	$form_state['task'] = $task;
 
@@ -260,9 +272,9 @@ function environment_task_form_delete($form, &$form_state, $environment, $task) 
 /**
  * Submit callback.
  *
- * @see environment_task_form_delete()
+ * @see environments_task_form_delete()
  */
-function environment_task_form_delete_submit($form, &$form_state) {
+function environments_task_form_delete_submit($form, &$form_state) {
 	$environment = $form_state['environment'];
 	$task = $form_state['task'];
 
@@ -283,7 +295,7 @@ function environment_task_form_delete_submit($form, &$form_state) {
  *
  * Displays add/edit task form.
  */
-function environment_task_form_edit($form, &$form_state, $environment, $task = NULL) {
+function environments_task_form_edit($form, &$form_state, $environment, $task = NULL) {
 	// Attach our custom styles.
 	$form['#attached']['css'][] = drupal_get_path('module', 'environments') . '/assets/css/environments.admin.css';
 
@@ -396,8 +408,8 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 		'#markup' => l(t('Cancel'), $path, array('absolute' => TRUE)),
 	);
 
-	$form['#submit'][] = 'environment_task_form_edit_submit';
-	$form['#submit'][] = 'environment_task_form_edit_submit_redirect';
+	$form['#submit'][] = 'environments_task_form_edit_submit';
+	$form['#submit'][] = 'environments_task_form_edit_submit_redirect';
 
 	return $form;
 }
@@ -407,7 +419,7 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
  *
  * Returns task settings form.
  *
- * @see environment_task_form_edit()
+ * @see environments_task_form_edit()
  */
 function environments_ajax_task_settings($form, &$form_state) {
 	return $form['settings'];
@@ -416,9 +428,9 @@ function environments_ajax_task_settings($form, &$form_state) {
 /**
  * Submit callback.
  *
- * @see environment_task_form_edit()
+ * @see environments_task_form_edit()
  */
-function environment_task_form_edit_submit($form, &$form_state) {
+function environments_task_form_edit_submit($form, &$form_state) {
 	$environment = $form_state['environment'];
 	$new_task = $form_state['values']['task'];
 	$new_settings = array_key_exists('settings', $form_state['values'])
@@ -478,9 +490,9 @@ function environment_task_form_edit_submit($form, &$form_state) {
 /**
  * Submit callback.
  *
- * @see environment_task_form_edit()
+ * @see environments_task_form_edit()
  */
-function environment_task_form_edit_submit_redirect($form, &$form_state) {
+function environments_task_form_edit_submit_redirect($form, &$form_state) {
 	$env = $form_state['environment'];
 	$form_state['redirect'] = "admin/config/development/environments/list/{$env->name}/tasks";
 

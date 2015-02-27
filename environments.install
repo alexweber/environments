@@ -37,10 +37,10 @@ function environments_schema() {
 		'export' => array(
 			'key' => 'name',
 			'identifier' => 'environment',
-			'default hook' => 'environments_default_environments',
+			'default hook' => 'default_environments_environments',
 			'api' => array(
 				'owner' => 'environments',
-				'api' => 'environments',
+				'api' => 'default_environments_environments',
 				'minimum_version' => 1,
 				'current_version' => 1,
 			),

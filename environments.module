@@ -177,7 +177,7 @@ function environments_theme() {
         'environment' => '',
       ),
     ),
-    'environment_task_form' => array(
+    'environments_task_form' => array(
       'render element' => 'form',
       'file' => 'environments.theme.inc',
     )
@@ -223,7 +223,10 @@ function environments_ctools_plugin_type() {
  */
 function environments_ctools_plugin_api($module, $api) {
 	if ($module === 'environments') {
-		if ($api === 'environments_task') {
+		if ($api === 'environments') {
+			return array('version' => 1);
+		}
+		else if ($api === 'environments_task') {
 			return array('version' => 1);
 		}
 	}

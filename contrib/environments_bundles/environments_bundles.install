@@ -16,10 +16,10 @@ function environments_bundles_schema() {
 		'export' => array(
 			'key' => 'name',
 			'identifier' => 'bundle',
-			'default hook' => 'environments_default_bundles',
+			'default hook' => 'default_environments_bundles',
 			'api' => array(
-				'owner' => 'environments',
-				'api' => 'bundles',
+				'owner' => 'environments_bundles',
+				'api' => 'default_environments_bundles',
 				'minimum_version' => 1,
 				'current_version' => 1,
 			),
