@@ -30,17 +30,18 @@ function environments_task_variable_set_settings($form_state) {
 	$form = array();
 	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
 
-	// Figure out default value.
-	if (isset($form_state['task']['settings']['selection'])) {
-		$selection = $form_state['task']['settings']['selection'];
-	}
-	else {
-		$selection = 'list';
-	}
+	$selection = isset($form_state['values']['settings']['selection'])
+		? $form_state['values']['settings']['selection']
+		: FALSE;
 
-	// Override with submitted values.
-	if (isset($form_state['values']['settings']['selection'])) {
-		$selection = $form_state['values']['settings']['selection'];
+	// Always start as a list for new ones and custom when editing.
+	if (!$selection) {
+		if ($task) {
+			$selection = 'custom';
+		}
+		else {
+			$selection = 'list';
+		}
 	}
 
 	$form['selection'] = array(
@@ -65,8 +66,8 @@ function environments_task_variable_set_settings($form_state) {
 		'#suffix' => '</div>',
 		'#name' => 'settings[name]',
 		'#title' => t('Variable name'),
-		'#description' => t('If the variable you\'re looking for isn\'t in this list, try using the "Specify manually" selection mode.'),
 		'#required' => TRUE,
+		'#element_validate' => array('_environments_task_variable_set_validate_name'),
 	);
 
 	if ($selection === 'list') {
@@ -75,15 +76,17 @@ function environments_task_variable_set_settings($form_state) {
 		$form['name']['#options'] = drupal_map_assoc(_environments_get_variables());
 		$form['name']['#empty_option'] = t(' -Select a variable- ');
 		$form['name']['#default_value'] = isset($task['settings']['name']) ? (array) $task['settings']['name'] : array();
+		$form['name']['#description'] = t('If the variable you\'re looking for isn\'t in this list, try using the "Specify manually" selection mode.');
 	}
 	else if ($selection === 'custom') {
 		$form['name']['#type'] = 'textfield';
 		$form['name']['#maxlength'] = 255;
 		$form['name']['#size'] = 40;
 		$form['name']['#default_value'] = isset($task['settings']['name']) ? (string) $task['settings']['name'] : '';
+		$form['name']['#description'] = t('Variable names must start with a letter, consist only of letters, numbers and underscores and be all in lower-case.');
 	}
 
-	$default_value = array_key_exists('value', $task['settings'])
+	$default_value = isset($task['settings']) && array_key_exists('value', $task['settings'])
 		? $task['settings']['value']
 		: '';
 
@@ -116,6 +119,7 @@ function environments_task_variable_set_settings($form_state) {
 			'boolean' => t('Boolean'),
 			'integer' => t('Integer'),
 			'float' => t('Float'),
+			'serialized' => t('Serialized'),
 		),
 		'#ajax' => array(
 			'callback' => 'environments_ajax_task_settings_variable_set_value',
@@ -147,6 +151,9 @@ function environments_task_variable_set_settings($form_state) {
 		$form['value']['#type'] = $type;
 		$form['value']['#size'] = 20;
 	}
+	else if ($value_type === 'serialized') {
+		$form['value']['#type'] = 'textarea';
+	}
 	else {
 		$form['value']['#type'] = 'textfield';
 		$form['value']['#size'] = 40;
@@ -171,17 +178,26 @@ function environments_task_variable_set($settings, &$context) {
 	$value = $settings['value'];
 	$value_type = $settings['value_type'];
 
-	variable_set($name, $value);
-
+	// Preprocess value & format display value.
 	if ($value_type === 'boolean') {
-		$value = $value ? t('True') : t('False');
+		$value_display = $value ? t('True') : t('False');
 	}
 	else if ($value_type === 'string') {
-		$value = "\"{$value}\"";
+		$value_display = "\"{$value}\"";
+	}
+	else if ($value_type === 'serialized') {
+		$value = unserialize($value);
+		$value_display = var_export($value, TRUE);
+	}
+	else {
+		$value_display = $value;
 	}
 
+	// Set variable.
+	variable_set($name, $value);
+
 	// Display message.
-	$context['message'] = t('Set variable "@name" value to: @value', array('@name' => $name, '@value' => $value));
+	$context['message'] = t('Set variable "@name" value to !value', array('@name' => $name, '!value' => $value_display));
 }
 
 /**

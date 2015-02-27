@@ -48,6 +48,22 @@ function _environments_task_cleanup($operation, $env, &$context) {
 }
 
 /**
+ * Batch API operation callback.
+ *
+ * Flush Drupal's caches. This is a lightweight replacement for the cleanup
+ * task, which isn't suitable for Task Bundles.
+ *
+ * This is called automatically as the last step for task bundle batch
+ * operations.
+ *
+ * @see environments_task_execute_bundle()
+ */
+function _environments_task_flush($operation, &$context) {
+	$context['message'] = t('@operation', array('@operation' => $operation));
+	drupal_flush_all_caches();
+}
+
+/**
  * Batch API finished callback.
  *
  * @see environments_set()
@@ -72,4 +88,5 @@ function _environments_task_finished($success, $results, $operations) {
 		'@arguments' => print_r($error_operation[1], TRUE)
 	));
 	drupal_set_message($message, 'error');
+	watchdog('environments', $message, array(), WATCHDOG_ERROR);
 }

@@ -14,60 +14,69 @@ define('ENVIRONMENTS_ALIAS_MAXLENGTH', 12);
  * Implements hook_permission().
  */
 function environments_permission() {
-  return array(
-    'administer environments' => array(
-      'title' => t('Administer Site Environments'),
-      'description' => t('Administer the Environments module.'),
+	return array(
+		'administer environments' => array(
+			'title' => t('Administer Site Environments'),
+			'description' => t('Administer the Environments module.'),
 			'restrict access' => TRUE,
-    ),
-    'view environments notifications' => array(
-      'title' => t('View Environments notifications'),
-      'description' => t('View notifications about what the current environment is.'),
-    ),
-  );
+		),
+		'view environments notifications' => array(
+			'title' => t('View Environments notifications'),
+			'description' => t('View notifications about what the current environment is.'),
+		),
+	);
 }
 
 /**
  * Implements hook_menu().
  */
 function environments_menu() {
-  $items = array();
+	$items = array();
 
-  $items['admin/config/system/environments'] = array(
-    'title' => 'Site environment',
-    'description' => 'Manage the current site environment.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('environments_form_site'),
-    'access arguments' => array('administer environments'),
-    'file' => 'environments.admin.inc',
-  );
+	$items['admin/config/system/environments'] = array(
+		'title' => 'Site environment',
+		'description' => 'Manage the current site environment.',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('environments_form_site'),
+		'access arguments' => array('administer environments'),
+		'file' => 'environments.admin.inc',
+	);
 
-  $items['admin/config/system/environments/confirm/%'] = array(
-    'title' => 'Confirm site environment change',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('environments_form_site_confirm', 5),
-    'access arguments' => array('administer environments'),
-    'file' => 'environments.admin.inc',
-  );
+	$items['admin/config/system/environments/confirm/%'] = array(
+		'title' => 'Confirm site environment change',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('environments_form_site_confirm', 5),
+		'access arguments' => array('administer environments'),
+		'file' => 'environments.admin.inc',
+	);
 
-  return $items;
+	return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function environments_menu_alter(&$items) {
+	if (isset($items['admin/config/development/environments/list'])) {
+		$items['admin/config/development/environments/list']['title'] = t('Environments');
+	}
 }
 
 /**
  * Implements hook_help().
  */
 function environments_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#environments':
+	switch ($path) {
+		case 'admin/help#environments':
 			$path = drupal_get_path('module', 'environments');
 			return file_get_contents("{$path}/README.txt");
-    case 'admin/config/system/environments':
-      return t('Here you can view and change the current environment, as well as manage other settings. To manage defined environments, go <a href="!url">here</a>.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE))));
-    case 'admin/config/development/environments':
-      return t('Here you can manage your environments and tasks. To change the current environment or manage other settings, go <a href="!url">here</a>.', array('!url' => url('admin/config/system/environments', array('absolute' => TRUE))));
+		case 'admin/config/system/environments':
+			return t('Here you can view and change the current environment, as well as manage other settings. To manage defined environments, go <a href="!url">here</a>.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE))));
+		case 'admin/config/development/environments':
+			return t('Here you can manage your environments and tasks. To change the current environment or manage other settings, go <a href="!url">here</a>.', array('!url' => url('admin/config/system/environments', array('absolute' => TRUE))));
 		case 'admin/config/development/environments/list/%/tasks':
 			return t('Here you can add to and manage all of an environment\'s tasks. <strong>NOTE</strong>: The order in which tasks appear is the exact order in which they will run. Use the handles on the left of each one to drag them around and re-order them and then press the "Update Order" button to save the changes.');
-  }
+	}
 }
 
 /**
@@ -77,8 +86,8 @@ function environments_help($path, $arg) {
  *   An environment machine_name.
  */
 function environments_set($env) {
-  if ($environment = environments_load($env)) {
-    $operations = array();
+	if ($environment = environments_load($env)) {
+		$operations = array();
 
 		if (is_array($environment->tasks)) {
 			// Add tasks in order. We use a dispatcher function to allow operation
@@ -86,41 +95,47 @@ function environments_set($env) {
 			// file right now.
 			foreach (element_children($environment->tasks, TRUE) as $task) {
 				$task_info = $environment->tasks[$task];
-				$operations[] = array('_environments_task_dispatcher', array($task_info));
+				$operations[] = array(
+					'_environments_task_dispatcher',
+					array($task_info)
+				);
 			}
 		}
 
 		// Always run our cleanup operation last to set the context for status
-		// messages and clean caches.
-		$operations[] = array('_environments_task_cleanup', array(t('Cleaning up.'), $env));
+		// messages and then flush caches for the grand finale.
+		$operations[] = array(
+			'_environments_task_cleanup',
+			array(t('Cleaning up.'), $env)
+		);
 
-    // Setup batch.
-    $batch = array(
-      'title' => t('Setting up environment.'),
-      'operations' => $operations,
-      'finished' => '_environments_task_finished',
-      'init_message' => t('Preparing to set environment.'),
-      'progress_message' => t('Processed @current out of @total tasks.'),
-      'error_message' => t('Error setting environent.'),
-      'file' => drupal_get_path('module', 'environments') . '/environments.batch.inc',
-    );
+		// Setup batch.
+		$batch = array(
+			'title' => t('Setting up environment.'),
+			'operations' => $operations,
+			'finished' => '_environments_task_finished',
+			'init_message' => t('Preparing to set environment.'),
+			'progress_message' => t('Processed @current out of @total tasks.'),
+			'error_message' => t('Error setting environent.'),
+			'file' => drupal_get_path('module', 'environments') . '/environments.batch.inc',
+		);
 
-    batch_set($batch);
+		batch_set($batch);
 
-    // If running through CLI, process batch using Drush.
-    if (php_sapi_name() === 'cli' && function_exists('drush_backend_batch_process')) {
-      $batch =& batch_get();
-      $batch['progressive'] = FALSE;
+		// If running through CLI, process batch using Drush.
+		if (php_sapi_name() === 'cli' && function_exists('drush_backend_batch_process')) {
+			$batch =& batch_get();
+			$batch['progressive'] = FALSE;
 			drush_backend_batch_process();
-    }
-    else {
-      batch_process('admin/config/system/environments');
-    }
-  }
-  else {
-    drupal_set_message(t('Trying to set invalid environment: %name', array('%name' => $env)), 'error', FALSE);
-    watchdog('environments', 'Trying to set invalid environment: %name', array('%name' => $env), WATCHDOG_ERROR);
-  }
+		}
+		else {
+			batch_process('admin/config/system/environments');
+		}
+	}
+	else {
+		drupal_set_message(t('Trying to set invalid environment: %name', array('%name' => $env)), 'error', FALSE);
+		watchdog('environments', 'Trying to set invalid environment: %name', array('%name' => $env), WATCHDOG_ERROR);
+	}
 }
 
 /**
@@ -135,53 +150,53 @@ function environments_unset() {
  * Implements hook_page_build().
  */
 function environments_page_build(&$page) {
-  if ($env = variable_get('environments_env')) {
-    if ($environment = environments_load($env)) {
-      // Check if we want to notify in this environment.
-      if ($environment->settings['notify']) {
-        // Check whether user has access to view notifications. This is done so
-        // late because it's the most expensive check we do, so we try to avoid
-        // it whenver possible.
-        if (user_access('view environments notifications')) {
-          $path = drupal_get_path('module', 'environments');
+	if ($env = variable_get('environments_env')) {
+		if ($environment = environments_load($env)) {
+			// Check if we want to notify in this environment.
+			if ($environment->settings['notify']) {
+				// Check whether user has access to view notifications. This is done so
+				// late because it's the most expensive check we do, so we try to avoid
+				// it whenver possible.
+				if (user_access('view environments notifications')) {
+					$path = drupal_get_path('module', 'environments');
 
-          $page['page_top']['environments'] = array(
-            '#theme' => 'environments_banner',
-            '#environment' => $env,
-          );
+					$page['page_top']['environments'] = array(
+						'#theme' => 'environments_banner',
+						'#environment' => $env,
+					);
 
-          // Include default styles.
-          if (variable_get('environments_css', TRUE)) {
-            $page['page_top']['environments']['#attached']['css'][] = $path . '/assets/css/environments.css';
-          }
+					// Include default styles.
+					if (variable_get('environments_css', TRUE)) {
+						$page['page_top']['environments']['#attached']['css'][] = $path . '/assets/css/environments.css';
+					}
 
-          // Include default scripts.
-          if (variable_get('environments_js', TRUE)) {
-            $page['page_top']['environments']['#attached']['js'][] = $path . '/assets/js/environments.js';
-          }
-        }
-      }
-    }
-  }
+					// Include default scripts.
+					if (variable_get('environments_js', TRUE)) {
+						$page['page_top']['environments']['#attached']['js'][] = $path . '/assets/js/environments.js';
+					}
+				}
+			}
+		}
+	}
 }
 
 /**
  * Implements hook_theme().
  */
 function environments_theme() {
-  return array(
-    'environments_banner' => array(
-      'template' => 'templates/banner',
-      'file' => 'environments.theme.inc',
-      'variables' => array(
-        'environment' => '',
-      ),
-    ),
-    'environment_task_form' => array(
-      'render element' => 'form',
-      'file' => 'environments.theme.inc',
-    )
-  );
+	return array(
+		'environments_banner' => array(
+			'template' => 'templates/banner',
+			'file' => 'environments.theme.inc',
+			'variables' => array(
+				'environment' => '',
+			),
+		),
+		'environments_task_form' => array(
+			'render element' => 'form',
+			'file' => 'environments.theme.inc',
+		)
+	);
 }
 
 /**
@@ -191,8 +206,10 @@ function environments_ctools_plugin_directory($module, $type) {
 	if ($type === 'export_ui') {
 		return 'plugins/export_ui';
 	}
-	else if ($type === 'environments_task') {
-		return 'plugins/environments_task';
+	else {
+		if ($type === 'environments_task') {
+			return 'plugins/environments_task';
+		}
 	}
 }
 
@@ -222,13 +239,8 @@ function environments_ctools_plugin_type() {
  * Implements hook_ctools_plugin_api().
  */
 function environments_ctools_plugin_api($module, $api) {
-	if ($module === 'environments') {
-		if ($api === 'environments') {
-			return array('version' => 1);
-		}
-		else if ($api === 'environments_task') {
-			return array('version' => 1);
-		}
+	if ($module === 'environments' && $api === 'environments_task') {
+		return array('version' => 1);
 	}
 }
 
@@ -300,8 +312,8 @@ function environments_create($values = array()) {
 }
 
 /**
- * Fetches all environments from the database and returns them as an associative
- * array.
+ * Fetches all environments from the database and returns them as an
+ * associative array.
  */
 function environments_load_all() {
 	ctools_include('export');
@@ -309,7 +321,7 @@ function environments_load_all() {
 }
 
 /**
- * Load a given environment,
+ * Load a given environment.
  *
  * @param string
  *   The environment's name.
@@ -364,6 +376,18 @@ function environments_delete($environment) {
 }
 
 /**
+ * Element validation callback; type-casts the submitted name.
+ *
+ * @see environments_task_variable_set_settings()
+ */
+function _environments_task_variable_set_validate_name($element, &$form_state, $form) {
+	$name = $form_state['values']['settings']['name'];
+	if (!preg_match('/^[a-z]+[a-z0-9\_]*$/', $name)) {
+		form_error($element, t('Invalid variable name.'));
+	}
+}
+
+/**
  * Element validation callback; type-casts the submitted value.
  *
  * @see environments_task_variable_set_settings()
@@ -389,6 +413,8 @@ function _environments_task_variable_set_validate_value($element, &$form_state, 
 		form_set_value($element, $value, $form_state);
 	}
 
-	// Remove helper setting.
-	unset($form_state['values']['value_type']);
+	// Remove helper setting if we're submitting the form.
+	if ($form_state['submitted']) {
+		unset($form_state['values']['settings']['selection']);
+	}
 }

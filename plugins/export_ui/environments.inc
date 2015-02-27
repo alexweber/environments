@@ -5,7 +5,7 @@
  * Export interface plugin for Environments.
  */
 
-$environments_path = drupal_get_path('module', 'environments');
+$module_path = drupal_get_path('module', 'environments');
 
 /**
  * Define this Export UI plugin.
@@ -28,10 +28,10 @@ $plugin = array(
         'path' => 'list/%ctools_export_ui/tasks',
         'title' => 'Manage Tasks',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('environment_task_form', 5),
+        'page arguments' => array('environments_task_form', 5),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $environments_path,
+        'file path' => $module_path,
         'type' => MENU_LOCAL_TASK,
         'weight' => -5,
       ),
@@ -40,10 +40,10 @@ $plugin = array(
         'path' => 'list/%ctools_export_ui/tasks/add',
         'title' => 'Add Task',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('environment_task_form_edit', 5),
+        'page arguments' => array('environments_task_form_edit', 5),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $environments_path,
+        'file path' => $module_path,
         'type' => MENU_LOCAL_ACTION,
       ),
       // Edit task form.
@@ -51,20 +51,20 @@ $plugin = array(
         'path' => 'list/%ctools_export_ui/tasks/%/edit',
         'title' => 'Edit Task',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('environment_task_form_edit', 5, 7),
+        'page arguments' => array('environments_task_form_edit', 5, 7),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $environments_path,
+        'file path' => $module_path,
       ),
       // Delete task form.
       'task delete' => array(
         'path' => 'list/%ctools_export_ui/tasks/%/delete',
         'title' => 'Delete Task',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('environment_task_form_delete', 5, 7),
+        'page arguments' => array('environments_task_form_delete', 5, 7),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $environments_path,
+        'file path' => $module_path,
       ),
     ),
   ),
@@ -84,7 +84,7 @@ $plugin = array(
 
   // Override the UI handler.
   'handler' => array(
-    'class' => 'environments_ctools_export_ui_handler',
+    'class' => 'environments_environments_ctools_export_ui_handler',
     'parent' => 'ctools_export_ui',
   ),
 

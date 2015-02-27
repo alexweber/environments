@@ -47,8 +47,13 @@ function environments_drush_command() {
  * @see environments_drush_command()
  */
 function _environments_drush_env_unset() {
-	environments_unset();
-	drush_log(t('The site\'s environment has been unset.'), 'status');
+	if (drush_confirm(t('Are you sure you want to unset your site\'s environment?'))) {
+		environments_unset();
+		drush_log(t('Your site\'s environment has been unset.'), 'status');
+	}
+	else {
+		drush_user_abort();
+	}
 }
 
 /**
