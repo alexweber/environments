@@ -1,0 +1,12 @@
+name = Environments Example
+description = Provides example configurations for Environments and Task Bundles.
+core = 7.x
+package = Example modules
+dependencies[] = ctools
+dependencies[] = environments
+dependencies[] = environments_bundles
+features[ctools][] = environments:default_environments_environments:1
+features[ctools][] = environments_bundles:default_environments_bundles:1
+features[environments][] = demo_environment
+features[environments_bundles][] = demo_bundle
+features[features_api][] = api:2

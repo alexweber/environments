@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Environments Example feature.
+ */
+
+include_once 'environments_example.features.inc';
