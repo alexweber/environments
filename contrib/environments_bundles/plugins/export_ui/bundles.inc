@@ -5,7 +5,7 @@
  * Export interface plugin for Environment Task Bundles.
  */
 
-$module_path = drupal_get_path('module', 'environments');
+$module_path = drupal_get_path('module', 'environments_bundles');
 
 /**
  * Define this Export UI plugin.
@@ -16,9 +16,9 @@ $plugin = array(
 
   // Define the menu item.
   'menu' => array(
-    'menu prefix' => 'admin/config/development/environments',
-    'menu item' => 'bundles',
-    'menu title' => 'Task Bundles',
+    'menu prefix' => 'admin/config/development',
+    'menu item' => 'environments-bundles',
+    'menu title' => 'Environments Task Bundles',
     'menu description' => 'Manage task bundles.',
 
     // Add extra menu items.
@@ -30,7 +30,7 @@ $plugin = array(
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form', 5),
         'access arguments' => array('administer environments'),
-        'file' => 'environments.admin.inc',
+        'file' => 'environments_bundles.admin.inc',
         'file path' => $module_path,
         'type' => MENU_LOCAL_TASK,
         'weight' => -5,
@@ -42,7 +42,7 @@ $plugin = array(
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form_edit', 5),
         'access arguments' => array('administer environments'),
-        'file' => 'environments.admin.inc',
+        'file' => 'environments_bundles.admin.inc',
         'file path' => $module_path,
         'type' => MENU_LOCAL_ACTION,
       ),
@@ -53,7 +53,7 @@ $plugin = array(
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form_edit', 5, 7),
         'access arguments' => array('administer environments'),
-        'file' => 'environments.admin.inc',
+        'file' => 'environments_bundles.admin.inc',
         'file path' => $module_path,
       ),
       // Delete task form.
@@ -63,7 +63,7 @@ $plugin = array(
         'page callback' => 'drupal_get_form',
         'page arguments' => array('environment_task_form_delete', 5, 7),
         'access arguments' => array('administer environments'),
-        'file' => 'environments.admin.inc',
+        'file' => 'environments_bundles.admin.inc',
         'file path' => $module_path,
       ),
     ),
@@ -99,7 +99,7 @@ $plugin = array(
  */
 function environments_ctools_export_ui_form_bundles(&$form, &$form_state) {
   // Load the admin form include.
-  module_load_include('inc', 'environments', 'environments.admin');
+  module_load_include('inc', 'environments', 'environments_bundles.admin');
 
   // Make environment reference in form_state.
   $form_state['bundle'] = &$form_state['item'];

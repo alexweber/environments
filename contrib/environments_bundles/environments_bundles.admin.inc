@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * @file
+ * Administration pages.
+ */
+

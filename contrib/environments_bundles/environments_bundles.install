@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function environments_bundles_schema() {
+	$schema = array();
+
+	$schema['environments_bundles'] = array(
+		'description' => 'Environment Task Bundles.',
+		'export' => array(
+			'key' => 'name',
+			'identifier' => 'bundle',
+			'default hook' => 'environments_default_bundles',
+			'api' => array(
+				'owner' => 'environments',
+				'api' => 'bundles',
+				'minimum_version' => 1,
+				'current_version' => 1,
+			),
+		),
+		'fields' => array(
+			'name' => array(
+				'description' => 'The bundle\'s machine-readable name.',
+				'type' => 'varchar',
+				'length' => 255,
+				'not null' => TRUE,
+			),
+			'description' => array(
+				'description' => 'The bundle\'s description.',
+				'type' => 'text',
+				'size' => 'big',
+			),
+			'tasks' => array(
+				'description' => 'The bundle\'s tasks.',
+				'type' => 'blob',
+				'size' => 'big',
+				'serialize' => TRUE,
+			),
+		),
+		'primary key' => array('name'),
+	);
+
+  return $schema;
+}

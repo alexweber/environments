@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * @file
+ * Environments Task Bundles module.
+ */
+
+
+/**
+ * Implements hook_help().
+ */
+function environments_bundles_help($path, $arg) {
+	switch ($path) {
+		case 'admin/help#environments_bundles':
+			$path = drupal_get_path('module', 'environments_bundles');
+			return file_get_contents("{$path}/README.txt");
+      break;
+		case 'admin/config/development/environments/bundles':
+			return t('Here you can manage your task bundles. Task bundles are pre-configured groups of tasks that can be imported and exported as a unit and also included as tasks themselves.');
+	}
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function environments_bundles_ctools_plugin_directory($module, $type) {
+	if ($type === 'export_ui') {
+		return 'plugins/export_ui';
+	}
+}
+
+/**
+ * Create a new task bundle object
+ *
+ * Note that this function does not save the bundle to the database.
+ * @see environments_bundles_save()
+ */
+function environments_bundles_create($values = array()) {
+	ctools_include('export');
+	$bundle = ctools_export_crud_new('environments_bundles');
+
+	// Default name.
+	if (isset($values['name'])) {
+		$bundle->name = $values['name'];
+	}
+
+	// Default description.
+	$bundle->description = $values['description'];
+
+	// Default tasks.
+	$bundle->tasks = array();
+
+	if (isset($values['tasks']) and is_array($values['tasks'])) {
+		$bundle->tasks = array_merge($values['tasks'], $bundle->tasks);
+	}
+
+	return $bundle;
+}
+
+/**
+ * Fetches all environments bundles from the database and returns them as an
+ * associative array.
+ */
+function environments_bundles_load_all() {
+	ctools_include('export');
+	return ctools_export_crud_load_all('environments_bundles');
+}
+
+/**
+ * Load a given environment bundle.
+ *
+ * @param string
+ *   The environment bundle's name.
+ *
+ * @return stdClass|NULL
+ *   The fully-loaded environment bundle object or NULL if it couldn't be loaded.
+ */
+function environments_bundles_load($bundle_name) {
+	ctools_include('export');
+	return ctools_export_crud_load('environments_bundles', $bundle_name);
+}
+
+/**
+ * Checks whether an environment bundle with the given name already exists.
+ *
+ * @param string
+ *   The environment bundle's name.
+ * @return boolean
+ *   TRUE if there exists an environment bundle with the give name, FALSE
+ *   otherwise.
+ */
+function environments_bundles_exists($bundle_name) {
+	ctools_include('export');
+	$bundle = ctools_export_crud_load('environments_bundles', $bundle_name);
+	return isset($bundle->name);
+}
+
+/**
+ * Saves the given environment to the database.
+ *
+ * @param object
+ *   The environment to save.
+ *
+ * @return object|boolean
+ *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
+ *   SAVED_UPDATED is returned depending on the operation performed. The
+ *   $object parameter contains values for any serial fields defined.
+ */
+function environments_bundles_save(&$environment) {
+	ctools_include('export');
+	return ctools_export_crud_save('environments_bundles', $environment);
+}
+
+/**
+ * Deletes the given environment from the database.
+ *
+ * @param object
+ *   The environment object to delete.
+ */
+function environments_bundles_delete($environment) {
+	ctools_include('export');
+	return ctools_export_crud_delete('environments_bundles', $environment);
+}
