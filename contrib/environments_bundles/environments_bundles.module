@@ -8,7 +8,7 @@
 /**
  * Implements hook_permission().
  */
-function environments_permission() {
+function environments_bundles_permission() {
 	return array(
 		'execute environments bundles' => array(
 			'title' => t('Manually execute environments task bundles'),
