@@ -64,7 +64,7 @@ function environments_bundles_form_delete($form, &$form_state, $bundle) {
 			'@action' => t(drupal_strtolower($op)),
 			'%admin_title' => $bundle->admin_title
 		)),
-		'admin/config/development/environments/bundles',
+		'admin/config/development/environments-bundles',
 		NULL,
 		t($op), t('Cancel')
 	);
@@ -81,5 +81,5 @@ function environments_bundles_form_delete_submit($form, &$form_state) {
 	ctools_export_crud_delete('environments_bundles', $bundle);
 
 	drupal_set_message(t('Task bundle %admin_title was ' . $op . '.', array('%admin_title' => $bundle->admin_title)));
-	$form_state['redirect'] = 'admin/config/development/environments/bundles';
+	$form_state['redirect'] = 'admin/config/development/environments-bundles';
 }

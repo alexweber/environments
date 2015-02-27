@@ -2,6 +2,6 @@ name = Environments Task Bundles
 description = Provides exportable Task Bundles for Environments.
 dependencies[] = ctools
 dependencies[] = environments
-configure = admin/config/development/environments/bundles
+configure = admin/config/development/environments-bundles
 package = Administration
 core = 7.x
