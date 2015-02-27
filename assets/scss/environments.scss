@@ -58,6 +58,11 @@
 	background: #FFC926;
   }
 
+  &.demo,
+  &.test {
+	background: #2d6fff;
+  }
+
   &.prd,
   &.prod,
   &.production {

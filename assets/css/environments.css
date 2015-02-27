@@ -44,10 +44,14 @@
   background: #FFC926;
 }
 /* line 61, ../scss/environments.scss */
+#environments-notify.demo, #environments-notify.test {
+  background: #2d6fff;
+}
+/* line 66, ../scss/environments.scss */
 #environments-notify.prd, #environments-notify.prod, #environments-notify.production {
   background: #FF2626;
 }
-/* line 66, ../scss/environments.scss */
+/* line 71, ../scss/environments.scss */
 #environments-notify.prd .message, #environments-notify.prd .message, #environments-notify.prd .message, #environments-notify.prod .message, #environments-notify.prod .message, #environments-notify.prod .message, #environments-notify.production .message, #environments-notify.production .message, #environments-notify.production .message {
   color: white;
   text-shadow: 1px 1px 1px black;
