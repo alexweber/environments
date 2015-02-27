@@ -8,11 +8,12 @@
 
   div.form-item-settings-value-type,
   #environments-variable-value {
-	display: inline-block;
+	float: left;
+	overflow: hidden;
   }
 
-  #environments-variable-value {
-	margin-left: 1em;
+  div.form-item-settings-value-type {
+	margin-right: 1.4em;
   }
 
 }
