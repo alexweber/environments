@@ -31,6 +31,12 @@ function environments_bundles_schema() {
 				'length' => 255,
 				'not null' => TRUE,
 			),
+			'admin_title' => array(
+				'description' => 'The bundle\'s human-readable title.',
+				'type' => 'varchar',
+				'length' => 255,
+				'not null' => TRUE,
+			),
 			'description' => array(
 				'description' => 'The bundle\'s description.',
 				'type' => 'text',

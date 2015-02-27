@@ -44,6 +44,11 @@ function environments_bundles_create($values = array()) {
 		$bundle->name = $values['name'];
 	}
 
+	// Default title.
+	if (isset($values['admin_title'])) {
+		$bundle->admin_title = $values['admin_title'];
+	}
+
 	// Default description.
 	$bundle->description = $values['description'];
 
