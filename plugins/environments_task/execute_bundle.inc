@@ -81,10 +81,11 @@ function environments_task_execute_bundle($settings, &$context) {
 			}
 
 			if (!empty($operations)) {
+				$operations[] = array('_environments_task_flush', array(t('Cleaning up.')));
+
 				$batch = array(
 					'title' => t('Processing task bundle.'),
 					'operations' => $operations,
-					'finished' => '_environments_task_finished',
 					'init_message' => t('Preparing to execute task bundle.'),
 					'progress_message' => t('Processed @current out of @total tasks.'),
 					'error_message' => t('Error executing task bundle.'),
