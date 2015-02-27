@@ -30,13 +30,22 @@ function environments_task_variable_set_settings($form_state) {
 	$form = array();
 	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
 
-	$selection = isset($form_state['values']['settings']['selection'])
-		? $form_state['values']['settings']['selection']
-		: 'list';
+	// Figure out default value.
+	if (isset($form_state['task']['settings']['selection'])) {
+		$selection = $form_state['task']['settings']['selection'];
+	}
+	else {
+		$selection = 'list';
+	}
+
+	// Override with submitted values.
+	if (isset($form_state['values']['settings']['selection'])) {
+		$selection = $form_state['values']['settings']['selection'];
+	}
 
 	$form['selection'] = array(
 		'#title' => t('Selection mode'),
-		'#description' => t('Specify how you would like to define the variable to modify. Selecting it from a list is easier, but only variables that have been explicitly set are available.'),
+		'#description' => t('Selecting from a list is easier, but only variables that have already been explicitly set are available.'),
 		'#type' => 'select',
 		'#default_value' => $selection,
 		'#options' => array(
@@ -70,7 +79,7 @@ function environments_task_variable_set_settings($form_state) {
 	else if ($selection === 'custom') {
 		$form['name']['#type'] = 'textfield';
 		$form['name']['#maxlength'] = 255;
-		$form['name']['#size'] = 8;
+		$form['name']['#size'] = 40;
 		$form['name']['#default_value'] = isset($task['settings']['name']) ? (string) $task['settings']['name'] : '';
 	}
 
