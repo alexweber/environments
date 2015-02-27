@@ -43,6 +43,7 @@ function environments_bundles_form_edit($form, &$form_state) {
 		'#type' => 'textarea',
 		'#title' => t('Description'),
 		'#default_value' => $bundle->description,
+		'#description' => t('Insert an optional description that will appear in the Admin UI.'),
 	);
 
 	return $form;

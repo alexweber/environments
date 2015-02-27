@@ -5,7 +5,7 @@
  * Export interface plugin for Environment Task Bundles.
  */
 
-$module_path = drupal_get_path('module', 'environments_bundles');
+$module_path = drupal_get_path('module', 'environments');
 
 /**
  * Define this Export UI plugin.
@@ -28,9 +28,9 @@ $plugin = array(
         'path' => 'list/%ctools_export_ui/tasks',
         'title' => 'Manage Tasks',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('environments_task_form', 5),
+        'page arguments' => array('environments_task_form', 6),
         'access arguments' => array('administer environments'),
-        'file' => 'environments_bundles.admin.inc',
+        'file' => 'environments.admin.inc',
         'file path' => $module_path,
         'type' => MENU_LOCAL_TASK,
         'weight' => -5,
@@ -40,9 +40,9 @@ $plugin = array(
         'path' => 'list/%ctools_export_ui/tasks/add',
         'title' => 'Add Task',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('environments_task_form_edit', 5),
+        'page arguments' => array('environments_task_form_edit', 6),
         'access arguments' => array('administer environments'),
-        'file' => 'environments_bundles.admin.inc',
+        'file' => 'environments.admin.inc',
         'file path' => $module_path,
         'type' => MENU_LOCAL_ACTION,
       ),
@@ -51,9 +51,9 @@ $plugin = array(
         'path' => 'list/%ctools_export_ui/tasks/%/edit',
         'title' => 'Edit Task',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('environments_task_form_edit', 5, 7),
+        'page arguments' => array('environments_task_form_edit', 6, 8),
         'access arguments' => array('administer environments'),
-        'file' => 'environments_bundles.admin.inc',
+        'file' => 'environments.admin.inc',
         'file path' => $module_path,
       ),
       // Delete task form.
@@ -61,9 +61,9 @@ $plugin = array(
         'path' => 'list/%ctools_export_ui/tasks/%/delete',
         'title' => 'Delete Task',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('environments_task_form_delete', 5, 7),
+        'page arguments' => array('environments_task_form_delete', 6, 8),
         'access arguments' => array('administer environments'),
-        'file' => 'environments_bundles.admin.inc',
+        'file' => 'environments.admin.inc',
         'file path' => $module_path,
       ),
     ),
@@ -99,13 +99,13 @@ $plugin = array(
  */
 function environments_ctools_export_ui_form_bundles(&$form, &$form_state) {
   // Load the admin form include.
-  module_load_include('inc', 'environments', 'environments_bundles.admin');
+  module_load_include('inc', 'environments_bundles', 'environments_bundles.admin');
 
   // Make environment reference in form_state.
   $form_state['bundle'] = &$form_state['item'];
 
   // Load the configuration form.
-  $form = drupal_retrieve_form('environments_bundle_form_edit', $form_state);
+  $form = drupal_retrieve_form('environments_bundles_form_edit', $form_state);
 }
 
 /**
