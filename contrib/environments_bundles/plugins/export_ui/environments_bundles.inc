@@ -90,8 +90,8 @@ $plugin = array(
 
   // Define the names of the functions that provide the add/edit forms.
   'form' => array(
-    'settings' => 'environments_ctools_export_ui_form_bundles',
-    'submit' => 'environments_ctools_export_ui_form_bundles_submit',
+    'settings' => 'environments_bundles_ctools_export_ui_form',
+    'submit' => 'environments_bundles_ctools_export_ui_form_submit',
   ),
 
   // Override the UI handler.
@@ -111,7 +111,7 @@ $plugin = array(
 /**
  * Export UI form
  */
-function environments_ctools_export_ui_form_bundles(&$form, &$form_state) {
+function environments_bundles_ctools_export_ui_form(&$form, &$form_state) {
   // Load the admin form include.
   module_load_include('inc', 'environments_bundles', 'environments_bundles.admin');
 
@@ -127,7 +127,7 @@ function environments_ctools_export_ui_form_bundles(&$form, &$form_state) {
  *
  * @see environments_form_edit()
  */
-function environments_ctools_export_ui_form_bundles_submit(&$form, &$form_state) {
+function environments_bundles_ctools_export_ui_form_submit(&$form, &$form_state) {
   // Edit the reference to $form_state['bundle'] which will in turn
   // reference $form_state['item'] which is what CTools is looking for.
   $bundle = &$form_state['bundle'];

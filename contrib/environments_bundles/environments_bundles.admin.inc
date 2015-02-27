@@ -87,7 +87,7 @@ function environments_bundles_form_delete_submit($form, &$form_state) {
 /**
  * Page callback.
  *
- * @see environments_ctools_export_ui_form_bundles()
+ * @see environments_bundles_ctools_export_ui_form()
  */
 function environments_bundles_exec_form($bundle) {
 
