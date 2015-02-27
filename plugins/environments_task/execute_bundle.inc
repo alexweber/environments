@@ -81,8 +81,7 @@ function environments_task_execute_bundle($settings, &$context) {
 			}
 
 			if (!empty($operations)) {
-				$batch =& batch_get();
-				$batch_set = array(
+				$batch = array(
 					'title' => t('Processing task bundle.'),
 					'operations' => $operations,
 					'finished' => '_environments_task_finished',
@@ -91,11 +90,8 @@ function environments_task_execute_bundle($settings, &$context) {
 					'error_message' => t('Error executing task bundle.'),
 					'file' => drupal_get_path('module', 'environments') . '/environments.batch.inc',
 				);
-				$index = $batch['current_set'] + 1;
-				$slice1 = array_slice($batch['sets'], 0, $index);
-				$slice2 = array_slice($batch['sets'], $index);
-				$batch['sets'] = array_merge($slice1, array($batch_set), $slice2);
-				_batch_populate_queue($batch, $index);
+
+				batch_set($batch);
 			}
 			else {
 				$context['message'] = t('Task bundle has no tasks: @name()', array('@name' => $bundle_object->admin_title));
@@ -103,7 +99,7 @@ function environments_task_execute_bundle($settings, &$context) {
 		}
 	}
 	else {
-		$message = 'Error queueing task bundle: @name()';
+		$message = 'Error loading task bundle: @name()';
 		$variables = array('@name' => $bundle);
 		watchdog('environments', $message, $variables, WATCHDOG_ERROR);
 		$context['message'] = t($message, $variables);
