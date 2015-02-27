@@ -77,19 +77,24 @@ function environments_task_variable_set_settings($form_state) {
 	$default_value = array_key_exists('value', $task['settings'])
 		? $task['settings']['value']
 		: '';
-	$default_type = 'string';
 
-	if ($default_value !== '') {
-		if (is_bool($default_value)) {
-			$default_type = 'boolean';
-			$default_value = intval($default_value);
-		}
-		else if (is_numeric($default_value)) {
-			if (strpos('.', $default_value) !== FALSE) {
-				$default_type = 'float';
+	$value_type = isset($form_state['values']['settings']['value_type'])
+		? $form_state['values']['settings']['value_type']
+		: FALSE;
+
+	if (!$value_type) {
+		if ($default_value !== '') {
+			if (is_bool($default_value)) {
+				$value_type = 'boolean';
+				$default_value = intval($default_value);
 			}
-			else {
-				$default_type = 'integer';
+			else if (is_numeric($default_value)) {
+				if (strpos('.', $default_value) !== FALSE) {
+					$value_type = 'float';
+				}
+				else {
+					$value_type = 'integer';
+				}
 			}
 		}
 	}
@@ -103,17 +108,42 @@ function environments_task_variable_set_settings($form_state) {
 			'integer' => t('Integer'),
 			'float' => t('Float'),
 		),
-		'#default_value' => $default_type,
+		'#ajax' => array(
+			'callback' => 'environments_ajax_task_settings_variable_set_value',
+			'wrapper' => 'environments-variable-value',
+			'method' => 'replace',
+			'effect' => 'slide',
+		),
+		'#default_value' => $value_type,
 	);
 
 	$form['value'] = array(
+		'#prefix' => '<div id="environments-variable-value">',
+		'#suffix' => '</div>',
 		'#name' => 'settings[value]',
-		'#type' => 'textfield',
 		'#title' => t('Value'),
-		'#description' => t('Note: Be sure to select the most appropriate type as this value will be type-casted. Use "1" and "0" for boolean values.'),
 		'#default_value' => $default_value,
 		'#element_validate' => array('_environments_task_variable_set_validate_value'),
 	);
+
+	if ($value_type === 'boolean') {
+		$form['value']['#type'] = 'select';
+		$form['value']['#options'] = array(
+			1 => t('True'),
+			0 => t('False'),
+		);
+	}
+	else if ($value_type === 'integer' || $value_type === 'float') {
+		if (module_exists('elements')) {
+			$form['value']['#type'] = 'numberfield';
+		}
+		else {
+			$form['value']['#type'] = 'textfield';
+		}
+	}
+	else {
+		$form['value']['#type'] = 'textfield';
+	}
 
 	return $form;
 }
@@ -150,10 +180,17 @@ function environments_task_variable_set($settings, &$context) {
 /**
  * AJAX Callback.
  *
- * Returns task settings form.
- *
  * @see environments_task_variable_set_settings()
  */
 function environments_ajax_task_settings_variable_set_name($form, &$form_state) {
 	return $form['settings']['name'];
+}
+
+/**
+ * AJAX Callback.
+ *
+ * @see environments_task_variable_set_settings()
+ */
+function environments_ajax_task_settings_variable_set_value($form, &$form_state) {
+	return $form['settings']['value'];
 }
