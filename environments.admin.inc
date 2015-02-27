@@ -566,14 +566,14 @@ function environments_form_site($form) {
 	$form['advanced']['banner']['environments_css'] = array(
 		'#title' => t('Include default CSS'),
 		'#type' => 'checkbox',
-		'#description' => t('Disable this if you want to write your own notification banner styles'),
+		'#description' => t('Disable this if you want to write your own notification banner styles.'),
 		'#default_value' => variable_get('environments_css', TRUE),
 	);
 
 	$form['advanced']['banner']['environments_js'] = array(
 		'#title' => t('Include default JS'),
 		'#type' => 'checkbox',
-		'#description' => t('Disable this if you use a <a href="!url">Zurb Foundation</a> sub-theme.', array('!url' => 'https://www.drupal.org/project/zurb_foundation')),
+		'#description' => t('Disable this if you want to write your own notification banner scripts.'),
 		'#default_value' => variable_get('environments_js', TRUE),
 	);
 
