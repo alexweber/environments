@@ -83,3 +83,12 @@ function environments_bundles_form_delete_submit($form, &$form_state) {
 	drupal_set_message(t('Task bundle %admin_title was ' . $op . '.', array('%admin_title' => $bundle->admin_title)));
 	$form_state['redirect'] = 'admin/config/development/environments-bundles';
 }
+
+/**
+ * Page callback.
+ *
+ * @see environments_ctools_export_ui_form_bundles()
+ */
+function environments_bundles_exec_form($bundle) {
+
+}

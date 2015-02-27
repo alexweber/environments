@@ -5,7 +5,8 @@
  * Export interface plugin for Environment Task Bundles.
  */
 
-$module_path = drupal_get_path('module', 'environments');
+$environments_path = drupal_get_path('module', 'environments');
+$module_path = drupal_get_path('module', 'environments_bundles');
 
 /**
  * Define this Export UI plugin.
@@ -31,9 +32,21 @@ $plugin = array(
         'page arguments' => array('environments_task_form', 5),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $module_path,
+        'file path' => $environments_path,
         'type' => MENU_LOCAL_TASK,
         'weight' => -5,
+      ),
+      // Execute Tasks form.
+      'exec' => array(
+        'path' => 'list/%ctools_export_ui/exec',
+        'title' => 'Execute Tasks',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('environments_bundles_exec_form', 5),
+        'access arguments' => array('execute environments bundles'),
+        'file' => 'environments_bundles.admin.inc',
+        'file path' => $module_path,
+        'type' => MENU_LOCAL_TASK,
+        'weight' => -4,
       ),
       // Add new task form.
       'task add' => array(
@@ -43,7 +56,7 @@ $plugin = array(
         'page arguments' => array('environments_task_form_edit', 5),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $module_path,
+        'file path' => $environments_path,
         'type' => MENU_LOCAL_ACTION,
       ),
       // Edit task form.
@@ -54,7 +67,7 @@ $plugin = array(
         'page arguments' => array('environments_task_form_edit', 5, 7),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $module_path,
+        'file path' => $environments_path,
       ),
       // Delete task form.
       'task delete' => array(
@@ -64,7 +77,7 @@ $plugin = array(
         'page arguments' => array('environments_task_form_delete', 5, 7),
         'access arguments' => array('administer environments'),
         'file' => 'environments.admin.inc',
-        'file path' => $module_path,
+        'file path' => $environments_path,
       ),
     ),
   ),
@@ -87,9 +100,10 @@ $plugin = array(
     'parent' => 'ctools_export_ui',
   ),
 
-  // Add an extra operation.
+  // Add extra operations.
   'allowed operations' => array(
     'tasks'  => array('title' => t('Manage Tasks')),
+    'exec'  => array('title' => t('Execute Tasks')),
   ),
 
 );

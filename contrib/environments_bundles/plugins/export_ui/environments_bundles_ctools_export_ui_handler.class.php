@@ -13,14 +13,16 @@ class environments_bundles_ctools_export_ui_handler extends ctools_export_ui {
 	function build_operations($item) {
 		$allowed_operations = parent::build_operations($item);
 
-		// Move our custom "Manage Tasks" operation to the bottom of the list.
-		$task = array_key_exists('tasks', $allowed_operations)
-			? $allowed_operations['tasks']
-			: NULL;
-
-		if ($task) {
-			unset ($allowed_operations['tasks']);
+		// Move our custom operations to the bottom of the list.
+		if (array_key_exists('tasks', $allowed_operations)) {
+			$task = $allowed_operations['tasks'];
+			unset($allowed_operations['tasks']);
 			$allowed_operations['tasks'] = $task;
+		}
+		if (array_key_exists('exec', $allowed_operations)) {
+			$exec = $allowed_operations['exec'];
+			unset($allowed_operations['exec']);
+			$allowed_operations['exec'] = $exec;
 		}
 
 		return $allowed_operations;
