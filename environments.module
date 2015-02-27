@@ -65,6 +65,8 @@ function environments_help($path, $arg) {
       return t('Here you can view and change the current environment, as well as manage other settings. To manage defined environments, go <a href="!url">here</a>.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE))));
     case 'admin/config/development/environments':
       return t('Here you can manage your environments and tasks. To change the current environment or manage other settings, go <a href="!url">here</a>.', array('!url' => url('admin/config/system/environments', array('absolute' => TRUE))));
+    case 'admin/config/development/environments/bundles':
+      return t('Here you can manage your task bundles. Task bundles are pre-configured groups of tasks that can be imported and exported as a unit and also included as tasks themselves.');
 		case 'admin/config/development/environments/list/%/tasks':
 			return t('Here you can add to and manage all of an environment\'s tasks. <strong>NOTE</strong>: The order in which tasks appear is the exact order in which they will run. Use the handles on the left of each one to drag them around and re-order them and then press the "Update Order" button to save the changes.');
   }
@@ -300,8 +302,8 @@ function environments_create($values = array()) {
 }
 
 /**
- * Fetches all environments from the database and returns them as an associative
- * array.
+ * Fetches all environments from the database and returns them as an
+ * associative array.
  */
 function environments_load_all() {
 	ctools_include('export');
@@ -309,7 +311,7 @@ function environments_load_all() {
 }
 
 /**
- * Load a given environment,
+ * Load a given environment.
  *
  * @param string
  *   The environment's name.
@@ -361,6 +363,71 @@ function environments_save(&$environment) {
 function environments_delete($environment) {
 	ctools_include('export');
 	return ctools_export_crud_delete('environments', $environment);
+}
+
+/**
+ * Fetches all environments bundles from the database and returns them as an
+ * associative array.
+ */
+function environments_bundles_load_all() {
+	ctools_include('export');
+	return ctools_export_crud_load_all('environments_bundles');
+}
+
+/**
+ * Load a given environment bundle.
+ *
+ * @param string
+ *   The environment bundle's name.
+ *
+ * @return stdClass|NULL
+ *   The fully-loaded environment bundle object or NULL if it couldn't be loaded.
+ */
+function environments_bundles_load($bundle_name) {
+	ctools_include('export');
+	return ctools_export_crud_load('environments_bundles', $bundle_name);
+}
+
+/**
+ * Checks whether an environment bundle with the given name already exists.
+ *
+ * @param string
+ *   The environment bundle's name.
+ * @return boolean
+ *   TRUE if there exists an environment bundle with the give name, FALSE
+ *   otherwise.
+ */
+function environments_bundles_exists($bundle_name) {
+	ctools_include('export');
+	$bundle = ctools_export_crud_load('environments_bundles', $bundle_name);
+	return isset($bundle->name);
+}
+
+/**
+ * Saves the given environment to the database.
+ *
+ * @param object
+ *   The environment to save.
+ *
+ * @return object|boolean
+ *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
+ *   SAVED_UPDATED is returned depending on the operation performed. The
+ *   $object parameter contains values for any serial fields defined.
+ */
+function environments_bundles_save(&$environment) {
+	ctools_include('export');
+	return ctools_export_crud_save('environments_bundles', $environment);
+}
+
+/**
+ * Deletes the given environment from the database.
+ *
+ * @param object
+ *   The environment object to delete.
+ */
+function environments_bundles_delete($environment) {
+	ctools_include('export');
+	return ctools_export_crud_delete('environments_bundles', $environment);
 }
 
 /**
