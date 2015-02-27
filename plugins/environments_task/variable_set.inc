@@ -99,16 +99,19 @@ function environments_task_variable_set_settings($environment, $task = NULL) {
  *   values as the batch progresses.
  */
 function environments_task_variable_set($settings, &$context) {
-  $name = $settings['name'];
-  $value = $settings['value'];
-  $value_type = $settings['value_type'];
+	$name = $settings['name'];
+	$value = $settings['value'];
+	$value_type = $settings['value_type'];
 
-  variable_set($name, $value);
+	variable_set($name, $value);
 
 	if ($value_type === 'boolean') {
 		$value = $value ? t('True') : t('False');
 	}
+	else if ($value_type === 'string') {
+		$value = "\"{$value}\"";
+	}
 
-  // Display message.
-  $context['message'] = t('Set variable value @name to @value', array('@name' => $name, '@value' => $value));
+	// Display message.
+	$context['message'] = t('Set variable "@name" value to: @value', array('@name' => $name, '@value' => $value));
 }
