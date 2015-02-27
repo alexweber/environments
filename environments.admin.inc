@@ -354,8 +354,8 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 	// Build settings form.
 	if (isset($form_state['task'])) {
 		if ($callback = ctools_plugin_get_function($form_state['task'], 'settings_callback')) {
-			$settings_form = call_user_func($callback, $form_state['environment'], $form_state['task']);
-			$form['settings'] += $settings_form;
+			// Invoke task's settings form callback.
+			$form['settings'] += call_user_func($callback, $form_state);
 		}
 		else {
 			$form['settings'] += array(
@@ -367,8 +367,8 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
 		if ($current_task) {
 			if ($task_info = environments_get_task($current_task)) {
 				if ($callback = ctools_plugin_get_function($task_info, 'settings_callback')) {
-					$settings_form = call_user_func($callback, $form_state['environment']);
-					$form['settings'] += $settings_form;
+					// Invoke task's settings form callback.
+					$form['settings'] += call_user_func($callback, $form_state);
 				}
 				else {
 					$form['settings'] += array(
