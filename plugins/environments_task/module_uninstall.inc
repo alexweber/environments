@@ -27,8 +27,8 @@ $plugin = array(
  *   A Form API array of task settings.
  */
 function environments_task_module_uninstall_settings($form_state) {
-	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
 	$form = array();
+	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
 
 	$form['modules'] = array(
 		'#name' => 'settings[modules]',
