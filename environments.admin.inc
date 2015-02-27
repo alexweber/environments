@@ -484,7 +484,7 @@ function environments_task_form_edit_submit($form, &$form_state) {
 				'name' => $task['name'],
 				'settings' => $settings,
 				'#id' => $id,
-				'#weight' => 0,
+				'#weight' => 50,
 			);
 
 			if (call_user_func($save_callback, $object)) {
