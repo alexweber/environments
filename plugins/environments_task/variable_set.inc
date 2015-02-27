@@ -60,7 +60,6 @@ function environments_task_variable_set_settings($form_state) {
 		'#suffix' => '</div>',
 		'#name' => 'settings[name]',
 		'#title' => t('Variable name'),
-		'#description' => t('If the variable you\'re looking for isn\'t in this list, try using the "Specify manually" selection mode.'),
 		'#required' => TRUE,
 		'#element_validate' => array('_environments_task_variable_set_validate_name'),
 	);
@@ -71,12 +70,14 @@ function environments_task_variable_set_settings($form_state) {
 		$form['name']['#options'] = drupal_map_assoc(_environments_get_variables());
 		$form['name']['#empty_option'] = t(' -Select a variable- ');
 		$form['name']['#default_value'] = isset($task['settings']['name']) ? (array) $task['settings']['name'] : array();
+		$form['name']['#description'] = t('If the variable you\'re looking for isn\'t in this list, try using the "Specify manually" selection mode.');
 	}
 	else if ($selection === 'custom') {
 		$form['name']['#type'] = 'textfield';
 		$form['name']['#maxlength'] = 255;
 		$form['name']['#size'] = 40;
 		$form['name']['#default_value'] = isset($task['settings']['name']) ? (string) $task['settings']['name'] : '';
+		$form['name']['#description'] = t('Variable names must start with a letter, consist only of letters, numbers and underscores and be all in lower-case.');
 	}
 
 	$default_value = isset($task['settings']) && array_key_exists('value', $task['settings'])
