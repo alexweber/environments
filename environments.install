@@ -100,7 +100,7 @@ function environments_requirements($phase) {
 				$return['environments'] = array(
 					'title' => t('Environments: current environment'),
 					'value' => $environment->admin_title,
-					'severity' => REQUIREMENT_INFO,
+					'severity' => REQUIREMENT_OK,
 				);
 			}
 			else {
@@ -115,7 +115,7 @@ function environments_requirements($phase) {
 			$return['environments'] = array(
 				'title' => t('Environments: current environment'),
 				'value' => t('No environment set'),
-				'severity' => REQUIREMENT_WARNING,
+				'severity' => REQUIREMENT_INFO,
 			);
 		}
 	}
