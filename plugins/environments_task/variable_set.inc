@@ -78,7 +78,7 @@ function environments_task_variable_set_settings($form_state) {
 		$form['name']['#default_value'] = isset($task['settings']['name']) ? (string) $task['settings']['name'] : '';
 	}
 
-	$default_value = array_key_exists('value', $task['settings'])
+	$default_value = isset($task['settings']) && array_key_exists('value', $task['settings'])
 		? $task['settings']['value']
 		: '';
 
