@@ -242,7 +242,7 @@ function environments_task_form_submit($form, &$form_state) {
 		? 'environments_bundles_save'
 		: 'environments_save';
 
-	if (call_user_func($save_callback, $object)) {
+	if (function_exists($save_callback) && $save_callback($object)) {
 		drupal_set_message(t('Task order updated!'), 'status', FALSE);
 	}
 	else {
