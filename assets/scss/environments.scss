@@ -12,16 +12,16 @@
   padding: 0;
   border: 0 none;
   z-index: 90;
-  -moz-box-shadow: 0px 0px 3px #000;
-  -webkit-box-shadow: 0px 0px 3px #000;
-  box-shadow: 0px 0px 3px #000;
+  -moz-box-shadow: 0 0 3px #000;
+  -webkit-box-shadow: 0 0 3px #000;
+  box-shadow: 0 0 3px #000;
   position: relative;
 
   // Banner close button. This works automatically with Zurb Foundation themes.
   &.alert-box a.close {
 	position: absolute;
-	top: 0.23em;
-	right: 0.3125em;
+	top: 0.2em;
+	right: 0.15em;
 	color: #333333;
 	opacity: 0.3;
 	text-decoration: none;
