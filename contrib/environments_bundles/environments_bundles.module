@@ -6,6 +6,19 @@
  */
 
 /**
+ * Implements hook_permission().
+ */
+function environments_permission() {
+	return array(
+		'execute environments bundles' => array(
+			'title' => t('Manually execute environments task bundles'),
+			'description' => t('Environments Task Bundles may be added to evironment tasks and executed as part of an environment switch. Users with this permission will be able to manually execute individual task bundles.'),
+			'restrict access' => TRUE,
+		),
+	);
+}
+
+/**
  * Implements hook_help().
  */
 function environments_bundles_help($path, $arg) {
