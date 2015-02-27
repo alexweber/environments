@@ -5,7 +5,7 @@
 
 			if ($banner.length) {
 				$banner.find('a.close').click(function () {
-					$banner.fadeOut('normal', function () {
+					$banner.fadeOut(300, function () {
 						$banner.remove();
 					});
 				});
