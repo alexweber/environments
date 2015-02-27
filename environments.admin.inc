@@ -403,6 +403,8 @@ function environment_task_form_edit($form, &$form_state, $environment, $task = N
  * AJAX Callback.
  *
  * Returns task settings form.
+ *
+ * @see environment_task_form_edit()
  */
 function environments_ajax_task_settings($form, &$form_state) {
 	return $form['settings'];
