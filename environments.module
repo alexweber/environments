@@ -66,7 +66,7 @@ function environments_help($path, $arg) {
     case 'admin/config/development/environments':
       return t('Here you can manage your environments and tasks. To change the current environment or manage other settings, go <a href="!url">here</a>.', array('!url' => url('admin/config/system/environments', array('absolute' => TRUE))));
 		case 'admin/config/development/environments/list/%/tasks':
-			return t('Here you can add to and manage all of an environment\'s tasks. NOTE: The order in which tasks appear is the exact order in which they will run. Use the handles on the left of each task to drag it around and re-order it and press the "Update Order" button when you\'re done to save the changes.');
+			return t('Here you can add to and manage all of an environment\'s tasks. <strong>NOTE</strong>: The order in which tasks appear is the exact order in which they will run. Use the handles on the left of each one to drag them around and re-order them and then press the "Update Order" button to save the changes.');
   }
 }
 
