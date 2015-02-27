@@ -30,12 +30,18 @@ function environments_task_variable_set_settings($form_state) {
 	$form = array();
 	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
 
-	// Always start as a list for new ones and custom when editing.
-	$selection = $task ? 'custom' : 'list';
+	$selection = isset($form_state['values']['settings']['selection'])
+		? $form_state['values']['settings']['selection']
+		: FALSE;
 
-	// Override with submitted values.
-	if (isset($form_state['values']['settings']['selection'])) {
-		$selection = $form_state['values']['settings']['selection'];
+	// Always start as a list for new ones and custom when editing.
+	if (!$selection) {
+		if ($task) {
+			$selection = 'custom';
+		}
+		else {
+			$selection = 'list';
+		}
 	}
 
 	$form['selection'] = array(
