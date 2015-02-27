@@ -295,18 +295,18 @@ function environments_task_form_delete_submit($form, &$form_state) {
  *
  * Displays add/edit task form.
  */
-function environments_task_form_edit($form, &$form_state, $environment, $task = NULL) {
+function environments_task_form_edit($form, &$form_state, $object, $task = NULL) {
 	// Attach our custom styles.
 	$form['#attached']['css'][] = drupal_get_path('module', 'environments') . '/assets/css/environments.admin.css';
 
-	// Store environment in form state for AJAX.
-	$form_state['environment'] = $environment;
+	// Store object in form state for AJAX.
+	$form_state['object'] = $object;
 	$current_task = !empty($form_state['values']['task']) ? $form_state['values']['task'] : '';
 
 	// Prepare task info if editing.
-	if (isset($task) && array_key_exists($task, $environment->tasks)) {
+	if (isset($task) && array_key_exists($task, $object->tasks)) {
 		// Grab task instance info.
-		$task_info = $environment->tasks[$task];
+		$task_info = $object->tasks[$task];
 		// Load task plugin.
 		$task = environments_get_task($task_info['name']);
 		// Override with instance info.
@@ -403,7 +403,14 @@ function environments_task_form_edit($form, &$form_state, $environment, $task = 
 		'#type' => 'submit',
 		'#value' => t('Save and add another'),
 	);
-	$path = "admin/config/development/environments/list/{$environment->name}/tasks";
+
+	// Figure out path depending on what type of object we're editing.
+	$path = 'admin/config/development/environments';
+	if ($object->table === 'environments_bundles') {
+		$path .= '/bundles';
+	}
+	$path .= "/list/{$object->name}/tasks";
+
 	$form['actions']['cancel'] = array(
 		'#markup' => l(t('Cancel'), $path, array('absolute' => TRUE)),
 	);
@@ -431,8 +438,12 @@ function environments_ajax_task_settings($form, &$form_state) {
  * @see environments_task_form_edit()
  */
 function environments_task_form_edit_submit($form, &$form_state) {
-	$environment = $form_state['environment'];
+	$object = $form_state['object'];
 	$new_task = $form_state['values']['task'];
+	$save_callback = $object->table === 'environments_bundles'
+		? 'environments_bundles_save'
+		: 'environments_save';
+
 	$new_settings = array_key_exists('settings', $form_state['values'])
 		? $form_state['values']['settings']
 		: array();
@@ -448,10 +459,10 @@ function environments_task_form_edit_submit($form, &$form_state) {
 	// Edit.
 	if (array_key_exists('task', $form_state)) {
 		$id = $form_state['task']['#id'];
-		$environment->tasks[$id]['name'] = $new_task;
-		$environment->tasks[$id]['settings'] = $new_settings;
+		$object->tasks[$id]['name'] = $new_task;
+		$object->tasks[$id]['settings'] = $new_settings;
 
-		if (environments_save($environment)) {
+		if (call_user_func($save_callback, $object)) {
 			drupal_set_message(t('Task Updated'), 'status', FALSE);
 			return;
 		}
@@ -468,15 +479,15 @@ function environments_task_form_edit_submit($form, &$form_state) {
 			// Generate unique ID.
 			$id = md5($task['name'] . serialize($settings) . time());
 
-			// Add new task to environment.
-			$environment->tasks[$id] = array(
+			// Add new task to object.
+			$object->tasks[$id] = array(
 				'name' => $task['name'],
 				'settings' => $settings,
 				'#id' => $id,
 				'#weight' => 0,
 			);
 
-			if (environments_save($environment)) {
+			if (call_user_func($save_callback, $object)) {
 				drupal_set_message(t('Task Added'), 'status', FALSE);
 				return;
 			}
@@ -493,8 +504,15 @@ function environments_task_form_edit_submit($form, &$form_state) {
  * @see environments_task_form_edit()
  */
 function environments_task_form_edit_submit_redirect($form, &$form_state) {
-	$env = $form_state['environment'];
-	$form_state['redirect'] = "admin/config/development/environments/list/{$env->name}/tasks";
+	$object = $form_state['object'];
+	$path = 'admin/config/development/environments';
+
+	// Figure out path depending on what type of object we're editing.
+	if ($object->table === 'environments_bundles') {
+		$path .= '/bundles';
+	}
+
+	$form_state['redirect'] = "{$path}/list/{$object->name}/tasks";
 
 	if ($form_state['values']['op'] === t('Save and add another')) {
 		$form_state['redirect'] .= '/add';
