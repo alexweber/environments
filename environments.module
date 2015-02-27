@@ -399,5 +399,5 @@ function _environments_task_variable_set_validate_value($element, &$form_state, 
 	}
 
 	// Remove helper setting.
-	unset($form_state['values']['value_type']);
+	unset($form_state['values']['settings']['selection']);
 }
