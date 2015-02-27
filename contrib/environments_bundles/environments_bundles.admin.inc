@@ -13,7 +13,7 @@ function environments_bundles_form_edit($form, &$form_state) {
 		$bundle = $form_state['bundle'];
 	}
 	else {
-		$bundle = environments_create();
+		$bundle = environments_bundles_create();
 	}
 
 	// Title

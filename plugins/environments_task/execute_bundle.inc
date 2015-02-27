@@ -6,7 +6,7 @@
  */
 
 $plugin = array(
-	'admin_title' => t('Execute Task Bundle'),
+	'admin_title' => t('Execute task bundle'),
 	'task_callback' => 'environments_task_execute_bundle',
 	'settings' => array(
 		'bundle' => '',
@@ -29,9 +29,16 @@ function environments_task_execute_bundle_settings($form_state) {
 	$form = array();
 	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
 	$options = array();
+	$empty_description = t('You haven\'t created any Task Bundles yet.');
 
 	foreach (environments_bundles_load_all() as $key => $value) {
 		$options[$key] = $value->admin_title;
+	}
+
+	if (isset($form_state['object'])
+		&& $form_state['object']->table === 'environments_bundles') {
+		unset($options[$form_state['object']->name]);
+		$empty_description = t('You haven\'t created any other Task Bundles yet.');
 	}
 
 	$form['name'] = array(
@@ -39,14 +46,13 @@ function environments_task_execute_bundle_settings($form_state) {
 		'#type' => 'select',
 		'#title' => t('Bundle'),
 		'#required' => TRUE,
-		'#description' => t('Select a bundle.'),
 		'#default_value' => isset($task['settings']['name']) ? $task['settings']['name'] : array(),
 		'#options' => $options,
 	);
 
 	if (empty($options)) {
 		$form['name']['#disabled'] = TRUE;
-		$form['name']['#description'] = t('You haven\'t created any Task Bundles yet.');
+		$form['name']['#description'] = $empty_description;
 	}
 
 	return $form;
