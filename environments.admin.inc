@@ -284,6 +284,9 @@ function environment_task_form_delete_submit($form, &$form_state) {
  * Displays add/edit task form.
  */
 function environment_task_form_edit($form, &$form_state, $environment, $task = NULL) {
+	// Attach our custom styles.
+	$form['#attached']['css'][] = drupal_get_path('module', 'environments') . '/assets/css/environments.admin.css';
+
 	// Store environment in form state for AJAX.
 	$form_state['environment'] = $environment;
 	$current_task = !empty($form_state['values']['task']) ? $form_state['values']['task'] : '';

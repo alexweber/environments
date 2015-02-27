@@ -121,7 +121,7 @@ function environments_task_variable_set_settings($form_state) {
 			'callback' => 'environments_ajax_task_settings_variable_set_value',
 			'wrapper' => 'environments-variable-value',
 			'method' => 'replace',
-			'effect' => 'slide',
+			'effect' => 'fade',
 		),
 		'#default_value' => $value_type,
 	);
@@ -143,15 +143,13 @@ function environments_task_variable_set_settings($form_state) {
 		);
 	}
 	else if ($value_type === 'integer' || $value_type === 'float') {
-		if (module_exists('elements')) {
-			$form['value']['#type'] = 'numberfield';
-		}
-		else {
-			$form['value']['#type'] = 'textfield';
-		}
+		$type = module_exists('elements') ? 'numberfield' : 'textfield';
+		$form['value']['#type'] = $type;
+		$form['value']['#size'] = 20;
 	}
 	else {
 		$form['value']['#type'] = 'textfield';
+		$form['value']['#size'] = 40;
 	}
 
 	return $form;
