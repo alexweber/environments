@@ -54,6 +54,15 @@ function environments_menu() {
 }
 
 /**
+ * Implements hook_menu_alter().
+ */
+function environments_menu_alter(&$items) {
+	if (isset($items['admin/config/development/environments/list'])) {
+		$items['admin/config/development/environments/list']['title'] = t('Environments');
+	}
+}
+
+/**
  * Implements hook_help().
  */
 function environments_help($path, $arg) {

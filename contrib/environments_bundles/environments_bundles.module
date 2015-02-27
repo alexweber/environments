@@ -16,7 +16,7 @@ function environments_bundles_help($path, $arg) {
 			return file_get_contents("{$path}/README.txt");
       break;
 		case 'admin/config/development/environments/bundles':
-			return t('Here you can manage your task bundles. Task bundles are pre-configured groups of tasks that can be imported and exported as a unit and also included as tasks themselves.');
+			return t('Here you can manage your task bundles. Task bundles are groups of tasks that can be imported, exported and executed as a unit.');
 	}
 }
 
@@ -27,6 +27,23 @@ function environments_bundles_ctools_plugin_directory($module, $type) {
 	if ($type === 'export_ui') {
 		return 'plugins/export_ui';
 	}
+}
+
+/**
+ * Implements hook_menu().
+ */
+function environments_bundles_menu() {
+  $items = array();
+
+	$items['admin/config/development/environments/task-bundles'] = array(
+		'title' => 'Task Bundles',
+		'page callback' => 'drupal_goto',
+		'page arguments' => array('admin/config/development/environments/bundles'),
+		'access arguments' => array('administer environments'),
+		'type' => MENU_LOCAL_TASK,
+	);
+
+  return $items;
 }
 
 /**
