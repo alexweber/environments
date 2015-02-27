@@ -462,7 +462,7 @@ function environments_task_form_edit_submit($form, &$form_state) {
 		$object->tasks[$id]['name'] = $new_task;
 		$object->tasks[$id]['settings'] = $new_settings;
 
-		if (call_user_func($save_callback, $object)) {
+		if (function_exists($save_callback) && $save_callback($object)) {
 			drupal_set_message(t('Task Updated'), 'status', FALSE);
 			return;
 		}
@@ -487,7 +487,7 @@ function environments_task_form_edit_submit($form, &$form_state) {
 				'#weight' => 50,
 			);
 
-			if (call_user_func($save_callback, $object)) {
+			if (function_exists($save_callback) && $save_callback($object)) {
 				drupal_set_message(t('Task Added'), 'status', FALSE);
 				return;
 			}
