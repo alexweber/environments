@@ -34,19 +34,19 @@ function environments_task_execute_bundle_settings($form_state) {
 		$options[$key] = $value->admin_title;
 	}
 
-	$form['bundle'] = array(
-		'#name' => 'settings[bundle]',
+	$form['name'] = array(
+		'#name' => 'settings[name]',
 		'#type' => 'select',
 		'#title' => t('Bundle'),
 		'#required' => TRUE,
 		'#description' => t('Select a bundle.'),
-		'#default_value' => isset($task['settings']['bundle']) ? $task['settings']['bundle'] : array(),
+		'#default_value' => isset($task['settings']['name']) ? $task['settings']['name'] : array(),
 		'#options' => $options,
 	);
 
 	if (empty($options)) {
-		$form['bundle']['#disabled'] = TRUE;
-		$form['bundle']['#description'] = t('You haven\'t created any Task Bundles yet.');
+		$form['name']['#disabled'] = TRUE;
+		$form['name']['#description'] = t('You haven\'t created any Task Bundles yet.');
 	}
 
 	return $form;
@@ -63,7 +63,7 @@ function environments_task_execute_bundle_settings($form_state) {
  *   values as the batch progresses.
  */
 function environments_task_execute_bundle($settings, &$context) {
-	$bundle = $settings['bundle'];
+	$bundle = $settings['name'];
 
 	// @TODO execute bundle.
 
