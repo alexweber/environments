@@ -107,19 +107,27 @@ function _environments_drush_env($env = NULL) {
 	// If not, display status.
   else {
 		$environments = environments_load_all();
-    $output = array();
+		$rows = array();
+		$rows[] = array(
+			t('Name'),
+			t('Alias'),
+			t('Active'),
+		);
+		$rows[] = array(
+			'-----',
+			'-----',
+			'-----',
+		);
 
     foreach ($environments as $environment) {
-      $temp = "{$environment->admin_title} ({$environment->alias})";
-
-      if ($environment->name === $current_env) {
-        $temp .= " *active*";
-      }
-
-      $output[] = $temp;
+      $rows[] = array(
+				$environment->admin_title,
+				$environment->alias,
+				$environment->name === $current_env ? '  x' : '',
+			);
     }
 
-    drush_log(implode("\n", $output), 'ok');
+		drush_print_table($rows, TRUE);
   }
 
   return TRUE;
