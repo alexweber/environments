@@ -376,6 +376,18 @@ function environments_delete($environment) {
 }
 
 /**
+ * Element validation callback; type-casts the submitted name.
+ *
+ * @see environments_task_variable_set_settings()
+ */
+function _environments_task_variable_set_validate_name($element, &$form_state, $form) {
+	$name = $form_state['values']['settings']['name'];
+	if (!preg_match('/^[a-z]+[a-z0-9\_]*$/', $name)) {
+		form_error($element, t('Invalid variable name.'));
+	}
+}
+
+/**
  * Element validation callback; type-casts the submitted value.
  *
  * @see environments_task_variable_set_settings()

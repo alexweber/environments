@@ -62,6 +62,7 @@ function environments_task_variable_set_settings($form_state) {
 		'#title' => t('Variable name'),
 		'#description' => t('If the variable you\'re looking for isn\'t in this list, try using the "Specify manually" selection mode.'),
 		'#required' => TRUE,
+		'#element_validate' => array('_environments_task_variable_set_validate_name'),
 	);
 
 	if ($selection === 'list') {
