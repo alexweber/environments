@@ -113,6 +113,7 @@ function environments_task_variable_set_settings($form_state) {
 			'boolean' => t('Boolean'),
 			'integer' => t('Integer'),
 			'float' => t('Float'),
+			'serialized' => t('Serialized'),
 		),
 		'#ajax' => array(
 			'callback' => 'environments_ajax_task_settings_variable_set_value',
@@ -144,6 +145,9 @@ function environments_task_variable_set_settings($form_state) {
 		$form['value']['#type'] = $type;
 		$form['value']['#size'] = 20;
 	}
+	else if ($value_type === 'serialized') {
+		$form['value']['#type'] = 'textarea';
+	}
 	else {
 		$form['value']['#type'] = 'textfield';
 		$form['value']['#size'] = 40;
@@ -168,17 +172,26 @@ function environments_task_variable_set($settings, &$context) {
 	$value = $settings['value'];
 	$value_type = $settings['value_type'];
 
-	variable_set($name, $value);
-
+	// Preprocess value & format display value.
 	if ($value_type === 'boolean') {
-		$value = $value ? t('True') : t('False');
+		$value_display = $value ? t('True') : t('False');
 	}
 	else if ($value_type === 'string') {
-		$value = "\"{$value}\"";
+		$value_display = "\"{$value}\"";
+	}
+	else if ($value_type === 'serialized') {
+		$value = unserialize($value);
+		$value_display = var_export($value, TRUE);
+	}
+	else {
+		$value_display = $value;
 	}
 
+	// Set variable.
+	variable_set($name, $value);
+
 	// Display message.
-	$context['message'] = t('Set variable "@name" value to !value', array('@name' => $name, '!value' => $value));
+	$context['message'] = t('Set variable "@name" value to !value', array('@name' => $name, '!value' => $value_display));
 }
 
 /**
