@@ -84,25 +84,23 @@ function _environments_drush_env($env = NULL) {
 				if ($input_env != $current_env) {
 					if (drush_confirm(t('Are you sure you want to change your site\'s environment to: @environment?', array('@environment' => $environment->admin_title)))) {
 						environments_set($environment->name);
-						return TRUE;
+						return;
 					}
 					else {
 						drush_user_abort();
-						return FALSE;
+						return;
 					}
 				}
 				else {
 					watchdog('environments', 'Environment is already set: @environment', array('@environment' => $environment->admin_title), WATCHDOG_INFO);
 					drush_log(t('Environment is already set: @environment', array('@environment' => $environment->admin_title)), 'warning');
-					return TRUE;
+					return;
 				}
 			}
 		}
 
-		watchdog('environments', 'Environment not defined: @environment', array('@environment' => $env), WATCHDOG_ERROR);
 		drush_log('Environment not defined: @environment', array('@environment' => $env), 'error');
 		drush_user_abort();
-		return FALSE;
   }
 	// If not, display status.
   else {
@@ -127,8 +125,7 @@ function _environments_drush_env($env = NULL) {
 			);
     }
 
+		drush_print("\r");
 		drush_print_table($rows, TRUE);
   }
-
-  return TRUE;
 }
