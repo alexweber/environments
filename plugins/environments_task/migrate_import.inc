@@ -33,6 +33,7 @@ function environments_task_migrate_import_settings($form_state) {
 		'#name' => 'settings[migrations]',
 		'#type' => 'select',
 		'#title' => t('Migrations'),
+		'#description' => t('Caution: This task will fail if the Migrate module is not enabled.'),
 		'#multiple' => TRUE,
 		'#options' => _environments_get_migrations(),
 		'#empty_option' => t(' -Select some migrations- '),
