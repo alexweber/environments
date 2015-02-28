@@ -76,18 +76,18 @@ function environments_task_features_revert($settings, &$context) {
 					}
 
 					features_revert($items);
-					$messages[] = t('Reverted feature: %feature.', array('%feature' => $module));
+					$messages[] = t('Reverted feature: !feature.', array('!feature' => $module));
 				}
 				else {
-					$messages[] = t('Error loading feature: %feature.', array('%feature' => $module));
+					$messages[] = t('Error loading feature: !feature.', array('!feature' => $module));
 				}
 			}
 			else {
-				$messages[] = t('Feature already matches default state: %feature.', array('%feature' => $module));
+				$messages[] = t('Feature already matches default state: !feature.', array('!feature' => $module));
 			}
 		}
 		else {
-			$messages[] = t('Can\'t revert a disabled feature: %feature.', array('%feature' => $module));
+			$messages[] = t('Can\'t revert a disabled feature: !feature.', array('!feature' => $module));
 		}
 	}
 
