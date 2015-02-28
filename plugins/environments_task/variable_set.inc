@@ -57,7 +57,7 @@ function environments_task_variable_set_settings($form_state) {
 		'#name' => 'settings[name]',
 		'#title' => t('Variable name'),
 		'#required' => TRUE,
-		'#element_validate' => array('_environments_task_variable_set_validate_name'),
+		'#element_validate' => array('_environments_task_variable_validate_name'),
 	);
 
 	if ($selection === 'list') {
