@@ -112,14 +112,58 @@ $plugin = array(
  * CTools Export UI form.
  */
 function environments_bundles_ctools_export_ui_form(&$form, &$form_state) {
-  // Load the admin form include.
-  module_load_include('inc', 'environments_bundles', 'environments_bundles.admin');
-
   // Make environment reference in form_state.
   $form_state['bundle'] = &$form_state['item'];
 
   // Load the configuration form.
   $form = drupal_retrieve_form('environments_bundles_form_edit', $form_state);
+}
+
+/**
+ * Form builder; Form to edit a given task bundle.
+ *
+ * @see environments_bundles_ctools_export_ui_form()
+ */
+function environments_bundles_form_edit($form, &$form_state) {
+	if (!empty($form_state['bundle'])) {
+		$bundle = $form_state['bundle'];
+	}
+	else {
+		$bundle = environments_bundles_create();
+	}
+
+	// Title
+	$form['admin_title'] = array(
+		'#type' => 'textfield',
+		'#maxlength' => '255',
+		'#title' => t('Title'),
+		'#description' => t('A human-readable title for this task bundle.'),
+		'#required' => TRUE,
+		'#default_value' => $bundle->admin_title,
+	);
+
+	// Machine name.
+	$form['name'] = array(
+		'#type' => 'machine_name',
+		'#maxlength' => '255',
+		'#machine_name' => array(
+			'source' => array('admin_title'),
+			'exists' => 'environments_bundles_exists',
+		),
+		'#required' => TRUE,
+		'#default_value' => $bundle->name,
+		'#disabled' => $form_state['form type'] === 'edit',
+	);
+
+	// Description.
+	$form['description'] = array(
+		'#type' => 'textarea',
+		'#title' => t('Description'),
+		'#default_value' => $bundle->description,
+		'#description' => t('Insert an optional description that will appear in the Admin UI.'),
+	);
+
+	return $form;
 }
 
 /**
@@ -133,4 +177,8 @@ function environments_bundles_ctools_export_ui_form_submit(&$form, &$form_state)
 	$bundle = &$form_state['bundle'];
   $bundle->admin_title = $form_state['values']['admin_title'];
   $bundle->description = $form_state['values']['description'];
+
+	if ($form_state['form type'] === 'add') {
+
+	}
 }

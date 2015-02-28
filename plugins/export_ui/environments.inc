@@ -99,14 +99,76 @@ $plugin = array(
  * CTools Export UI form.
  */
 function environments_ctools_export_ui_form(&$form, &$form_state) {
-  // Load the admin form include.
-  module_load_include('inc', 'environments', 'environments.admin');
-
   // Make environment reference in form_state.
   $form_state['environment'] = &$form_state['item'];
 
   // Load the configuration form.
   $form = drupal_retrieve_form('environments_form_edit', $form_state);
+}
+
+/**
+ * Form builder; Form to edit a given environment.
+ *
+ * @see environments_ctools_export_ui_form()
+ */
+function environments_form_edit($form, &$form_state) {
+	if (!empty($form_state['environment'])) {
+		$environment = $form_state['environment'];
+	}
+	else {
+		$environment = environments_create();
+	}
+
+	// Title
+	$form['admin_title'] = array(
+		'#type' => 'textfield',
+		'#maxlength' => '255',
+		'#title' => t('Title'),
+		'#description' => t('A human-readable title for this environment.'),
+		'#required' => TRUE,
+		'#default_value' => $environment->admin_title,
+	);
+
+	// Machine name.
+	$form['name'] = array(
+		'#type' => 'machine_name',
+		'#maxlength' => '255',
+		'#machine_name' => array(
+			'source' => array('admin_title'),
+			'exists' => 'environments_exists',
+		),
+		'#required' => TRUE,
+		'#default_value' => $environment->name,
+		'#disabled' => $form_state['form type'] === 'edit',
+	);
+
+	// Alias.
+	$form['alias'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Alias'),
+		'#description' => t('An optional alias for this environment to use with Drush. Must contain !num or less characters and use only letters.', array('!num' => ENVIRONMENTS_ALIAS_MAXLENGTH)),
+		'#default_value' => $environment->alias,
+		'#size' => 8,
+		'#maxlength' => ENVIRONMENTS_ALIAS_MAXLENGTH,
+	);
+
+	// Settings vertical tab group.
+	$form['settings'] = array(
+		'#title' => t('Settings'),
+		'#type' => 'fieldset',
+		'#tree' => TRUE,
+		'#collapsible' => FALSE,
+	);
+
+	// Notify when environment is active.
+	$form['settings']['notify'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Notify when this environment is active.'),
+		'#description' => t('Displays a small notification banner across the the top of the site.'),
+		'#default_value' => $environment->settings['notify'],
+	);
+
+	return $form;
 }
 
 /**

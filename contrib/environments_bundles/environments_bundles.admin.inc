@@ -6,51 +6,6 @@
  */
 
 /**
- * Form builder; Form to edit a given task bundle.
- */
-function environments_bundles_form_edit($form, &$form_state) {
-	if (!empty($form_state['bundle'])) {
-		$bundle = $form_state['bundle'];
-	}
-	else {
-		$bundle = environments_bundles_create();
-	}
-
-	// Title
-	$form['admin_title'] = array(
-		'#type' => 'textfield',
-		'#maxlength' => '255',
-		'#title' => t('Title'),
-		'#description' => t('A human-readable title for this task bundle.'),
-		'#required' => TRUE,
-		'#default_value' => $bundle->admin_title,
-	);
-
-	// Machine name.
-	$form['name'] = array(
-		'#type' => 'machine_name',
-		'#maxlength' => '255',
-		'#machine_name' => array(
-			'source' => array('admin_title'),
-			'exists' => 'environments_bundles_exists',
-		),
-		'#required' => TRUE,
-		'#default_value' => $bundle->name,
-		'#disabled' => $form_state['form type'] === 'edit',
-	);
-
-	// Description.
-	$form['description'] = array(
-		'#type' => 'textarea',
-		'#title' => t('Description'),
-		'#default_value' => $bundle->description,
-		'#description' => t('Insert an optional description that will appear in the Admin UI.'),
-	);
-
-	return $form;
-}
-
-/**
  * Form builder; Form to delete a given task bundle.
  */
 function environments_bundles_form_delete($form, &$form_state, $bundle) {
