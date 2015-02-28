@@ -1,19 +1,25 @@
-//////////////////////////////////
+/////////////////////////////////
 /// Environments Admin styles ///
-//////////////////////////////////
+/////////////////////////////////
 
-// These look best with the Shiny admin theme or sub-theme.
+// These look best with the Shiny admin theme or a sub-theme.
 
 #environments-task-settings {
 
-  div.form-item-settings-value-type,
-  #environments-variable-value {
+  #environments-variable-value-type,
+  #environments-variable-value,
+  #edit-settings-getvalue {
 	float: left;
 	overflow: hidden;
   }
 
-  div.form-item-settings-value-type {
-	margin-right: 1.4em;
+  #environments-variable-value-type,
+  #environments-variable-value {
+	margin-right: 1em;
+  }
+
+  #edit-settings-getvalue.form-submit {
+	margin-top: 1.3em;
   }
 
 }
