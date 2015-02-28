@@ -109,7 +109,7 @@ $plugin = array(
 );
 
 /**
- * Export UI form
+ * CTools Export UI form.
  */
 function environments_bundles_ctools_export_ui_form(&$form, &$form_state) {
   // Load the admin form include.

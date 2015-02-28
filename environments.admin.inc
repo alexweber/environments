@@ -485,6 +485,7 @@ function environments_task_form_edit_submit($form, &$form_state) {
 				'name' => $task['name'],
 				'settings' => $settings,
 				'#id' => $id,
+				// @TODO max weight + 1
 				'#weight' => 50,
 			);
 
