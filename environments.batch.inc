@@ -101,6 +101,7 @@ function _environments_bundles_task_finished($success, $results, $operations) {
 		if ($bundle = $results['object']) {
 			watchdog('environments', 'Executed task bundle: !name', array('!name' => $bundle->admin_title), WATCHDOG_INFO);
 			drupal_set_message(t('Executed task bundle: !name', array('!name' => $bundle->admin_title)));
+			return;
 		}
 	}
 

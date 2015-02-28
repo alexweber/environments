@@ -109,7 +109,7 @@ function environments_bundles_exec_form($form, &$form_state, $bundle) {
 		));
 	}
 	else {
-		$tasks = '<em>none</em>';
+		$tasks = ' <em>' . t('None') . '</em>';
 	}
 
 	return confirm_form($form,
