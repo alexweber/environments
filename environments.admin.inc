@@ -407,7 +407,7 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
 	// Figure out path depending on what type of object we're editing.
 	$path = 'admin/config/development/environments';
 	if ($object->table === 'environments_bundles') {
-		$path .= '/bundles';
+		$path .= '-bundles';
 	}
 	$path .= "/list/{$object->name}/tasks";
 
@@ -509,7 +509,7 @@ function environments_task_form_edit_submit_redirect($form, &$form_state) {
 
 	// Figure out path depending on what type of object we're editing.
 	if ($object->table === 'environments_bundles') {
-		$path .= '/bundles';
+		$path .= '-bundles';
 	}
 
 	$form_state['redirect'] = "{$path}/list/{$object->name}/tasks";
