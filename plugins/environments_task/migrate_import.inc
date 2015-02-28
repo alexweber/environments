@@ -51,10 +51,17 @@ function environments_task_migrate_import_settings($form_state) {
  *   $context is an array that will contain information about the
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
+ *
+ * @throws Exception
+ *   If the Migrate module is not enabled.
  */
 function environments_task_migrate_import($settings, &$context) {
 	$migrations = $settings['migrations'];
 	$messages = array();
+
+	if (!module_exists('migrate')) {
+		throw new Exception(t('Features module must be enabled to execute the "features_revert" Environments task.'));
+	}
 
 	foreach ($migrations as $machine_name) {
 		$migration = Migration::getInstance($machine_name);
