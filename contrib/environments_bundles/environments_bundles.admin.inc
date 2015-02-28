@@ -87,8 +87,66 @@ function environments_bundles_form_delete_submit($form, &$form_state) {
 /**
  * Page callback.
  *
- * @see environments_bundles_ctools_export_ui_form()
+ * @see environments_ctools_export_ui_form_bundles()
  */
-function environments_bundles_exec_form($bundle) {
+function environments_bundles_exec_form($form, &$form_state, $bundle) {
+	$tasks_summary = array();
 
+	if (is_array($bundle->tasks)) {
+		foreach (element_children($bundle->tasks, TRUE) as $key) {
+			$task = $bundle->tasks[$key];
+			$tasks_summary[] = $task['name'];
+		}
+	}
+
+	if (!empty($tasks_summary)) {
+		$tasks = theme_item_list(array(
+			'items' => $tasks_summary,
+			'title' => '',
+			'type' => 'ol',
+			'attributes' => array(),
+		));
+	}
+	else {
+		$tasks = '<em>none</em>';
+	}
+
+	return confirm_form($form,
+		t('Are you sure you want to execute the task bundle: %name?', array('%name' => $bundle->admin_title)),
+		"admin/config/development/environments-bundles/list/{$bundle->name}",
+		t('The following tasks will run:') . $tasks,
+		t('Execute'),
+		t('Cancel')
+	);
+}
+
+/**
+ * Submit handler for deleting a task bundle.
+ */
+function environments_bundles_exec_form_submit($form, &$form_state) {
+	$bundle = &$form_state['bundle'];
+	$operations = array();
+
+	// Process our tasks.
+	_environments_process_tasks($bundle, $operations);
+
+	// Always run our cleanup operation last to set the context for status
+	// messages and then flush caches for the grand finale.
+	$operations[] = array(
+		'_environments_task_cleanup',
+		array(t('Cleaning up.'), $bundle)
+	);
+
+	$batch = array(
+		'title' => t('Processing task bundle.'),
+		'operations' => $operations,
+		'finished' => '_environments_bundles_task_finished',
+		'init_message' => t('Preparing to execute task bundle.'),
+		'progress_message' => t('Processed @current out of @total tasks.'),
+		'error_message' => t('Error executing task bundle.'),
+		'file' => drupal_get_path('module', 'environments') . '/environments.batch.inc',
+	);
+
+	batch_set($batch);
+	_environments_process_batch($batch, "admin/config/development/environments-bundles/list/{$bundle->name}");
 }

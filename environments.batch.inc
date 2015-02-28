@@ -41,9 +41,9 @@ function _environments_task_dispatcher($task_info, &$context) {
  *
  * @see environments_set()
  */
-function _environments_task_cleanup($operation, $env, &$context) {
+function _environments_task_cleanup($operation, $object, &$context) {
 	$context['message'] = t('@operation', array('@operation' => $operation));
-	$context['results']['environment'] = $env;
+	$context['results']['object'] = $object;
 	drupal_flush_all_caches();
 }
 
@@ -70,13 +70,37 @@ function _environments_task_flush($operation, &$context) {
  */
 function _environments_task_finished($success, $results, $operations) {
 	if ($success) {
-		if ($env = $results['environment']) {
+		if ($env = $results['object']) {
 			if ($environment = environments_load($env)) {
 				variable_set('environments_env', $env);
 				watchdog('environments', 'Environment set to: @name', array('@name' => $environment->admin_title), WATCHDOG_INFO);
 				drupal_set_message(t('Environment set to: @name', array('@name' => $environment->admin_title)));
 				return;
 			}
+		}
+	}
+
+	// An error occurred.
+	// $operations contains the operations that remained unprocessed.
+	$error_operation = reset($operations);
+	$message = t('An error occurred while processing %error_operation with arguments: @arguments', array(
+		'%error_operation' => $error_operation[0],
+		'@arguments' => print_r($error_operation[1], TRUE)
+	));
+	drupal_set_message($message, 'error');
+	watchdog('environments', $message, array(), WATCHDOG_ERROR);
+}
+
+/**
+ * Batch API finished callback.
+ *
+ * @see environments_bundles_exec_form_submit()
+ */
+function _environments_bundles_task_finished($success, $results, $operations) {
+	if ($success) {
+		if ($bundle = $results['object']) {
+			watchdog('environments', 'Executed task bundle: !name', array('!name' => $bundle->admin_title), WATCHDOG_INFO);
+			drupal_set_message(t('Executed task bundle: !name', array('!name' => $bundle->admin_title)));
 		}
 	}
 
