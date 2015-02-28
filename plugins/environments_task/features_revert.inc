@@ -56,6 +56,10 @@ function environments_task_features_revert($settings, &$context) {
 	$modules = $settings['modules'];
 	$messages = array();
 
+	if (!module_exists('features')) {
+		throw new Exception(t('Features module must be enabled to execute the "features_revert" Environments task.'));
+	}
+
 	module_load_include('inc', 'features', 'features.export');
 
 	foreach ($modules as $module) {
