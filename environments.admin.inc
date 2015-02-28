@@ -744,3 +744,25 @@ function _environments_get_features() {
 
 	return $features_options;
 }
+
+/**
+ * Returns all available Migrations. Used by the "migrate_import" and
+ * "migrate_rollback" tasks.
+ *
+ * @return array
+ *   An array of migration names, keyed by machine_name.
+ */
+function _environments_get_migrations() {
+	static $migrations = array();
+
+	if (empty($migrations) && function_exists('migrate_migrations')) {
+		// Load all available migrations.
+		$migrations = migrate_migrations();
+
+		foreach ($migrations as $machine_name => $migration) {
+			$migrations[] = $machine_name;
+		}
+	}
+
+	return $migrations;
+}
