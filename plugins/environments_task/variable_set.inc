@@ -84,6 +84,24 @@ function environments_task_variable_set_settings($form_state) {
 		? $form_state['values']['settings']['value_type']
 		: FALSE;
 
+	// If we pressed the "Try to find value" button, try to find and set it.
+	$set_var_value = NULL;
+	if (isset($form_state['triggering_element']['#name']) && $form_state['triggering_element']['#name'] === 'getvalue') {
+		$varname = $form_state['values']['settings']['name'];
+		$varval = variable_get($varname, NULL);
+
+		if (isset($varval)) {
+			$set_var_value = $varval;
+
+			if (is_array($default_value)) {
+				$set_var_value = serialize($set_var_value);
+			}
+
+			$default_value = $set_var_value;
+			$value_type = NULL;
+		}
+	}
+
 	if (!$value_type) {
 		if ($default_value !== '') {
 			if (is_bool($default_value)) {
@@ -98,10 +116,19 @@ function environments_task_variable_set_settings($form_state) {
 					$value_type = 'integer';
 				}
 			}
+			else if (strpos($default_value, ';') !== FALSE) {
+				$value_type = 'serialized';
+			}
+		}
+
+		if (!$value_type) {
+			$value_type = 'string';
 		}
 	}
 
 	$form['value_type'] = array(
+		'#prefix' => '<div id="environments-variable-value-type">',
+		'#suffix' => '</div>',
 		'#type' => 'select',
 		'#title' => t('Value type'),
 		'#options' => array(
@@ -120,6 +147,10 @@ function environments_task_variable_set_settings($form_state) {
 		'#default_value' => $value_type,
 	);
 
+	if (isset($set_var_value)) {
+		$form['value_type']['#value'] = $value_type;
+	}
+
 	$form['value'] = array(
 		'#prefix' => '<div id="environments-variable-value">',
 		'#suffix' => '</div>',
@@ -128,6 +159,10 @@ function environments_task_variable_set_settings($form_state) {
 		'#default_value' => $default_value,
 		'#element_validate' => array('_environments_task_variable_set_validate_value'),
 	);
+
+	if (isset($set_var_value)) {
+		$form['value']['#value'] = $default_value;
+	}
 
 	if ($value_type === 'boolean') {
 		$form['value']['#type'] = 'select';
@@ -148,6 +183,25 @@ function environments_task_variable_set_settings($form_state) {
 		$form['value']['#type'] = 'textfield';
 		$form['value']['#size'] = 40;
 	}
+
+	$form['getvalue'] = array(
+		'#name' => 'getvalue',
+		'#type' => 'button',
+		'#button_type' => 'submit',
+		'#executes_submit_callback' => FALSE,
+		'#value' => t('Try to find value'),
+		'#ajax' => array(
+			'callback' => 'environments_ajax_task_settings_variable_get_value',
+			'wrapper' => 'environments-variable-value',
+			'method' => 'replace',
+			'effect' => 'slide',
+		),
+		'#states' => array(
+		  'visible' => array(
+		    ':input[name="settings[name]"]' => array('filled' => TRUE),
+		  ),
+		),
+	);
 
 	return $form;
 }
@@ -191,7 +245,7 @@ function environments_task_variable_set($settings, &$context) {
 }
 
 /**
- * AJAX Callback.
+ * AJAX callback; updates the variable name field according to selection mode.
  *
  * @see environments_task_variable_set_settings()
  */
@@ -200,10 +254,27 @@ function environments_ajax_task_settings_variable_set_name($form, &$form_state) 
 }
 
 /**
- * AJAX Callback.
+ * AJAX callback; updates the variable value field according to the value type.
  *
  * @see environments_task_variable_set_settings()
  */
 function environments_ajax_task_settings_variable_set_value($form, &$form_state) {
 	return $form['settings']['value'];
+}
+
+/**
+ * AJAX callback; updates both the variable type and value fields with values
+ * determined automatically, if available.
+ *
+ * @see environments_task_variable_set_settings()
+ */
+function environments_ajax_task_settings_variable_get_value($form, &$form_state) {
+	$commands = array();
+
+	// Manually replace the contents of both fields.
+	$commands[] = ajax_command_html('#environments-variable-value-type', render($form['settings']['value_type']));
+	$commands[] = ajax_command_html('#environments-variable-value', render($form['settings']['value']));
+
+	// Finally, return commands.
+	return array('#type' => 'ajax', '#commands' => $commands);
 }

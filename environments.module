@@ -416,7 +416,7 @@ function _environments_task_variable_validate_name($element, &$form_state, $form
 		form_error($element, t('Invalid variable name.'));
 	}
 
-	// Remove helper setting if we're submitting the form.
+	// Remove helper settings if we're submitting the form.
 	if ($form_state['submitted']) {
 		unset($form_state['values']['settings']['selection']);
 	}
@@ -446,5 +446,10 @@ function _environments_task_variable_set_validate_value($element, &$form_state, 
 	// Update value if we casted it.
 	if ($original_value !== $value) {
 		form_set_value($element, $value, $form_state);
+	}
+
+	// Remove helper settings if we're submitting the form.
+	if ($form_state['submitted']) {
+		unset($form_state['values']['settings']['getvalue']);
 	}
 }
