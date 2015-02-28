@@ -177,8 +177,4 @@ function environments_bundles_ctools_export_ui_form_submit(&$form, &$form_state)
 	$bundle = &$form_state['bundle'];
   $bundle->admin_title = $form_state['values']['admin_title'];
   $bundle->description = $form_state['values']['description'];
-
-	if ($form_state['form type'] === 'add') {
-
-	}
 }
