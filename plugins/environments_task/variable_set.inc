@@ -149,7 +149,7 @@ function environments_task_variable_set_settings($form_state) {
 	else if ($value_type === 'integer' || $value_type === 'float') {
 		$type = module_exists('elements') ? 'numberfield' : 'textfield';
 		$form['value']['#type'] = $type;
-		$form['value']['#size'] = 20;
+		$form['value']['#size'] = 10;
 	}
 	else if ($value_type === 'serialized') {
 		$form['value']['#type'] = 'textarea';
