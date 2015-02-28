@@ -56,9 +56,10 @@ function environments_task_features_revert($settings, &$context) {
 	$modules = $settings['modules'];
 	$messages = array();
 
+	module_load_include('inc', 'features', 'features.export');
+
 	foreach ($modules as $module) {
 		if (module_exists($module)) {
-			module_load_include('inc', 'features', 'features.export');
 			$storage = features_get_storage($module);
 			if (in_array($storage, array(
 				FEATURES_OVERRIDDEN,
