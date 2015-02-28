@@ -136,20 +136,31 @@ function environments_set($env) {
 		);
 
 		batch_set($batch);
-
-		// If running through CLI, process batch using Drush.
-		if (php_sapi_name() === 'cli' && function_exists('drush_backend_batch_process')) {
-			$batch =& batch_get();
-			$batch['progressive'] = FALSE;
-			drush_backend_batch_process();
-		}
-		else {
-			batch_process('admin/config/system/environments');
-		}
+		_environments_process_batch($batch, 'admin/config/system/environments');
 	}
 	else {
 		drupal_set_message(t('Trying to set invalid environment: %name', array('%name' => $env)), 'error', FALSE);
 		watchdog('environments', 'Trying to set invalid environment: %name', array('%name' => $env), WATCHDOG_ERROR);
+	}
+}
+
+/**
+ * Helper function to process batch jobs.
+ *
+ * @param array
+ *   The batch definition.
+ * @param string
+ *   The url to redirect to once batch is finished.
+ */
+function _environments_process_batch($batch, $redirect = NULL) {
+	// If running through CLI, process batch using Drush.
+	if (php_sapi_name() === 'cli' && function_exists('drush_backend_batch_process')) {
+		$batch =& batch_get();
+		$batch['progressive'] = FALSE;
+		drush_backend_batch_process();
+	}
+	else {
+		batch_process($redirect);
 	}
 }
 
