@@ -32,17 +32,7 @@ function environments_task_variable_set_settings($form_state) {
 
 	$selection = isset($form_state['values']['settings']['selection'])
 		? $form_state['values']['settings']['selection']
-		: FALSE;
-
-	// Always start as a list for new ones and custom when editing.
-	if (!$selection) {
-		if ($task) {
-			$selection = 'custom';
-		}
-		else {
-			$selection = 'list';
-		}
-	}
+		: 'custom';
 
 	$form['selection'] = array(
 		'#title' => t('Selection mode'),
