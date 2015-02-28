@@ -36,6 +36,7 @@ function environments_bundles_form_edit($form, &$form_state) {
 		),
 		'#required' => TRUE,
 		'#default_value' => $bundle->name,
+		'#disabled' => $form_state['form type'] === 'edit',
 	);
 
 	// Description.

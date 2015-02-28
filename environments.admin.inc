@@ -36,6 +36,7 @@ function environments_form_edit($form, &$form_state) {
 		),
 		'#required' => TRUE,
 		'#default_value' => $environment->name,
+		'#disabled' => $form_state['form type'] === 'edit',
 	);
 
 	// Alias.

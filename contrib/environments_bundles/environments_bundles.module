@@ -99,7 +99,9 @@ function environments_bundles_create($values = array()) {
 	}
 
 	// Default description.
-	$bundle->description = $values['description'];
+	if (isset($values['description'])) {
+		$bundle->description = $values['description'];
+	}
 
 	// Default tasks.
 	$bundle->tasks = array();

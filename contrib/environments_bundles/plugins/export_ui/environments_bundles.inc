@@ -125,11 +125,12 @@ function environments_bundles_ctools_export_ui_form(&$form, &$form_state) {
 /**
  * Submit handler.
  *
- * @see environments_form_edit()
+ * @see environments_bundles_form_edit()
  */
 function environments_bundles_ctools_export_ui_form_submit(&$form, &$form_state) {
   // Edit the reference to $form_state['bundle'] which will in turn
   // reference $form_state['item'] which is what CTools is looking for.
-  $bundle = &$form_state['bundle'];
+	$bundle = &$form_state['bundle'];
+  $bundle->admin_title = $form_state['values']['admin_title'];
   $bundle->description = $form_state['values']['description'];
 }
