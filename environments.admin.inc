@@ -514,7 +514,7 @@ function environments_task_form_edit_submit_redirect($form, &$form_state) {
 
 	$form_state['redirect'] = "{$path}/list/{$object->name}/tasks";
 
-	if ($form_state['values']['op'] === t('Save and add another')) {
+	if ($form_state['values']['op'] === $form_state['values']['submit_another']) {
 		$form_state['redirect'] .= '/add';
 		unset($_GET['destination']);
 	}
