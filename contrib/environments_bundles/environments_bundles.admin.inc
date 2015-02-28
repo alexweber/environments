@@ -48,29 +48,30 @@ function environments_bundles_form_delete_submit($form, &$form_state) {
 function environments_bundles_exec_form($form, &$form_state, $bundle) {
 	$tasks_summary = array();
 	$form_state['bundle'] = $bundle;
+	$redirect_path = "admin/config/development/environments-bundles/list/{$bundle->name}";
 
-	if (is_array($bundle->tasks)) {
-		foreach (element_children($bundle->tasks, TRUE) as $key) {
-			$task = $bundle->tasks[$key];
-			$tasks_summary[] = $task['name'];
-		}
+	if (!is_array($bundle->tasks) || empty($bundle->tasks)) {
+		$redirect_path .= '/tasks';
+		drupal_set_message(t('This bundle has no tasks!'), 'warning', FALSE);
+		drupal_goto(url($redirect_path, array('absolute' => TRUE)));
+		exit;
 	}
 
-	if (!empty($tasks_summary)) {
-		$tasks = theme_item_list(array(
-			'items' => $tasks_summary,
-			'title' => '',
-			'type' => 'ol',
-			'attributes' => array(),
-		));
+	foreach (element_children($bundle->tasks, TRUE) as $key) {
+		$task = $bundle->tasks[$key];
+		$tasks_summary[] = $task['name'];
 	}
-	else {
-		$tasks = ' <em>' . t('None') . '</em>';
-	}
+
+	$tasks = theme_item_list(array(
+		'items' => $tasks_summary,
+		'title' => '',
+		'type' => 'ol',
+		'attributes' => array(),
+	));
 
 	return confirm_form($form,
 		t('Are you sure you want to execute the task bundle: %name?', array('%name' => $bundle->admin_title)),
-		"admin/config/development/environments-bundles/list/{$bundle->name}",
+		$redirect_path,
 		t('The following tasks will run:') . $tasks,
 		t('Execute'),
 		t('Cancel')
