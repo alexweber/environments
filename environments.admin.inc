@@ -467,13 +467,15 @@ function environments_task_form_edit_submit_redirect($form, &$form_state) {
  * @see environments_menu()
  */
 function environments_form_site($form) {
-	$environments_options = array();
 	$environments = environments_load_all();
 
+	// Format options.
+	$environments_options = array();
 	foreach ($environments as $env) {
 		$environments_options[$env->name] = $env->admin_title;
 	}
 
+	// Current site environment.
 	$form['environment'] = array(
 		'#title' => t('Current environment'),
 		'#type' => 'select',
@@ -499,7 +501,8 @@ function environments_form_site($form) {
 		'#type' => 'fieldset',
 		'#title' => t('Notification banners'),
 		'#description' => t('These settings are only taken into account if the current environment has banner notifications enabled.'),
-		'#collapsible' => FALSE,
+		'#collapsible' => TRUE,
+		'#collapsed' => TRUE,
 	);
 
 	$form['advanced']['banner']['environments_css'] = array(
@@ -514,6 +517,21 @@ function environments_form_site($form) {
 		'#type' => 'checkbox',
 		'#description' => t('Disable this if you want to write your own notification banner scripts.'),
 		'#default_value' => variable_get('environments_js', TRUE),
+	);
+
+	$form['advanced']['drush'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('Drush'),
+		'#description' => t('Configure Drush integration.'),
+		'#collapsible' => TRUE,
+		'#collapsed' => TRUE,
+	);
+
+	$form['advanced']['drush']['environments_drush'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Path to Drush'),
+		'#description' => t('Enter the absolute path to your Drush executable, for example: /usr/bin/drush'),
+		'#default_value' => variable_get('environments_drush', ''),
 	);
 
 	$form['actions'] = array('#type' => 'actions');
@@ -531,9 +549,10 @@ function environments_form_site($form) {
  * @see environments_form_site()
  */
 function environments_form_site_submit($form, &$form_state) {
-	// Persist CSS/JS settings.
+	// Save simple variables.
 	variable_set('environments_css', $form_state['values']['environments_css']);
 	variable_set('environments_js', $form_state['values']['environments_js']);
+	variable_set('environments_drush', $form_state['values']['environments_drush']);
 
 	// Use the same message as system_settings_form_submit().
 	drupal_set_message(t('The configuration options have been saved.'), 'status', FALSE);
