@@ -22,11 +22,11 @@ function _environments_task_dispatcher($task_info, &$context) {
 			$callback($task_info['settings'], $context);
 		}
 		else {
-			watchdog('environments', 'Error loading callback for task: @name', array('@name' => $task_info), WATCHDOG_ERROR);
+			watchdog('environments', 'Error loading callback for task: @name', array('@name' => $task_info['name']), WATCHDOG_ERROR);
 		}
 	}
 	else {
-		watchdog('environments', 'Error loading task: @name', array('@name' => $task_info), WATCHDOG_ERROR);
+		watchdog('environments', 'Error loading task: @name', array('@name' => $task_info['name']), WATCHDOG_ERROR);
 	}
 }
 
