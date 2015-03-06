@@ -260,7 +260,7 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
 	}
 
 	// Sort tasks alphabetically.
-	sort($task_types);
+	asort($task_types);
 
 	// Pick a task.
 	// Default task can either com from submitted values or from form_state.
