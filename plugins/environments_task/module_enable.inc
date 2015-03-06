@@ -98,7 +98,7 @@ function environments_task_module_enable($settings, &$context) {
 
 	foreach ($modules as $module) {
 		if (module_exists($module)) {
-			$messages[] = t('No need to enable %module, it\'s already enabled.', array('%module' => $module));
+			$messages[] = t('@module is already enabled.', array('@module' => $module));
 		}
 		else {
 			$modules_filtered[] = $module;
@@ -109,7 +109,7 @@ function environments_task_module_enable($settings, &$context) {
 	if (!empty($modules_filtered)) {
 		if (module_enable($modules_filtered, $enable_dependencies)) {
 			// Display this message before all others.
-			array_unshift($messages, t('Enabled modules: %modules.', array('%module' => implode(', ', array_values($modules_filtered)))));
+			array_unshift($messages, t('Enabled modules: @modules.', array('@modules' => implode(', ', array_values($modules_filtered)))));
 		}
 	}
 

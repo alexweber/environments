@@ -89,13 +89,13 @@ function environments_task_module_uninstall($settings, &$context) {
 		// Disable enabled modules first.
 		if (!empty($modules_disable)) {
 			module_disable($modules_disable, $uninstall_dependents);
-			$messages[] = t('The following modules were manually disabled before being uninstalled: %module.', array('%module' => implode(', ', array_values($modules_disable))));
+			$messages[] = t('The following modules were manually disabled before being uninstalled: @modules.', array('@modules' => implode(', ', array_values($modules_disable))));
 		}
 	}
 
 	// Finally, uninstall modules.
 	if (drupal_uninstall_modules($modules, $uninstall_dependents)) {
-		$messages[] = t('Uninstalled modules: %modules.', array('%module' => implode(', ', array_values($modules))));
+		$messages[] = t('The folowing modules were uninstalled: @modules.', array('@modules' => implode(', ', array_values($modules))));
 	}
 
 	// Display messages.

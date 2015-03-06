@@ -61,13 +61,13 @@ function environments_task_migrate_import($settings, &$context) {
 	$messages = array();
 
 	if (!module_exists('migrate')) {
-		throw new Exception(t('Features module must be enabled to execute the "features_revert" Environments task.'));
+		throw new Exception(t('Migrate module must be enabled to execute the "migrate_import" Environments task.'));
 	}
 
 	foreach ($migrations as $machine_name) {
 		$migration = Migration::getInstance($machine_name);
 		$migration->processImport();
-		$messages[] = t('Imported migration: !name', array('!name' => $machine_name));
+		$messages[] = t('Imported migration: @name', array('@name' => $machine_name));
 	}
 
 	// Display messages.

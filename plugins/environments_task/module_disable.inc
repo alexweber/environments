@@ -71,7 +71,7 @@ function environments_task_module_disable($settings, &$context) {
 
 	foreach ($modules as $module) {
 		if (!module_exists($module)) {
-			$messages[] = t('No need to disable %module, it\'s not enabled.', array('%module' => $module));
+			$messages[] = t('@module is already disabled.', array('@module' => $module));
 		}
 		else {
 			$modules_filtered[] = $module;
@@ -83,7 +83,7 @@ function environments_task_module_disable($settings, &$context) {
 		module_disable($modules_filtered, $disable_dependents);
 
 		// Display this message before all others.
-		array_unshift($messages, t('Disabled modules: %modules.', array('%module' => implode(', ', array_values($modules_filtered)))));
+		array_unshift($messages, t('Disabled modules: @modules.', array('@modules' => implode(', ', array_values($modules_filtered)))));
 	}
 
 	// Display messages.

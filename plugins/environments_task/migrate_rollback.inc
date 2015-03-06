@@ -61,13 +61,13 @@ function environments_task_migrate_rollback($settings, &$context) {
 	$messages = array();
 
 	if (!module_exists('migrate')) {
-		throw new Exception(t('Features module must be enabled to execute the "features_revert" Environments task.'));
+		throw new Exception(t('Migrate module must be enabled to execute the "migrate_rollback" Environments task.'));
 	}
 
 	foreach ($migrations as $machine_name) {
 		$migration = Migration::getInstance($machine_name);
 		$migration->processRollback();
-		$messages[] = t('Rolled-back migration: !name', array('!name' => $machine_name));
+		$messages[] = t('Migration rolled-back: @name', array('@name' => $machine_name));
 	}
 
 	// Display messages.
