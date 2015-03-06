@@ -12,7 +12,7 @@
  *
  * @see environments_set()
  */
-function _environments_task_dispatcher($task_info, &$context) {
+function _environments_task_dispatcher($task_info, &$context, $nested = FALSE) {
 	// Load task plugin.
 	if ($full_task = environments_get_task($task_info['name'])) {
 		// Resolve callback function.
@@ -25,8 +25,22 @@ function _environments_task_dispatcher($task_info, &$context) {
 			watchdog('environments', 'Error loading callback for task: @name', array('@name' => $task_info['name']), WATCHDOG_ERROR);
 		}
 	}
+	// If it fails, clear CTools caches and give it another chance. This is done
+	// this way to avoid having to do this gratuitously. It does, however, seem to
+	// be necessary at times for reasons still unknown to me.
 	else {
-		watchdog('environments', 'Error loading task: @name', array('@name' => $task_info['name']), WATCHDOG_ERROR);
+		drupal_static_reset('ctools_plugins');
+		drupal_static_reset('ctools_plugin_type_info');
+		drupal_static_reset('ctools_plugin_type_info_loaded');
+
+		// In order to prevent infinite recursion, try again just once.
+		if (!$nested) {
+			watchdog('environments', 'Trouble loading task: @name, clearing caches and tryin again.', array('@name' => $task_info['name']), WATCHDOG_NOTICE);
+			_environments_task_dispatcher($task_info, $context, TRUE);
+		}
+		else {
+			watchdog('environments', 'Error loading task: @name', array('@name' => $task_info['name']), WATCHDOG_ERROR);
+		}
 	}
 }
 
