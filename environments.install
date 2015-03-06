@@ -98,14 +98,14 @@ function environments_requirements($phase) {
 		if ($env = variable_get('environments_env')) {
 			if ($environment = environments_load($env)) {
 				$return['environments'] = array(
-					'title' => t('Environments: current environment'),
+					'title' => t('Environments: Current environment'),
 					'value' => $environment->admin_title,
-					'severity' => REQUIREMENT_OK,
+					'severity' => REQUIREMENT_INFO,
 				);
 			}
 			else {
 				$return['environments'] = array(
-					'title' => t('Environments: invalid environment'),
+					'title' => t('Environments: Invalid environment'),
 					'value' => $env,
 					'severity' => REQUIREMENT_ERROR,
 				);
@@ -113,9 +113,9 @@ function environments_requirements($phase) {
 		}
 		else {
 			$return['environments'] = array(
-				'title' => t('Environments: current environment'),
+				'title' => t('Environments: Current environment'),
 				'value' => t('No environment set'),
-				'severity' => REQUIREMENT_INFO,
+				'severity' => REQUIREMENT_WARNING,
 			);
 		}
 	}
