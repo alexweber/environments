@@ -1,16 +1,7 @@
-/* line 9, ../scss/environments.admin.scss */
-#environments-task-settings #environments-variable-value-type,
-#environments-task-settings #environments-variable-value,
-#environments-task-settings #edit-settings-getvalue {
+#environments-task-settings #environments-variable-value-type, #environments-task-settings #environments-variable-value, #environments-task-settings #edit-settings-getvalue {
   float: left;
-  overflow: hidden;
-}
-/* line 16, ../scss/environments.admin.scss */
-#environments-task-settings #environments-variable-value-type,
-#environments-task-settings #environments-variable-value {
-  margin-right: 1em;
-}
-/* line 21, ../scss/environments.admin.scss */
+  overflow: hidden; }
+#environments-task-settings #environments-variable-value-type, #environments-task-settings #environments-variable-value {
+  margin-right: 1em; }
 #environments-task-settings #edit-settings-getvalue.form-submit {
-  margin-top: 1.3em;
-}
+  margin-top: 1.3em; }
