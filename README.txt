@@ -15,12 +15,16 @@ It defines 3 new concepts:
 Environments
 ------------
 
-Environments can be managed in: Administration -> Configuration -> Development -> Environments
+Environments can be managed in:
+
+		Administration -> Configuration -> Development -> Environments
 
 An environment consists of a name, optional alias, configuration options and tasks.
 
 You can view the current environment in your site's Status Report or in the
-settings page: Administration -> Configuration -> System -> Site Environment
+settings page:
+
+		Administration -> Configuration -> System -> Site Environment
 
 You can manually switch your site's active environment at any given time either
 in the settings interface or using the Drush command: "drush environments", or
@@ -61,6 +65,31 @@ or using the "environments-bundle" Drush command:
 
 Finally, a Task Bundle can also be added to an Environment as a task itself, so
 that it can be run and managed alongside other tasks.
+
+------------
+Drush
+------------
+
+In order to add a task that executes Drush commands, you must first configure
+the path to Drush in the settings form:
+
+		Administration -> Configuration -> System -> Site Environment
+
+You must insert the absolute path to the executable and, if it contains spaces
+you must manually escape them, for example:
+
+		/Applications/Dev\ Desktop/drush/drush
+
+The following documentation page from the Migrate module has pretty good
+instructions for getting a very similar Drush integration working (this one is
+based on theirs actually!):
+
+ 		https://www.drupal.org/node/1958170
+
+All you have to do is replace the variable name "migrate_drush_path" in the
+instructions with ours: "environments_drush". In fact, if you already have
+Migrate configured, we will borrow from their config to initialize ours when
+you enable the module.
 
 ------------
 Suggested Usage
