@@ -259,6 +259,9 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
 		$task_types[$type['name']] = $type['admin_title'];
 	}
 
+	// Sort tasks alphabetically.
+	sort($task_types);
+
 	// Pick a task.
 	// Default task can either com from submitted values or from form_state.
 	if (isset($form_state['values']['task'])) {
