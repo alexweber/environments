@@ -62,15 +62,16 @@ function environments_task_execute_drush($settings, &$context) {
 		$status = NULL;
 		$output = array();
 		$uri = $GLOBALS['base_url'];
-		$uid = $GLOBALS['user']->uid;
-		$drush_command = "{$drush_path} {$command} --user={$uid} --uri={$uri} --root=" . DRUPAL_ROOT;
+		$drush_command = "{$drush_path} {$command} --uri={$uri} --root=" . DRUPAL_ROOT;
 
 		$log_file = '/tmp/drupal_environments.log';
-		$drush_command .= " >$log_file 2>&1 &";
+		$drush_command_full = "{$drush_command} >{$log_file} 2>&1 &";
 
-		exec($drush_command, $output, $status);
-		$output_str = count($output) ? "\n" . implode("\n", $output) : '(empty)';
-		$context['message'] = t("Executed command: \"!name\", status was: !status and output was: \n!output.", array('!name' => $drush_command, '!status' => $status, '!output' => $output_str));
+		exec($drush_command_full, $output, $status);
+		$output_str = var_export($output, TRUE);
+		$context['message'] = t("Executed command: \"!name\".", array('!name' => $drush_command));
+		$context['message'] = t("Command status: \"!status\".", array('!status' => $status));
+		$context['message'] = t("Command output: \"!output\".", array('!output' => $output_str));
 	}
 	else {
 		$message = 'Drush is misconfigured.';
