@@ -1,6 +1,8 @@
 (function ($, Drupal) {
-	Drupal.behaviors.environments_notification = {
-		attach: function (context, settings) {
+	'use strict';
+
+	Drupal.behaviors.environmentsNotification = {
+		attach: function (context) {
 			var $banner = $('#environments-notify', context);
 
 			if ($banner.length) {
