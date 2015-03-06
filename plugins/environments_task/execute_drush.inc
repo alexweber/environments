@@ -69,8 +69,8 @@ function environments_task_execute_drush($settings, &$context) {
 		$drush_command .= " >$log_file 2>&1 &";
 
 		exec($drush_command, $output, $status);
-		$output_str = implode("\n", $output);
-		$context['message'] = t("Executed command: \"!name\", status was: !status and output was: \n!output", array('@name' => $command, '!status' => $status, '!output' => $output_str));
+		$output_str = count($output) ? "\n" . implode("\n", $output) : '(empty)';
+		$context['message'] = t("Executed command: \"!name\", status was: !status and output was: \n!output.", array('!name' => $drush_command, '!status' => $status, '!output' => $output_str));
 	}
 	else {
 		$message = 'Drush is misconfigured.';
