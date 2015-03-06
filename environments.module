@@ -232,10 +232,8 @@ function environments_ctools_plugin_directory($module, $type) {
 	if ($type === 'export_ui') {
 		return 'plugins/export_ui';
 	}
-	else {
-		if ($type === 'environments_task') {
-			return 'plugins/environments_task';
-		}
+	else if ($type === 'environments_task') {
+		return 'plugins/environments_task';
 	}
 }
 
