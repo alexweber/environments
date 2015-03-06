@@ -37,6 +37,9 @@ function environments_task_execute_drush_settings($form_state) {
 		'#description' => t('Insert the command you wish to run, leave out "drush". The command will be executed as-is.'),
 		'#required' => TRUE,
 		'#default_value' => isset($task['settings']['command']) ? $task['settings']['command'] : '',
+		'#attributes' => array(
+			'placeholder' => 'vset my_test_var foo',
+		),
 	);
 
 	return $form;

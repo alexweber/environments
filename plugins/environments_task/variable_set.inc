@@ -74,6 +74,7 @@ function environments_task_variable_set_settings($form_state) {
 		$form['name']['#size'] = 40;
 		$form['name']['#default_value'] = isset($task['settings']['name']) ? (string) $task['settings']['name'] : '';
 		$form['name']['#description'] = t('Variable names must start with a letter, consist only of letters, numbers and underscores and be all in lower-case.');
+		$form['name']['#attributes']['placeholder'] = 'my_awesome_variable';
 	}
 
 	$default_value = isset($task['settings']) && array_key_exists('value', $task['settings'])
@@ -175,6 +176,7 @@ function environments_task_variable_set_settings($form_state) {
 		$type = module_exists('elements') ? 'numberfield' : 'textfield';
 		$form['value']['#type'] = $type;
 		$form['value']['#size'] = 10;
+		$form['value']['#attributes']['placeholder'] = '123';
 	}
 	else if ($value_type === 'serialized') {
 		$form['value']['#type'] = 'textarea';
@@ -182,6 +184,7 @@ function environments_task_variable_set_settings($form_state) {
 	else {
 		$form['value']['#type'] = 'textfield';
 		$form['value']['#size'] = 40;
+		$form['value']['#attributes']['placeholder'] = 'foo bar baz';
 	}
 
 	$form['getvalue'] = array(

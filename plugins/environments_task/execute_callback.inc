@@ -36,6 +36,9 @@ function environments_task_execute_callback_settings($form_state) {
 		'#description' => t('Insert a function name without parentheses. Caution: This task will fail if the callback function doesn\'t exist or isn\'t included. For best results put it in a .module file. It\'s not possible to pass parameters to the callback at this time.'),
 		'#required' => TRUE,
 		'#default_value' => isset($task['settings']['callback']) ? $task['settings']['callback'] : '',
+		'#attributes' => array(
+			'placeholder' => 'my_awesome_function',
+		),
 	);
 
 	return $form;
