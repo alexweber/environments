@@ -22,4 +22,21 @@
 	margin-top: 1.3em;
   }
 
+  .form-item-settings-command label {
+
+	&:after {
+	  content: "drush";
+	  font-style: italic;
+	  position: relative;
+	  top: 1.75em;
+	  left: -5.8em;
+	}
+
+  }
+
+  #edit-settings-command {
+	position: relative;
+	left: 3.4em;
+  }
+
 }

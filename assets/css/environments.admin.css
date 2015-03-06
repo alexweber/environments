@@ -5,3 +5,12 @@
   margin-right: 1em; }
 #environments-task-settings #edit-settings-getvalue.form-submit {
   margin-top: 1.3em; }
+#environments-task-settings .form-item-settings-command label:after {
+  content: "drush";
+  font-style: italic;
+  position: relative;
+  top: 1.75em;
+  left: -5.8em; }
+#environments-task-settings #edit-settings-command {
+  position: relative;
+  left: 3.4em; }
