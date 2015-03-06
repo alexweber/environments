@@ -12,8 +12,8 @@ $plugin = array(
 		'command' => '',
 	),
 	'settings_callback' => 'environments_task_execute_drush_settings',
+//	'summary_callback' => 'environments_task_execute_drush_summary',
 );
-
 
 /**
  * Form callback.
@@ -66,7 +66,8 @@ function environments_task_execute_drush($settings, &$context) {
 		$drush_command .= " >$log_file 2>&1 &";
 
 		exec($drush_command, $output, $status);
-		$context['message'] = t('Executed command: @name(), status was: !status and output was: !output', array('@name' => $command, '!status' => $status, '!output' => $output));
+		$output_str = implode("\n", $output);
+		$context['message'] = t("Executed command: \"!name\", status was: !status and output was: \n!output", array('@name' => $command, '!status' => $status, '!output' => $output_str));
 	}
 	else {
 		$message = 'Drush is misconfigured.';
