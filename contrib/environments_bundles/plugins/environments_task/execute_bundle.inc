@@ -7,11 +7,11 @@
 
 $plugin = array(
 	'admin_title' => t('Execute task bundle'),
-	'task_callback' => 'environments_bundle_execute_task',
+	'task_callback' => 'environments_bundles_task_execute',
 	'settings' => array(
 		'bundle' => '',
 	),
-	'settings_callback' => 'environments_bundle_task_settings',
+	'settings_callback' => 'environments_bundles_task_settings',
 );
 
 /**
@@ -25,7 +25,7 @@ $plugin = array(
  * @return array
  *   A Form API array of task settings.
  */
-function environments_bundle_task_settings($form_state) {
+function environments_bundles_task_settings($form_state) {
 	$form = array();
 	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
 	$options = array();
@@ -68,7 +68,7 @@ function environments_bundle_task_settings($form_state) {
  *   status of the batch. The values in $context will retain their
  *   values as the batch progresses.
  */
-function environments_bundle_execute_task($settings, &$context) {
+function environments_bundles_task_execute($settings, &$context) {
 	$bundle = $settings['name'];
 
 	if ($bundle_object = environments_bundles_load($bundle)) {
