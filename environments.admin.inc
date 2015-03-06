@@ -282,6 +282,9 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
 		'#empty_option' => t('- None -'),
 		'#default_value' => $default_task,
 		'#options' => $task_types,
+		'#attributes' => array(
+			'style' => 'min-width:240px;',
+		),
 		'#ajax' => array(
 			'callback' => 'environments_ajax_task_settings',
 			'wrapper' => 'environments-task-settings',
