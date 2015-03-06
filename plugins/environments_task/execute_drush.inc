@@ -10,6 +10,7 @@ $plugin = array(
 	'task_callback' => 'environments_task_execute_drush',
 	'settings' => array(
 		'command' => '',
+//		'output' => '', // @TODO allow disregarding output?
 	),
 	'settings_callback' => 'environments_task_execute_drush_settings',
 //	'summary_callback' => 'environments_task_execute_drush_summary',
@@ -60,7 +61,6 @@ function environments_task_execute_drush($settings, &$context) {
 
 	if ($drush_path = variable_get('environments_drush', '')) {
 		$status = NULL;
-		$output = array();
 		$uri = $GLOBALS['base_url'];
 		$drush_command = "{$drush_path} {$command} --uri={$uri} --root=" . DRUPAL_ROOT;
 
@@ -68,6 +68,8 @@ function environments_task_execute_drush($settings, &$context) {
 		$drush_command_full = "{$drush_command} >{$log_file} 2>&1 &";
 
 		exec($drush_command_full, $output, $status);
+//		passthru($drush_command_full, $status);
+
 		$output_str = var_export($output, TRUE);
 		$context['message'] = t("Executed command: \"!name\".", array('!name' => $drush_command));
 		$context['message'] = t("Command status: \"!status\".", array('!status' => $status));
