@@ -24,6 +24,17 @@ function environments_enable() {
 	if (php_sapi_name() !== 'cli') {
 		drupal_set_message(t('You\'ve enabled the Environments module. Click <a href="!url">here</a> to configure up your site environments and tasks.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE)))), 'status', FALSE);
 	}
+
+	// If we don't happen to already have this variable set, try to figure it out
+	// from ther modules which also use Drush.
+	if (!variable_get('environments_drush', '')) {
+		if ($path = variable_get('migrate_drush_path')) {
+			variable_set('environments_drush', $path);
+		}
+		else if ($path = variable_get('wordpress_migrate_drush')) {
+			variable_set('environments_drush', $path);
+		}
+	}
 }
 
 /**
