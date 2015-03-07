@@ -6,10 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Alex Weber (alexweber15@gmail.com)",
+  "author": {
+	"name": "Alex Weber",
+	"email": "alexweber15@gmail.com",
+	"url": "http://alexweber.com.br"
+  },
   "license": "GPL",
   "devDependencies": {
-    "grunt": "^0.4.5",
     "gulp": "^3.8.11",
     "gulp-jshint": "^1.9.2",
     "gulp-sass": "^1.3.3",
