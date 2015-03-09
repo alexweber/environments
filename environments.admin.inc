@@ -38,6 +38,7 @@ function environments_form_delete_submit($form, &$form_state) {
 
 	drupal_set_message(t('Environment %admin_title was ' . $op . '.', array('%admin_title' => $environment->admin_title)));
 	$form_state['redirect'] = 'admin/config/development/environments';
+	unset($_GET['destination']);
 }
 
 /**
@@ -365,6 +366,12 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
 			'absolute' => TRUE,
 		),
 	);
+
+	$form['actions']['delete'] = array(
+		'#type' => 'submit',
+		'#value' => t('Delete'),
+		'#limit_validation_errors' => array(),
+		'#submit' => array('environments_task_form_edit_submit_delete'),
 	);
 
 	$form['#submit'][] = 'environments_task_form_edit_submit';
@@ -465,6 +472,47 @@ function environments_task_form_edit_submit($form, &$form_state) {
  */
 function environments_task_form_edit_submit_redirect($form, &$form_state) {
 	$object = $form_state['object'];
+	$path = _environments_get_path($object);
+	$form_state['redirect'] = "{$path}/tasks";
+
+	if ($form_state['values']['op'] === $form_state['values']['submit_another']) {
+		$form_state['redirect'] .= '/add';
+		unset($_GET['destination']);
+	}
+}
+/**
+ * Submit callback.
+ *
+ * @see environments_task_form_edit()
+ */
+function environments_task_form_edit_submit_delete($form, &$form_state) {
+	$object = $form_state['object'];
+	$task = $form_state['task'];
+	$path = _environments_get_path($object);
+	$form_state['redirect'] = array(
+		"{$path}/tasks/{$task['#id']}/delete",
+		array(
+			'query' => array(
+				'destination' => "{$path}/tasks/{$task['#id']}/edit",
+			),
+		),
+	);
+	unset($_GET['destination']);
+}
+
+/**
+ * Helper function to determine the path of an object.
+ *
+ * @param $object
+ *   Either an Environment or an Environment Bundle object.
+ *
+ * @return string
+ *   The admin path to that object.
+ *
+ * @see environments_task_form_edit_submit_redirect()
+ * @see environments_task_form_edit_submit_delete()
+ */
+function _environments_get_path($object) {
 	$path = 'admin/config/development/environments';
 
 	// Figure out path depending on what type of object we're editing.
@@ -472,12 +520,7 @@ function environments_task_form_edit_submit_redirect($form, &$form_state) {
 		$path .= '-bundles';
 	}
 
-	$form_state['redirect'] = "{$path}/list/{$object->name}/tasks";
-
-	if ($form_state['values']['op'] === $form_state['values']['submit_another']) {
-		$form_state['redirect'] .= '/add';
-		unset($_GET['destination']);
-	}
+	return "{$path}/list/{$object->name}";
 }
 
 /**
