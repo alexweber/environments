@@ -195,8 +195,8 @@ function environments_task_form_submit($form, &$form_state) {
  *
  * Displays delete task form.
  */
-function environments_task_form_delete($form, &$form_state, $environment, $task) {
-	$form_state['environment'] = $environment;
+function environments_task_form_delete($form, &$form_state, $object, $task) {
+	$form_state['object'] = $object;
 	$form_state['task'] = $task;
 
 	return confirm_form(
@@ -214,12 +214,12 @@ function environments_task_form_delete($form, &$form_state, $environment, $task)
  * @see environments_task_form_delete()
  */
 function environments_task_form_delete_submit($form, &$form_state) {
-	$environment = $form_state['environment'];
+	$object = $form_state['object'];
 	$task = $form_state['task'];
 
-	if (array_key_exists($task, $environment->tasks)) {
-		unset($environment->tasks[$task]);
-		if (environments_save($environment)) {
+	if (array_key_exists($task, $object->tasks)) {
+		unset($object->tasks[$task]);
+		if (environments_save($object)) {
 			drupal_set_message(t('Task deleted!'), 'status', FALSE);
 			return;
 		}
