@@ -80,6 +80,32 @@ function environments_help($path, $arg) {
 }
 
 /**
+ * Implements hook_form_alter().
+ *
+ * Alter the CTools Export UI form for our exportables to make them look more
+ * like other Drupal forms.
+ */
+function environments_form_ctools_export_ui_edit_item_form_alter(&$form, &$form_state) {
+	$plugins = array(
+		'environments',
+		'environments_bundles',
+	);
+
+	if (in_array($form_state['plugin']['name'], $plugins)) {
+		$form['actions']= array(
+			'#type' => 'actions',
+		);
+
+		foreach (element_children($form['buttons']) as $button) {
+			$form['actions'][$button] = $form['buttons'][$button];
+			unset($form['buttons'][$button]);
+		}
+
+		unset($form['buttons']);
+	}
+}
+
+/**
  * Helper function to add tasks to the batch.
  *
  * @param mixed
