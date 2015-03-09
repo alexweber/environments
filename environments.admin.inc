@@ -356,7 +356,15 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
 	$path .= "/list/{$object->name}/tasks";
 
 	$form['actions']['cancel'] = array(
-		'#markup' => l(t('Cancel'), $path, array('absolute' => TRUE)),
+		'#theme' => 'link',
+		'#text' => t('Cancel'),
+		'#path' => $path,
+		'#options' => array(
+			'attributes' => array(),
+			'html' => FALSE,
+			'absolute' => TRUE,
+		),
+	);
 	);
 
 	$form['#submit'][] = 'environments_task_form_edit_submit';
