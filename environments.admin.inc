@@ -177,11 +177,9 @@ function environments_task_form_submit($form, &$form_state) {
 	// Sort tasks by new weights.
 	uasort($object->tasks, 'element_sort');
 
-	$save_callback = $object->table === 'environments_bundles'
-		? 'environments_bundles_save'
-		: 'environments_save';
+	$save_callback = _environments_get_callback($object);
 
-	if (function_exists($save_callback) && $save_callback($object)) {
+	if ($save_callback($object)) {
 		drupal_set_message(t('Task order updated!'), 'status', FALSE);
 	}
 	else {
@@ -219,8 +217,13 @@ function environments_task_form_delete_submit($form, &$form_state) {
 
 	if (array_key_exists($task, $object->tasks)) {
 		unset($object->tasks[$task]);
-		if (environments_save($object)) {
+		$save_callback = _environments_get_callback($object);
+
+		if ($save_callback($object)) {
+			$path = _environments_get_path($object);
 			drupal_set_message(t('Task deleted!'), 'status', FALSE);
+			$form_state['redirect'] = "{$path}/tasks";
+			unset($_GET['destination']);
 			return;
 		}
 	}
@@ -399,9 +402,7 @@ function environments_ajax_task_settings($form, &$form_state) {
 function environments_task_form_edit_submit($form, &$form_state) {
 	$object = $form_state['object'];
 	$new_task = $form_state['values']['task'];
-	$save_callback = $object->table === 'environments_bundles'
-		? 'environments_bundles_save'
-		: 'environments_save';
+	$save_callback = _environments_get_callback($object);
 
 	$new_settings = array_key_exists('settings', $form_state['values'])
 		? $form_state['values']['settings']
@@ -454,7 +455,7 @@ function environments_task_form_edit_submit($form, &$form_state) {
 				'#weight' => $weight,
 			);
 
-			if (function_exists($save_callback) && $save_callback($object)) {
+			if ($save_callback($object)) {
 				drupal_set_message(t('Task Added'), 'status', FALSE);
 				return;
 			}
@@ -501,7 +502,7 @@ function environments_task_form_edit_submit_delete($form, &$form_state) {
 }
 
 /**
- * Helper function to determine the path of an object.
+ * Helper function to determine the path to an object.
  *
  * @param $object
  *   Either an Environment or an Environment Bundle object.
@@ -521,6 +522,24 @@ function _environments_get_path($object) {
 	}
 
 	return "{$path}/list/{$object->name}";
+}
+
+/**
+ * Helper function to determine an object's save callback.
+ *
+ * @param $object
+ *   Either an Environment or an Environment Bundle object.
+ *
+ * @return string
+ *   The callback name.
+ *
+ * @see environments_task_form_submit()
+ * @see environments_task_form_edit_submit()
+ */
+function _environments_get_callback($object) {
+	return $object->table === 'environments_bundles'
+		? 'environments_bundles_save'
+		: 'environments_save';
 }
 
 /**
