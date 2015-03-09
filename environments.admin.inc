@@ -406,7 +406,7 @@ function environments_task_form_edit_submit($form, &$form_state) {
 		$object->tasks[$id]['name'] = $new_task;
 		$object->tasks[$id]['settings'] = $new_settings;
 
-		if (function_exists($save_callback) && $save_callback($object)) {
+		if ($save_callback($object)) {
 			drupal_set_message(t('Task Updated'), 'status', FALSE);
 			return;
 		}
