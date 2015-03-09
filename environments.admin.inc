@@ -423,13 +423,20 @@ function environments_task_form_edit_submit($form, &$form_state) {
 			// Generate unique ID.
 			$id = md5($task['name'] . serialize($settings) . time());
 
+			// Find the next highest weight for our new task.
+			$weight = -50;
+			foreach ($object->tasks as $t) {
+				if ($t['#weight'] > $weight) {
+					$weight = ++$t['#weight'];
+				}
+			}
+
 			// Add new task to object.
 			$object->tasks[$id] = array(
 				'name' => $task['name'],
 				'settings' => $settings,
 				'#id' => $id,
-				// @TODO max weight + 1
-				'#weight' => 50,
+				'#weight' => $weight,
 			);
 
 			if (function_exists($save_callback) && $save_callback($object)) {
