@@ -4,3 +4,4 @@ dependencies[] = ctools
 configure = admin/config/development/environments
 package = Administration
 core = 7.x
+files[] = plugins/export_ui/environments_ctools_export_ui.class.php

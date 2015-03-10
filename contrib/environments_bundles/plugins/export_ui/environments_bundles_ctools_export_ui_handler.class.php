@@ -5,7 +5,11 @@
  * Contains environments_bundles_ctools_export_ui_handler.
  */
 
-class environments_bundles_ctools_export_ui_handler extends ctools_export_ui {
+/**
+ * Class environments_bundles_ctools_export_ui_handler; customizes the
+ * CTools Exportable UI for Environments Bundles.
+ */
+class environments_bundles_ctools_export_ui_handler extends environments_ctools_export_ui {
 
 	/**
 	 * @inheritdoc
@@ -14,11 +18,6 @@ class environments_bundles_ctools_export_ui_handler extends ctools_export_ui {
 		$allowed_operations = parent::build_operations($item);
 
 		// Move our custom operations to the bottom of the list.
-		if (array_key_exists('tasks', $allowed_operations)) {
-			$task = $allowed_operations['tasks'];
-			unset($allowed_operations['tasks']);
-			$allowed_operations['tasks'] = $task;
-		}
 		if (array_key_exists('exec', $allowed_operations)) {
 			$exec = $allowed_operations['exec'];
 			unset($allowed_operations['exec']);
