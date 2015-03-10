@@ -797,10 +797,10 @@ function _environments_get_migrations() {
 
 	if (empty($migrations) && function_exists('migrate_migrations')) {
 		// Load all available migrations.
-		$migrations = migrate_migrations();
+		$loaded_migrations = migrate_migrations(TRUE);
 
-		foreach ($migrations as $machine_name => $migration) {
-			$migrations[] = $machine_name;
+		foreach ($loaded_migrations as $machine_name => $migration) {
+			$migrations[$machine_name] = $machine_name;
 		}
 	}
 
