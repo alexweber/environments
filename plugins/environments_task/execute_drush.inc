@@ -6,7 +6,7 @@
  */
 
 $plugin = array(
-	'admin_title' => t('Execute Drush command'),
+	'admin_title' => t('Execute drush command'),
 	'task_callback' => 'environments_task_execute_drush',
 	'settings' => array(
 		'command' => '',

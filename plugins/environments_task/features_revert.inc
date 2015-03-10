@@ -36,7 +36,7 @@ function environments_task_features_revert_settings($form_state) {
 		'#description' => t('Caution: This task will fail if the Features module is not enabled.'),
 		'#multiple' => TRUE,
 		'#options' => _environments_get_features(),
-		'#empty_option' => t(' -Select some features- '),
+		'#empty_option' => t(' -Select features- '),
 		'#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
 	);
 

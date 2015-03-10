@@ -36,7 +36,7 @@ function environments_task_module_disable_settings($form_state) {
 		'#title' => t('Modules'),
 		'#multiple' => TRUE,
 		'#options' => _environments_get_modules(),
-		'#empty_option' => t(' -Select some modules- '),
+		'#empty_option' => t(' -Select modules- '),
 		'#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
 	);
 
