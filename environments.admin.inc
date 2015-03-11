@@ -96,15 +96,20 @@ function environments_task_form($form, &$form_state, $object) {
 					if (is_array($value)) {
 						$value = implode(', ', $value);
 					}
-					else if (is_bool($value)) {
-						$value_string = $value ? t('true') : t('false');
-						$value = "<em>{$value_string}</em>";
-					}
 					else if ($name === 'value' && $value_type) {
 						if ($value_type === 'string') {
 							$value = "\"{$value}\"";
 						}
-						// Booleans are already handled above.
+						// Boolean values are true/false.
+						else if (is_bool($value)) {
+							$value_string = $value ? t('true') : t('false');
+							$value = "<em>{$value_string}</em>";
+						}
+					}
+					// Boolean settings are yes/no.
+					else if (is_bool($value)) {
+						$value_string = $value ? t('yes') : t('no');
+						$value = "<em>{$value_string}</em>";
 					}
 
 					// Give the setting a nice "human" label.
