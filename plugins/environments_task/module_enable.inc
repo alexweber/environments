@@ -44,9 +44,7 @@ $plugin = array(
 );
 
 /**
- * Form callback.
- *
- * Returns the settings form for this task.
+ * Form callback; returns the settings form for this task.
  *
  * @param array
  *   A copy of the form_state array.

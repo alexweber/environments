@@ -133,3 +133,9 @@ and manage tasks in a much more streamlined manner:
  			* Execute "CDN Development Bundle"
  			* Execute "Enable Debug Bundle"
  			* Execute "Disable Caching Bundle"
+
+------------
+Environments API
+------------
+
+@TODO Explain how to write a task plugin.
