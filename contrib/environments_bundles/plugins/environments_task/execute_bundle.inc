@@ -9,7 +9,7 @@ $plugin = array(
 	'admin_title' => t('Execute task bundle'),
 	'task_callback' => 'environments_bundles_task_execute',
 	'settings' => array(
-		'bundle' => '',
+		'name' => '',
 	),
 	'settings_callback' => 'environments_bundles_task_settings',
 );
