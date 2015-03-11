@@ -107,7 +107,8 @@ function environments_task_form($form, &$form_state, $object) {
 						// Booleans are already handled above.
 					}
 
-					$label = drupal_ucfirst($name);
+					// Give the setting a nice "human" label.
+					$label = drupal_ucfirst(str_replace('_', ' ', $name));
 					$settings_summary[] = "<strong>{$label}:</strong> {$value}";
 				}
 			}
