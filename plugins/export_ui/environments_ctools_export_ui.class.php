@@ -14,22 +14,6 @@ abstract class environments_ctools_export_ui extends ctools_export_ui {
 	/**
 	 * @inheritdoc
 	 */
-	function build_operations($item) {
-		$allowed_operations = parent::build_operations($item);
-
-		// Move our custom operations to the bottom of the list.
-		if (array_key_exists('tasks', $allowed_operations)) {
-			$tasks = $allowed_operations['tasks'];
-			unset($allowed_operations['tasks']);
-			$allowed_operations['tasks'] = $tasks;
-		}
-
-		return $allowed_operations;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	function get_page_title($op, $item = NULL) {
 		if (empty($this->plugin['strings']['title'][$op])) {
 			return;
