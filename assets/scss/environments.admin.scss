@@ -4,6 +4,10 @@
 
 // These look best with the Shiny admin theme or a sub-theme.
 
+select.env-task-select {
+  min-width:240px;
+}
+
 #environments-task-settings {
 
   #environments-variable-value-type,
@@ -27,8 +31,9 @@
 	&:after {
 	  content: "drush";
 	  font-style: italic;
+	  font-weight: normal;
 	  position: relative;
-	  top: 1.75em;
+	  top: 1.9em;
 	  left: -5.8em;
 	}
 
