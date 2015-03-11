@@ -23,10 +23,6 @@ function environments_bundles_permission() {
  */
 function environments_bundles_help($path, $arg) {
 	switch ($path) {
-		case 'admin/help#environments_bundles':
-			$path = drupal_get_path('module', 'environments_bundles');
-			return file_get_contents("{$path}/README.txt");
-      break;
 		case 'admin/config/development/environments-bundles':
 			return t('Here you can manage your task bundles. Task bundles are groups of tasks that can be imported, exported and executed as a unit.');
 		case 'admin/config/development/environments-bundles/list/%/tasks':
