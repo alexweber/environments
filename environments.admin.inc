@@ -75,29 +75,36 @@ function environments_task_form($form, &$form_state, $object) {
 		foreach (element_children($object->tasks) as $id) {
 			$task = $object->tasks[$id];
 
-			// Prepare settings summary.
-			$settings_summary = array();
+			// If the task has a custom summary callback, use it.
+			if ($callback = ctools_plugin_get_function($form_state['task'], 'summary_callback')) {
+				$settings_summary = (array) call_user_func($callback, $task['settings']);
+			}
+			// If not, generate a default summary as best we can.
+			else {
+				$settings_summary = array();
 
-			$value_type = array_key_exists('value_type', $task['settings'])
-				? $task['settings']['value_type']
-				: FALSE;
+				$value_type = array_key_exists('value_type', $task['settings'])
+					? $task['settings']['value_type']
+					: FALSE;
 
-			foreach ($task['settings'] as $name => $value) {
-				if (is_array($value)) {
-					$value = implode(', ', $value);
-				}
-				else if (is_bool($value)) {
-					$value_string = $value ? t('true') : t('false');
-					$value = "<em>{$value_string}</em>";
-				}
-				else if ($name === 'value' && $value_type) {
-					if ($value_type === 'string') {
-						$value = "\"{$value}\"";
+				foreach ($task['settings'] as $name => $value) {
+					if (is_array($value)) {
+						$value = implode(', ', $value);
 					}
-					// Booleans are already handled above.
-				}
+					else if (is_bool($value)) {
+						$value_string = $value ? t('true') : t('false');
+						$value = "<em>{$value_string}</em>";
+					}
+					else if ($name === 'value' && $value_type) {
+						if ($value_type === 'string') {
+							$value = "\"{$value}\"";
+						}
+						// Booleans are already handled above.
+					}
 
-				$settings_summary[] = "<strong>{$name}:</strong> {$value}";
+					$label = drupal_ucfirst($name);
+					$settings_summary[] = "<strong>{$label}:</strong> {$value}";
+				}
 			}
 
 			ctools_include('export');
@@ -144,7 +151,7 @@ function environments_task_form($form, &$form_state, $object) {
 	}
 	else {
 		$form['tasks'] = array(
-			'#markup' => '<div class="empty-text">' . t('There are no tasks set up yet.') . '</div>',
+			'#markup' => '<div class="empty-text">' . t('There are no tasks set up yet. Click "Add Task" to get started!') . '</div>',
 		);
 	}
 
@@ -634,7 +641,7 @@ function environments_form_site($form) {
  * @see environments_form_site()
  */
 function environments_form_site_submit($form, &$form_state) {
-	// Save simple variables.
+	// Save simple settings.
 	variable_set('environments_css', $form_state['values']['environments_css']);
 	variable_set('environments_js', $form_state['values']['environments_js']);
 	variable_set('environments_drush', $form_state['values']['environments_drush']);
@@ -655,8 +662,8 @@ function environments_form_site_submit($form, &$form_state) {
 			drupal_set_message(t('The site\'s environment has been unset.'), 'status', FALSE);
 		}
 		else {
-			unset($_GET['destination']);
 			$form_state['redirect'] = "admin/config/system/environments/confirm/{$new_environment}";
+			unset($_GET['destination']);
 		}
 	}
 }
@@ -766,9 +773,7 @@ function _environments_get_variables() {
 }
 
 /**
- * Returns all available Drupal features. Used by the "features_revert". This
- * is as a convenience function to prepare a list of features for a "select"
- * Form API element.
+ * Returns all available Drupal features. Used by the "features_revert" task.
  *
  * @return array
  *   An array of module names, keyed by machine_name.
@@ -810,7 +815,8 @@ function _environments_get_migrations() {
 }
 
 /**
- * Returns all available Rules Components. Used by the "rules_component task.
+ * Returns all available Rules "action" Components. Used by the
+ * "rules_component" task.
  *
  * @return array
  *   An array of component names, keyed by machine_name.

@@ -13,8 +13,7 @@ $plugin = array(
 //		'output' => '', // @TODO allow disregarding output?
 	),
 	'settings_callback' => 'environments_task_execute_drush_settings',
-//	'summary_callback' => 'environments_task_execute_drush_summary',
-// @TODO summary callbacks?
+	'summary_callback' => 'environments_task_execute_drush_summary',
 );
 
 /**
@@ -46,7 +45,24 @@ function environments_task_execute_drush_settings($form_state) {
 }
 
 /**
- * Task callback.
+ * Summary callback; format a custom summary of our task settings.
+ *
+ * @param array
+ *   An array of settings.
+ *
+ * @return array
+ *   An array containing a short summary for each setting.
+ */
+function environments_task_execute_drush_summary($settings) {
+	$summary = array();
+
+	$summary[] = '<strong>' . t('Command') . ':</strong> drush ' . $settings['command'];
+
+	return $summary;
+}
+
+/**
+ * Task callback; executes our task.
  *
  * @param array
  *   An array of settings for the task.
