@@ -41,12 +41,24 @@ function environments_bundles_task_settings($form_state) {
 		$empty_description = t('You haven\'t created any other Task Bundles yet.');
 	}
 
+	// Get default value.
+	$default_bundle = isset($task['settings']['name'])
+		? $task['settings']['name']
+		: '';
+
+	// Check whether this bundle exists. It might get deleted, renamed, etc and we
+	// are most definitely not gonna keep watching for that stuff as it's total
+	// overkill. Instead, simply warn the user if the bundle doesn't exist.
+	if (!in_array($default_bundle, array_keys($options))) {
+		drupal_set_message(t('The bundle this task was using no longer exists.'), 'warning');
+	}
+
 	$form['name'] = array(
 		'#name' => 'settings[name]',
 		'#type' => 'select',
 		'#title' => t('Bundle'),
 		'#required' => TRUE,
-		'#default_value' => isset($task['settings']['name']) ? $task['settings']['name'] : array(),
+		'#default_value' => $default_bundle,
 		'#options' => $options,
 	);
 
