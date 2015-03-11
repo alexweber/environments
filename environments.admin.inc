@@ -441,9 +441,11 @@ function environments_task_form_edit_submit($form, &$form_state) {
 
 			// Find the next highest weight for our new task.
 			$weight = -50;
-			foreach ($object->tasks as $t) {
-				if ($t['#weight'] > $weight) {
-					$weight = ++$t['#weight'];
+			if ($object->tasks) {
+				foreach ($object->tasks as $t) {
+					if ($t['#weight'] > $weight) {
+						$weight = ++$t['#weight'];
+					}
 				}
 			}
 
