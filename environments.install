@@ -133,3 +133,40 @@ function environments_requirements($phase) {
 
 	return $return;
 }
+
+/**
+ * Fix Environments schema indices.
+ */
+function environments_update_7100() {
+	// If either of these fail, our schema is probably already ok so don't let
+	// the update hook fail. Do, however, run them independently to give them both
+	// a chance.
+	try {
+		db_drop_unique_key('environments', 'alias');
+	}
+	catch (Exception $e) {
+		watchdog('environments', $e->getMessage(), array(), WATCHDOG_NOTICE);
+	}
+
+	try {
+		db_add_index('environments', 'alias', array('alias'));
+	}
+	catch (Exception $e) {
+		watchdog('environments', $e->getMessage(), array(), WATCHDOG_NOTICE);
+	}
+}
+
+/**
+ * Fix Environment aliases.
+ */
+function environments_update_7101() {
+	try {
+		db_update('environments')
+			->fields(array('alias' => NULL))
+			->condition('alias', '', '=')
+			->execute();
+	}
+	catch (Exception $e) {
+		watchdog('environments', $e->getMessage(), array(), WATCHDOG_ERROR);
+	}
+}
