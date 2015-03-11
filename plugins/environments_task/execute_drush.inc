@@ -14,6 +14,7 @@ $plugin = array(
 	),
 	'settings_callback' => 'environments_task_execute_drush_settings',
 //	'summary_callback' => 'environments_task_execute_drush_summary',
+// @TODO summary callbacks?
 );
 
 /**
