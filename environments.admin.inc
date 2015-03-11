@@ -75,8 +75,13 @@ function environments_task_form($form, &$form_state, $object) {
 		foreach (element_children($object->tasks) as $id) {
 			$task = $object->tasks[$id];
 
+			// Prevent warnings.
+			$plugin_def = isset($all_tasks[$task['name']])
+				? $all_tasks[$task['name']]
+				: NULL;
+
 			// If the task has a custom summary callback, use it.
-			if ($callback = ctools_plugin_get_function($form_state['task'], 'summary_callback')) {
+			if ($callback = ctools_plugin_get_function($plugin_def, 'summary_callback')) {
 				$settings_summary = (array) call_user_func($callback, $task['settings']);
 			}
 			// If not, generate a default summary as best we can.
