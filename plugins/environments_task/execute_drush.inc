@@ -10,7 +10,7 @@ $plugin = array(
 	'task_callback' => 'environments_task_execute_drush',
 	'settings' => array(
 		'command' => '',
-//		'output' => '', // @TODO allow disregarding output?
+		'verbose' => TRUE,
 	),
 	'settings_callback' => 'environments_task_execute_drush_settings',
 	'summary_callback' => 'environments_task_execute_drush_summary',
@@ -41,6 +41,14 @@ function environments_task_execute_drush_settings($form_state) {
 		),
 	);
 
+	$form['verbose'] = array(
+		'#name' => 'settings[verbose]',
+		'#type' => 'checkbox',
+		'#title' => t('Verbose'),
+		'#description' => t('If TRUE the Drush command\'s output will be printed to stdout and if FALSE it will be ignored.'),
+		'#default_value' => isset($task['settings']['verbose']) ? $task['settings']['verbose'] : TRUE,
+	);
+
 	return $form;
 }
 
@@ -57,6 +65,7 @@ function environments_task_execute_drush_summary($settings) {
 	$summary = array();
 
 	$summary[] = '<strong>' . t('Command') . ':</strong> drush ' . $settings['command'];
+	$summary[] = '<strong>' . t('Verbose') . ':</strong> ' . $settings['verbose'] ? t('yes') : t('no');
 
 	return $summary;
 }
@@ -73,6 +82,7 @@ function environments_task_execute_drush_summary($settings) {
  */
 function environments_task_execute_drush($settings, &$context) {
 	$command = $settings['command'];
+	$verbose = $settings['verbose'];
 
 	if ($drush_path = variable_get('environments_drush', '')) {
 		$status = NULL;
@@ -85,10 +95,13 @@ function environments_task_execute_drush($settings, &$context) {
 		exec($drush_command, $output, $status);
 //		passthru($drush_command_full, $status);
 
-		$output_str = var_export($output, TRUE);
 		$context['message'] = t("Executed command: \"!name\".", array('!name' => $drush_command));
-		$context['message'] = t("Command status: \"!status\".", array('!status' => $status));
-		$context['message'] = t("Command output: \"!output\".", array('!output' => $output_str));
+
+		if ($verbose) {
+			$output_str = var_export($output, TRUE);
+			$context['message'] = t("Command status: \"!status\".", array('!status' => $status));
+			$context['message'] = t("Command output: \"!output\".", array('!output' => $output_str));
+		}
 	}
 	else {
 		$message = 'Drush is misconfigured.';
