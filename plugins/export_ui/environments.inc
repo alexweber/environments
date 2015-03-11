@@ -215,6 +215,8 @@ function environments_ctools_export_ui_form_submit(&$form, &$form_state) {
   // reference $form_state['item'] which is what CTools is looking for.
   $environment = &$form_state['environment'];
   $environment->admin_title = $form_state['values']['admin_title'];
-  $environment->alias = $form_state['values']['alias'];
+  $environment->alias = !empty($form_state['values']['alias'])
+		? $form_state['values']['alias']
+		: NULL;
   $environment->settings = $form_state['values']['settings'];
 }
