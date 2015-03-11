@@ -69,7 +69,7 @@ function environments_help($path, $arg) {
 	switch ($path) {
 		case 'admin/help#environments':
 			$path = drupal_get_path('module', 'environments');
-			return file_get_contents("{$path}/README.txt");
+			return file_get_contents("{$path}/docs/index.html");
 		case 'admin/config/system/environments':
 			return t('Here you can view and change the current environment, as well as manage other settings. To manage defined environments, go <a href="!url">here</a>.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE))));
 		case 'admin/config/development/environments':

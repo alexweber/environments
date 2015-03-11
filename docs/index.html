@@ -1,0 +1,170 @@
+<em>This page is an automatically-generated HTML version of <a href="https://github.com/alexweber/environments/blob/7.x-1.x/README.md">the official docs</a></em>
+
+<h1>Environments module</h1>
+
+<p>This module attempts to solve the problem of executing repetive tasks when switching between different server
+	environments, such as development, staging or production.</p>
+
+<p>It inroduces 3 new concepts:</p>
+
+<ul>
+	<li>Environments</li>
+	<li>Tasks</li>
+	<li>Task Bundles</li>
+</ul>
+
+<h2>Environments</h2>
+
+<p>An environment is a Drupal object (a CTools Exportable to be more specific) which represents a server environment, such
+	as "production", "staging", "development" and so on.</p>
+
+<p>The environment object has a name, optional alias, settings and any number of tasks. All defined environments can be
+	managed in: <code>Administration -&gt; Configuration -&gt; Development -&gt; Environments</code>.</p>
+
+<h3>Current Environment</h3>
+
+<p>Having defined one or more environments, you can now switch your site between them.</p>
+
+<p>You can view the current environment in your site's Status Report or in the settings page:
+	<code>Administration -&gt; Configuration -&gt; System -&gt; Site Environment</code></p>
+
+<p>Only one environment can be active at any given time and, when an environment becomes active, it's tasks are executed
+	in order.</p>
+
+<p>You can manually switch your site's active environment at any given time either in the Admin UI described above or by
+	using the handy <strong>Drush</strong> command: <code>drush environments</code>, or <code>drush env</code> for short:</p>
+
+<pre><code>
+	# View documentation.
+	drush environments --help</p>
+
+	<p># View all defined environments.
+		drush env</p>
+
+	<p># Switch to the "dev" environment.
+		drush env dev
+</code></pre>
+
+<h2>Tasks</h2>
+
+<p>Environment Tasks are operations such as enabling or disabling a module or changing a variable's value, that are
+	executed when an environment becomes active.</p>
+
+<p>Once you've created an environment at <code>Administration -&gt; Configuration -&gt; Development -&gt; Environments</code>, you can
+	configure it's tasks by going to it's "Manage Tasks" page.</p>
+
+<p>It's important to note that you can drag the tasks around to re-arrange them and that they will run in the <em>exact</em> order
+	in which they appear.</p>
+
+<p>The following tasks are available out of the box:</p>
+
+<ul>
+	<li>Clear caches</li>
+	<li>Delete variable</li>
+	<li>Disable module(s)</li>
+	<li>Enable module(s)</li>
+	<li>Execute callback</li>
+	<li>Execute Drush command</li>
+	<li>Execute Rules component</li>
+	<li>Import Migrations</li>
+	<li>Revert Feature(s)</li>
+	<li>Roll-back Migrations</li>
+	<li>Set variable value</li>
+	<li>Uninstall module(s)</li>
+</ul>
+
+<h2>Task Bundles</h2>
+
+<p>The included "Environments Bundles" module enables <em>Task Bundles</em>, which are nothing more than one or more tasks,
+	grouped together.</p>
+
+<p>Bundles are virtually identical to <em>Environments</em> except for 2 major differences:</p>
+
+<ul>
+	<li>Bundles don't have an "active" state like Environments</li>
+	<li>Unlike Environments, you can execute all of a Bundle's tasks on demand (with Environments you'd have to make that
+		Environment active to have it's tasks execute)</li>
+</ul>
+
+<p>Task Bundles may be executed in the Admin UI described above or by using the handy <strong>Drush</strong> command:
+	<code>drush environments-bundle</code>, or <code>drush envb</code> for short:</p>
+
+<pre><code>
+	# View documentation.
+	drush environments-bundle --help</p>
+
+	<p># Execute "foo" bundle.
+		drush envb foo
+</code></pre>
+
+<p>The Environments Bundles module also enables a new task:</p>
+
+<ul>
+	<li>Execute Task Bundle</li>
+</ul>
+
+<p>Yo dawg, I heard you like bundles, so this task can be added to Environments as well as Task Bundles, so you can have a
+	bundle that executes another bundle (but not itself because that would be bundle inception).</p>
+
+<h2>Drush</h2>
+
+<p>In order to use the task that executes a Drush command, you must first configure the path to Drush in the settings form:
+	<code>Administration -&gt; Configuration -&gt; System -&gt; Site Environment</code></p>
+
+<p>You must insert the absolute path to the executable and, if it contains spaces you must manually escape them, for
+	example: <code>/Applications/Dev\ Desktop/drush/drush</code></p>
+
+<p>The following documentation page from the Migrate module has pretty good instructions for getting a very similar Drush
+	integration working (this one is totally ripped off theirs actually!):
+	<a href="https://www.drupal.org/node/1958170">https://www.drupal.org/node/1958170</a></p>
+
+<p>All you have to do is replace the variable name <code>migrate_drush_path</code> in the instructions with ours <code>environments_drush</code>.
+	In fact, if you already have Migrate configured, we will borrow from their config to initialize ours when you enable the
+	module so you won't have to do anything!</p>
+
+<h2>Suggested Usage</h2>
+
+<p>The optimal way of working with Environments, particularly when maintaining multiple sites, each with their own somewhat
+	yet not entirely similar set of modules, is to leverage Task Bundles to create smaller, more manageable sets of tasks
+	targetted at a particular functionality, module or module suite:</p>
+
+<pre><code>    AdvAgg Production Bundle
+	* Enable AdvAgg + submodules
+	* Enable JS Compression using JSMin extension
+
+	AdvAgg Staging Bundle
+	* Enable AdvAgg + submodules
+	* Enable JS Compression using JSMin+
+
+	AdvAgg Development Bundle
+	* Disable AdvAgg + submodules
+</code></pre>
+
+<p>The above example is very simple but it demonstrates reasonably well how you may apply different settings to different
+	environments in a real-life situation.</p>
+
+<p>Grouping your tasks into targetted bundles also allows them to be more easily re-used amongst other projects where
+	there might be small differences (ie: no CDN) and that alone means for example that the "Production" environment of a
+	site with a CDN couldn't be shared with a site that didn't use it.</p>
+
+<p>However, using bundles we can simple add the bundles we want to our environments and manage tasks in a much more
+	streamlined manner:</p>
+
+<pre><code>    Production Environment Tasks
+	* Execute "AdvAgg Production Bundle"
+	* Execute "CDN Production Bundle"
+	* Execute "Disable Debug Bundle"
+	* Execute "Enable Caching Bundle"
+
+	Development Environment Tasks
+	* Execute "AdvAgg Development Bundle"
+	* Execute "CDN Development Bundle"
+	* Execute "Enable Debug Bundle"
+	* Execute "Disable Caching Bundle"
+</code></pre>
+
+<h2>Environments API</h2>
+
+<p>If you are familiar with CTools Plugins, creating a new Environments Task should be pretty straight-forwards!</p>
+
+<p><code>@TODO write this for now check out the existing tasks! :)</code></p>
