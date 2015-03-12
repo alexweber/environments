@@ -31,13 +31,13 @@ You can manually switch your site's active environment at any given time either 
 using the handy __Drush__ command: `drush environments`, or `drush env` for short:
 
 ```bash
-\# View documentation.
+# View documentation.
 drush environments --help
 
-\# View all defined environments.
+# View all defined environments.
 drush env
 
-\# Switch to the "dev" environment.
+# Switch to the "dev" environment.
 drush env dev
 ```
 
@@ -82,10 +82,10 @@ Task Bundles may be executed in the Admin UI described above or by using the han
 `drush environments-bundle`, or `drush envb` for short:
 
 ```bash
-\# View documentation.
+# View documentation.
 drush environments-bundle --help
 
-\# Execute "foo" bundle.
+# Execute "foo" bundle.
 drush envb foo
 ```
 
