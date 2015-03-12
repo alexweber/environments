@@ -21,14 +21,14 @@ function environments_bundles_drush_help($section) {
 function environments_bundles_drush_command() {
 	return array(
 		'environments-bundle' => array(
-			'aliases' => array('env-exec'),
+			'aliases' => array('envb'),
 			'callback' => '_environments_bundles_drush_exec',
 			'description' => 'Executes an Environments Task Bundle.',
 			'arguments' => array(
 				'bundle' => 'Optional. Specify the bundle\'s machine_name or omit it to list all available task bundles.',
 			),
 			'examples' => array(
-				'drush env-exec demo_bundle' => 'Execute the "demo_bundle" task bundle.',
+				'drush envb demo_bundle' => 'Execute the "demo_bundle" task bundle.',
 			),
 		),
 	);
