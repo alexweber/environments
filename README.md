@@ -156,3 +156,7 @@ streamlined manner:
 If you are familiar with CTools Plugins, creating a new Environments Task should be pretty straight-forwards!
 
 `@TODO write this for now check out the existing tasks! :)`
+
+## Video Overview
+
+<iframe src="https://player.vimeo.com/video/121030324" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="https://vimeo.com/121030324">Drupal Environments Module</a> from <a href="https://vimeo.com/alexweber15">Alex Weber</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
