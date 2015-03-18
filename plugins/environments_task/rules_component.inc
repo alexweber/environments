@@ -10,8 +10,10 @@ $plugin = array(
 	'task_callback' => 'environments_task_rules_component',
 	'settings' => array(
 		'components' => array(),
+		'enable' => TRUE,
 	),
 	'settings_callback' => 'environments_task_rules_component_settings',
+	'summary_callback' => 'environments_task_rules_component_summary',
 );
 
 /**
@@ -31,14 +33,40 @@ function environments_task_rules_component_settings($form_state) {
 		'#name' => 'settings[components]',
 		'#type' => 'select',
 		'#title' => t('Components'),
-		'#description' => t('Caution: This task will fail if the Rules module is not enabled.'),
+		'#description' => t('You can select one or more Rules "Action" components.'),
 		'#multiple' => TRUE,
 		'#options' => _environments_get_rules_components(),
 		'#empty_option' => t(' -Select components- '),
 		'#default_value' => isset($task['settings']['components']) ? $task['settings']['components'] : array(),
 	);
 
+	$form['enable'] = array(
+		'#name' => 'settings[enable]',
+		'#type' => 'checkbox',
+		'#title' => t('Enable Rules'),
+		'#description' => t('If checked, the Rules module will be explicitly enabled. Otherwise, it\'s up to you to make sure it\'s enabled when this task runs! This task will fail if Rules is not enabled.'),
+		'#default_value' => isset($task['settings']['enable']) ? $task['settings']['enable'] : TRUE,
+	);
+
 	return $form;
+}
+
+/**
+ * Summary callback; format a custom summary of our task settings.
+ *
+ * @param array
+ *   An array of settings.
+ *
+ * @return array
+ *   An array containing a short summary for each setting.
+ */
+function environments_task_rules_component_summary($settings) {
+	$summary = array();
+
+	$summary[] = '<strong>' . t('Components') . ':</strong> ' . implode(', ', $settings['components']);
+	$summary[] = '<strong>' . t('Enable Rules') . ':</strong> ' . ($settings['enable'] ? t('yes') : t('no'));
+
+	return $summary;
 }
 
 /**
@@ -56,10 +84,16 @@ function environments_task_rules_component_settings($form_state) {
  */
 function environments_task_rules_component($settings, &$context) {
 	$components = $settings['components'];
+	$enable = $settings['enable'];
 	$messages = array();
 
 	if (!module_exists('rules')) {
-		throw new Exception(t('Rules module must be enabled to execute the "rules_component" Environments task.'));
+		if ($enable) {
+			module_enable(array('rules'));
+		}
+		else {
+			throw new Exception(t('Rules module must be enabled to execute the "rules_component" Environments task.'));
+		}
 	}
 
 	foreach ($components as $machine_name) {
