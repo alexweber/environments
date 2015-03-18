@@ -155,7 +155,9 @@ streamlined manner:
 
 If you are familiar with CTools Plugins, creating a new Environments Task should be pretty straight-forwards!
 
-`@TODO write this for now check out the existing tasks! :)`
+`@TODO write this!`
+
+... for now check out the existing tasks, they're pretty well documented!
 
 ## Videos
 
