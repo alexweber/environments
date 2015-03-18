@@ -10,8 +10,10 @@ $plugin = array(
 	'task_callback' => 'environments_task_features_revert',
 	'settings' => array(
 		'modules' => array(),
+		'enable' => TRUE,
 	),
 	'settings_callback' => 'environments_task_features_revert_settings',
+	'summary_callback' => 'environments_task_features_revert_summary',
 );
 
 /**
@@ -38,7 +40,33 @@ function environments_task_features_revert_settings($form_state) {
 		'#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
 	);
 
+	$form['enable'] = array(
+		'#name' => 'settings[enable]',
+		'#type' => 'checkbox',
+		'#title' => t('Enable Features'),
+		'#description' => t('If checked, the Features module will be explicitly enabled. Otherwise, it\'s up to you to make sure it\'s enabled when this task runs! This task will fail if Features is not enabled.'),
+		'#default_value' => isset($task['settings']['enable']) ? $task['settings']['enable'] : TRUE,
+	);
+
 	return $form;
+}
+
+/**
+ * Summary callback; format a custom summary of our task settings.
+ *
+ * @param array
+ *   An array of settings.
+ *
+ * @return array
+ *   An array containing a short summary for each setting.
+ */
+function environments_task_features_revert_summary($settings) {
+	$summary = array();
+
+	$summary[] = '<strong>' . t('Features') . ':</strong> ' . implode(', ', $settings['modules']);
+	$summary[] = '<strong>' . t('Enable Features') . ':</strong> ' . ($settings['enable'] ? t('yes') : t('no'));
+
+	return $summary;
 }
 
 /**
@@ -52,13 +80,19 @@ function environments_task_features_revert_settings($form_state) {
  *   values as the batch progresses.
  *
  * @throws Exception
- *   If the Migrate module is not enabled.
+ *   If the Features module is not enabled.
  */
 function environments_task_features_revert($settings, &$context) {
 	$modules = $settings['modules'];
+	$enable = $settings['enable'];
 	$messages = array();
 
-	if (!module_exists('features')) {
+	if ($enable && !module_exists('features')) {
+		module_enable(array('features'));
+	}
+
+	// Keep it simple.
+	if (!function_exists('features_get_storage')) {
 		throw new Exception(t('Features module must be enabled to execute the "features_revert" Environments task.'));
 	}
 
