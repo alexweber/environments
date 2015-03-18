@@ -45,7 +45,7 @@ function environments_task_execute_drush_settings($form_state) {
 		'#name' => 'settings[verbose]',
 		'#type' => 'checkbox',
 		'#title' => t('Verbose'),
-		'#description' => t('If TRUE the Drush command\'s output will be printed to stdout and if FALSE it will be ignored.'),
+		'#description' => t('If checked, the command\'s output will be printed to stdout. Otherwise, it will be ignored.'),
 		'#default_value' => isset($task['settings']['verbose']) ? $task['settings']['verbose'] : TRUE,
 	);
 
