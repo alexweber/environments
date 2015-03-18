@@ -49,7 +49,7 @@ function environments_bundles_task_settings($form_state) {
 	// Check whether this bundle exists. It might get deleted, renamed, etc and we
 	// are most definitely not gonna keep watching for that stuff as it's total
 	// overkill. Instead, simply warn the user if the bundle doesn't exist.
-	if (!in_array($default_bundle, array_keys($options))) {
+	if (!empty($default_bundle) && !in_array($default_bundle, array_keys($options))) {
 		drupal_set_message(t('The bundle this task was using no longer exists.'), 'warning');
 	}
 
