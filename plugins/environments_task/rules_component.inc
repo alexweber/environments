@@ -87,13 +87,13 @@ function environments_task_rules_component($settings, &$context) {
 	$enable = $settings['enable'];
 	$messages = array();
 
-	if (!module_exists('rules')) {
-		if ($enable) {
-			module_enable(array('rules'));
-		}
-		else {
-			throw new Exception(t('Rules module must be enabled to execute the "rules_component" Environments task.'));
-		}
+	if ($enable && !module_exists('rules')) {
+		module_enable(array('rules'));
+	}
+
+	// Keep it simple.
+	if (!function_exists('rules_invoke_component')) {
+		throw new Exception(t('Rules module must be enabled to execute the "rules_component" Environments task.'));
 	}
 
 	foreach ($components as $machine_name) {
