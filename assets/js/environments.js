@@ -9,7 +9,7 @@
 				$banner.find('a.close').click(function () {
 					$banner.fadeOut(300, function () {
 						$banner.remove();
-					});
+					}).attr('href', 'javascript:;');
 				});
 			}
 		}
