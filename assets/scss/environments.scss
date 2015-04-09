@@ -6,7 +6,7 @@
 // interface.
 
 // Default banner position.
-#environments-notify {
+.environments-notify {
   height: 1.2em;
   margin: 0;
   padding: 0;
@@ -44,7 +44,7 @@
   }
 }
 
-#environments-notify {
+.environments-notify {
   // Sensible default colors for environments.
   &.local,
   &.dev,

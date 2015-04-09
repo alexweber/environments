@@ -323,7 +323,7 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
 		'#type' => 'fieldset',
 		'#title' => t('Settings'),
 		'#tree' => TRUE,
-		'#prefix' => '<div id="environments-task-settings">',
+		'#prefix' => '<div id="environments-task-settings" class="env-task-settings">',
 		'#suffix' => '</div>',
 		'#states' => array(
 			'visible' => array(

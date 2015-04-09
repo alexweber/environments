@@ -1,20 +1,20 @@
-select.env-task-select {
+.env-task-select {
   min-width: 240px; }
 
-#environments-task-settings #environments-variable-value-type, #environments-task-settings #environments-variable-value, #environments-task-settings #edit-settings-getvalue {
+.env-task-settings #environments-variable-value-type, .env-task-settings #environments-variable-value, .env-task-settings #edit-settings-getvalue {
   float: left;
   overflow: hidden; }
-#environments-task-settings #environments-variable-value-type, #environments-task-settings #environments-variable-value {
+.env-task-settings #environments-variable-value-type, .env-task-settings #environments-variable-value {
   margin-right: 1em; }
-#environments-task-settings #edit-settings-getvalue.form-submit {
+.env-task-settings #edit-settings-getvalue.form-submit {
   margin-top: 1.3em; }
-#environments-task-settings .form-item-settings-command label:after {
-  content: "drush";
+.env-task-settings .form-item-settings-command label:after {
+  content: 'drush';
   font-style: italic;
   font-weight: normal;
+  left: -5.8em;
   position: relative;
-  top: 1.9em;
-  left: -5.8em; }
-#environments-task-settings #edit-settings-command {
-  position: relative;
-  left: 3.4em; }
+  top: 1.9em; }
+.env-task-settings #edit-settings-command {
+  left: 3.4em;
+  position: relative; }

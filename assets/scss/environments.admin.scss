@@ -4,44 +4,44 @@
 
 // These look best with the Shiny admin theme/sub-theme.
 
-select.env-task-select {
+.env-task-select {
   min-width: 240px;
 }
 
-#environments-task-settings {
+.env-task-settings {
 
-  #environments-variable-value-type,
-  #environments-variable-value,
+  .env-var-val-type,
+  .env-var-val,
   #edit-settings-getvalue {
-	float: left;
-	overflow: hidden;
+    float: left;
+    overflow: hidden;
   }
 
-  #environments-variable-value-type,
-  #environments-variable-value {
-	margin-right: 1em;
+  .env-var-val-type,
+  .env-var-val {
+    margin-right: 1em;
   }
 
   #edit-settings-getvalue.form-submit {
-	margin-top: 1.3em;
+    margin-top: 1.3em;
   }
 
   .form-item-settings-command label {
 
-	&:after {
-	  content: "drush";
-	  font-style: italic;
-	  font-weight: normal;
-	  position: relative;
-	  top: 1.9em;
-	  left: -5.8em;
+    &:after {
+      content: 'drush';
+      font-style: italic;
+      font-weight: normal;
+      left: -5.8em;
+      position: relative;
+      top: 1.9em;
 	}
 
   }
 
   #edit-settings-command {
-	position: relative;
-	left: 3.4em;
+    left: 3.4em;
+    position: relative;
   }
 
 }

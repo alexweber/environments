@@ -126,7 +126,7 @@ function environments_task_variable_set_settings($form_state) {
 	}
 
 	$form['value_type'] = array(
-		'#prefix' => '<div id="environments-variable-value-type">',
+		'#prefix' => '<div id="environments-variable-value-type" class="env-var-val-type">',
 		'#suffix' => '</div>',
 		'#type' => 'select',
 		'#title' => t('Value type'),
@@ -151,7 +151,7 @@ function environments_task_variable_set_settings($form_state) {
 	}
 
 	$form['value'] = array(
-		'#prefix' => '<div id="environments-variable-value">',
+		'#prefix' => '<div id="environments-variable-value" class="env-var-val">',
 		'#suffix' => '</div>',
 		'#name' => 'settings[value]',
 		'#title' => t('Value'),

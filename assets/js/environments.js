@@ -3,7 +3,7 @@
 
 	Drupal.behaviors.environmentsNotification = {
 		attach: function (context) {
-			var $banner = $('#environments-notify', context);
+			var $banner = $('.environments-notify', context);
 
 			if ($banner.length) {
 				$banner.find('a.close').click(function () {
