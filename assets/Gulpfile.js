@@ -21,4 +21,4 @@ gulp.task('lintjs', function () {
 		.pipe(jshint.reporter('default', {verbose: true}));
 });
 
-gulp.task('default', ['lintjs', 'sass']);
+gulp.task('default', ['lintjs', 'sass', 'lintscss']);
