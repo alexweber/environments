@@ -36,7 +36,8 @@ function environments_bundles_task_settings($form_state) {
 	}
 
 	if (isset($form_state['object'])
-		&& $form_state['object']->table === 'environments_bundles') {
+		&& $form_state['object']->table === 'environments_bundles'
+	) {
 		unset($options[$form_state['object']->name]);
 		$empty_description = t('You haven\'t created any other Task Bundles yet.');
 	}
@@ -89,11 +90,17 @@ function environments_bundles_task_execute($settings, &$context) {
 
 			foreach (element_children($bundle_object->tasks, TRUE) as $task) {
 				$task_info = $bundle_object->tasks[$task];
-				$operations[] = array('_environments_task_dispatcher', array($task_info));
+				$operations[] = array(
+					'_environments_task_dispatcher',
+					array($task_info)
+				);
 			}
 
 			if (!empty($operations)) {
-				$operations[] = array('_environments_task_flush', array(t('Cleaning up.')));
+				$operations[] = array(
+					'_environments_task_flush',
+					array(t('Cleaning up.'))
+				);
 
 				$batch = array(
 					'title' => t('Processing task bundle.'),

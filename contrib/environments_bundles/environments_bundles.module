@@ -37,8 +37,10 @@ function environments_bundles_ctools_plugin_directory($module, $type) {
 	if ($type === 'export_ui') {
 		return 'plugins/export_ui';
 	}
-	else if ($type === 'environments_task') {
-		return 'plugins/environments_task';
+	else {
+		if ($type === 'environments_task') {
+			return 'plugins/environments_task';
+		}
 	}
 }
 
@@ -46,7 +48,7 @@ function environments_bundles_ctools_plugin_directory($module, $type) {
  * Implements hook_menu().
  */
 function environments_bundles_menu() {
-  $items = array();
+	$items = array();
 
 	$items['admin/config/development/environments/task-bundles'] = array(
 		'title' => 'Task Bundles',
@@ -65,7 +67,7 @@ function environments_bundles_menu() {
 		'weight' => -50,
 	);
 
-  return $items;
+	return $items;
 }
 
 /**
