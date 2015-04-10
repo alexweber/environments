@@ -92,7 +92,7 @@ function environments_form_ctools_export_ui_edit_item_form_alter(&$form, &$form_
 	);
 
 	if (in_array($form_state['plugin']['name'], $plugins)) {
-		$form['actions']= array(
+		$form['actions'] = array(
 			'#type' => 'actions',
 		);
 
@@ -323,6 +323,9 @@ function environments_get_tasks() {
  * Create a new environment object.
  *
  * Note that this function does not save the environment to the database.
+ *
+ * @param array
+ *   An array of values to initialize the environment with.
  *
  * @see environments_form_edit()
  * @see environments_save()
