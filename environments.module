@@ -267,22 +267,24 @@ function environments_ctools_plugin_directory($module, $type) {
  * Implements hook_ctools_plugin_type().
  */
 function environments_ctools_plugin_type() {
-	$plugins['environments_task'] = array(
-		'cache' => TRUE,
-		'defaults' => array(
-			// Administrative title.
-			'admin_title' => '',
-			// Callback to execute.
-			'task_callback' => '',
-			// An array of task-specific settings.
-			'settings' => array(),
-			// Settings form callback.
-			'settings_callback' => '',
+	return array(
+		'environments_task' => array(
+			'cache' => TRUE,
+			'defaults' => array(
+				// Administrative title.
+				'admin_title' => '',
+				// Callback to execute.
+				'task_callback' => '',
+				// Optional. An array of task-specific settings.
+				'settings' => array(),
+				// Optional. Settings form callback.
+				'settings_callback' => '',
+				// Optional. Settings summary callback.
+				'summary_callback' => '',
+			),
+			'use hooks' => FALSE,
 		),
-		'use hooks' => FALSE,
 	);
-
-	return $plugins;
 }
 
 /**
