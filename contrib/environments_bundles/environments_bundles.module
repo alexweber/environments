@@ -50,6 +50,17 @@ function environments_bundles_ctools_plugin_directory($module, $type) {
 function environments_bundles_menu() {
 	$items = array();
 
+	// Bundle task summary.
+	$items['environments_bundles/%ctools_js/summary/%'] = array(
+		'title' => 'Task Summary',
+		'page callback' => 'environments_bundles_ajax_summary',
+		'page arguments' => array(1, 3),
+		'file' => 'environments_bundles.admin.inc',
+		'access arguments' => array('administer environments'),
+		'type' => MENU_CALLBACK,
+	);
+
+	// Shortcut to Bundles on Environments page.
 	$items['admin/config/development/environments/task-bundles'] = array(
 		'title' => 'Task Bundles',
 		'page callback' => 'drupal_goto',
@@ -58,6 +69,7 @@ function environments_bundles_menu() {
 		'type' => MENU_LOCAL_TASK,
 	);
 
+	// Shortcut back to Environments on Bundles page.
 	$items['admin/config/development/environments-bundles/environments'] = array(
 		'title' => 'Environments',
 		'page callback' => 'drupal_goto',

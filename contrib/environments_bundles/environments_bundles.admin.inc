@@ -85,3 +85,61 @@ function environments_bundles_exec_form_submit($form, &$form_state) {
 	$bundle = &$form_state['bundle'];
 	environments_bundles_exec($bundle);
 }
+
+/**
+ * Page callback; returns the task summary for a given bundle.
+ *
+ * @see environments_bundles_menu()
+ * @see environments_bundles_task_summary()
+ */
+function environments_bundles_ajax_summary($js, $bundle) {
+	ctools_include('modal');
+
+	$page_title = t('Task Summary');
+	$list_title = t('Bundle Tasks for %name', array('%name' => $bundle));
+	$output = '';
+	$items = array();
+	$i = 1;
+
+	if ($bundle = environments_bundles_load($bundle)) {
+		foreach ($bundle->tasks as $key => $task) {
+			$item_data = array(
+				'#type' => 'fieldset',
+				'#title' => $i++ . ' - ' . $task['name'],
+				'#collapsible' => TRUE,
+				'#collapsed' => TRUE,
+				'#attributes' => array('class' => array('collapsible', 'collapsed')),
+			);
+
+			if ($callback = ctools_plugin_get_function($task, 'summary_callback')) {
+				$task_summary = (array) call_user_func($callback, $task['settings']);
+			}
+			else {
+				$task_summary = environments_default_summary($task);
+			}
+
+			$item_data['items'] = array(
+				'#theme' => 'item_list',
+				'#title' => '',
+				'#type' => 'ul',
+				'#attributes' => array(),
+				'#items' => $task_summary,
+			);
+
+			$items[$key] = drupal_render($item_data);
+		}
+
+		$output = implode('', $items);
+	}
+	else {
+		// @TODO display themed error message.
+	}
+
+	if ($js) {
+		ctools_modal_render($page_title, $output);
+	}
+	else {
+		drupal_set_title($page_title);
+		return $output;
+	}
+}

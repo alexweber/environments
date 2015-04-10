@@ -12,6 +12,7 @@ $plugin = array(
 		'name' => '',
 	),
 	'settings_callback' => 'environments_bundles_task_settings',
+	'summary_callback' => 'environments_bundles_task_summary',
 );
 
 /**
@@ -124,4 +125,31 @@ function environments_bundles_task_execute($settings, &$context) {
 		watchdog('environments_bundle', $message, $variables, WATCHDOG_ERROR);
 		$context['message'] = t($message, $variables);
 	}
+}
+
+/**
+ * Summary callback; format a custom summary of our task settings.
+ *
+ * @param array
+ *   An array of settings.
+ *
+ * @return array
+ *   An array containing a short summary for each setting.
+ */
+function environments_bundles_task_summary($settings) {
+	ctools_include('ajax');
+	ctools_include('modal');
+	ctools_modal_add_js();
+	drupal_add_js('misc/form.js');
+	drupal_add_js('misc/collapse.js');
+
+	// Prepare modal link.
+	$url = "environments_bundles/nojs/summary/{$settings['name']}";
+	$summarylink = ctools_ajax_text_button(t('View tasks'), $url, '', 'ctools-use-modal');
+
+	$summary = array();
+	$summary[] = '<strong>' . t('Name') . ':</strong> ' . $settings['name'];
+	$summary[] = '<strong>' . t('Tasks') . ':</strong> ' . $summarylink;
+
+	return $summary;
 }
