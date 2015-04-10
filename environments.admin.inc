@@ -86,36 +86,7 @@ function environments_task_form($form, &$form_state, $object) {
 			}
 			// If not, generate a default summary as best we can.
 			else {
-				$settings_summary = array();
-
-				$value_type = array_key_exists('value_type', $task['settings'])
-					? $task['settings']['value_type']
-					: FALSE;
-
-				foreach ($task['settings'] as $name => $value) {
-					if (is_array($value)) {
-						$value = implode(', ', $value);
-					}
-					else if ($name === 'value' && $value_type) {
-						if ($value_type === 'string') {
-							$value = "\"{$value}\"";
-						}
-						// Boolean values are true/false.
-						else if (is_bool($value)) {
-							$value_string = $value ? t('true') : t('false');
-							$value = "<em>{$value_string}</em>";
-						}
-					}
-					// Boolean settings are yes/no.
-					else if (is_bool($value)) {
-						$value_string = $value ? t('yes') : t('no');
-						$value = "<em>{$value_string}</em>";
-					}
-
-					// Give the setting a nice "human" label.
-					$label = drupal_ucfirst(str_replace('_', ' ', $name));
-					$settings_summary[] = "<strong>{$label}:</strong> {$value}";
-				}
+				$settings_summary = environments_default_summary($task);
 			}
 
 			ctools_include('export');
