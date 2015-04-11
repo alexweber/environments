@@ -795,24 +795,3 @@ function _environments_get_migrations() {
 
 	return $migrations;
 }
-
-/**
- * Returns all available Rules "action" Components. Used by the
- * "rules_component" task.
- *
- * @return array
- *   An array of component names, keyed by machine_name.
- */
-function _environments_get_rules_components() {
-	static $components = array();
-
-	if (empty($components) && function_exists('rules_get_components')) {
-		$loaded_components = rules_get_components(FALSE, 'action');
-
-		foreach ($loaded_components as $machine_name => $component) {
-			$components[$machine_name] = $component->label();
-		}
-	}
-
-	return $components;
-}

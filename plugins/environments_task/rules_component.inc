@@ -108,3 +108,23 @@ function environments_task_rules_component($settings, &$context) {
 	// Display messages.
 	$context['message'] = implode("\n", $messages);
 }
+
+/**
+ * Returns all available Rules "action" Components.
+ *
+ * @return array
+ *   An array of component names, keyed by machine_name.
+ */
+function _environments_get_rules_components() {
+	static $components = array();
+
+	if (empty($components) && function_exists('rules_get_components')) {
+		$loaded_components = rules_get_components(FALSE, 'action');
+
+		foreach ($loaded_components as $machine_name => $component) {
+			$components[$machine_name] = $component->label();
+		}
+	}
+
+	return $components;
+}
