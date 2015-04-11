@@ -795,3 +795,16 @@ function _environments_get_migrations() {
 
 	return $migrations;
 }
+
+/**
+ * Page callback; returns the rendered markup for the Environments Summary page.
+ *
+ * @see environments_menu()
+ */
+function environments_page_summary() {
+	$build = array();
+
+	// @TODO build summary
+
+	return drupal_render($build);
+}

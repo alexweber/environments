@@ -33,6 +33,7 @@ function environments_permission() {
 function environments_menu() {
 	$items = array();
 
+	// Current environment settings.
 	$items['admin/config/system/environments'] = array(
 		'title' => 'Site environment',
 		'description' => 'Manage the current site environment.',
@@ -42,12 +43,22 @@ function environments_menu() {
 		'file' => 'environments.admin.inc',
 	);
 
+	// Confirm environment change.
 	$items['admin/config/system/environments/confirm/%'] = array(
 		'title' => 'Confirm site environment change',
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('environments_form_site_confirm', 5),
 		'access arguments' => array('administer environments'),
 		'file' => 'environments.admin.inc',
+	);
+
+	// Environments summary page.
+	$items['admin/config/system/environments/summary'] = array(
+		'title' => 'Summary',
+		'page callback' => 'environments_page_summary',
+		'access arguments' => array('administer environments'),
+		'file' => 'environments.admin.inc',
+		'weight' =>  99,
 	);
 
 	return $items;
