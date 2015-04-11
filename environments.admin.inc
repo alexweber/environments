@@ -755,26 +755,6 @@ function _environments_get_variables() {
 }
 
 /**
- * Returns all available Drupal features. Used by the "features_revert" task.
- *
- * @return array
- *   An array of module names, keyed by machine_name.
- */
-function _environments_get_features() {
-	static $features_options = array();
-
-	if (empty($features)) {
-		$features = features_get_features();
-
-		foreach ($features as $name => $info) {
-			$features_options[$name] = $info->info['name'];
-		}
-	}
-
-	return $features_options;
-}
-
-/**
  * Returns all available Migrations. Used by the "migrate_import" and
  * "migrate_rollback" tasks.
  *
