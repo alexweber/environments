@@ -32,7 +32,7 @@ using the handy __Drush__ command: `drush environments`, or `drush env` for shor
 
 ```bash
 # View documentation.
-drush environments --help
+drush help environment
 
 # View all defined environments.
 drush env
