@@ -250,7 +250,11 @@ function environments_task_variable_set($settings, &$context) {
 	variable_set($name, $value);
 
 	// Display message.
-	$context['message'] = t('Set variable "@name" value to !value', array('@name' => $name, '!value' => $value_display));
+	$context['message'] = t('Set variable "@name" to !type value: !value', array(
+		'@name' => $name,
+		'!type' => $value_type,
+		'!value' => $value_display,
+	));
 }
 
 /**
