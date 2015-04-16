@@ -12,11 +12,24 @@
  *
  * @see environments_set()
  */
-function _environments_task_dispatcher($task_info, &$context, $nested = FALSE) {
+function _environments_task_dispatcher($task_info, &$context) {
+	// Sanity check.
+	drupal_static_reset('ctools_plugins');
+	drupal_static_reset('ctools_plugin_type_info');
+	drupal_static_reset('ctools_plugin_type_info_loaded');
+
 	// Load task plugin.
 	if ($full_task = environments_get_task($task_info['name'])) {
+		$callback_exists = FALSE;
+
 		// Resolve callback function.
 		if ($callback = ctools_plugin_get_function($full_task, 'task_callback')) {
+			if (function_exists($callback)) {
+				$callback_exists = TRUE;
+			}
+		}
+
+		if ($callback_exists) {
 			// Execute it. We call it directly instead of using call_user_func() to
 			// be able to pass the $context var by reference.
 			$callback($task_info['settings'], $context);
@@ -25,22 +38,8 @@ function _environments_task_dispatcher($task_info, &$context, $nested = FALSE) {
 			watchdog('environments', 'Error loading callback for task: @name', array('@name' => $task_info['name']), WATCHDOG_ERROR);
 		}
 	}
-	// If it fails, clear CTools caches and give it another chance. This is done
-	// this way to avoid having to do this gratuitously. It does, however, seem to
-	// be necessary at times for reasons still unknown to me.
 	else {
-		drupal_static_reset('ctools_plugins');
-		drupal_static_reset('ctools_plugin_type_info');
-		drupal_static_reset('ctools_plugin_type_info_loaded');
-
-		// In order to prevent infinite recursion, try again just once.
-		if (!$nested) {
-			watchdog('environments', 'Trouble loading task: @name, clearing caches and tryin again.', array('@name' => $task_info['name']), WATCHDOG_NOTICE);
-			_environments_task_dispatcher($task_info, $context, TRUE);
-		}
-		else {
-			watchdog('environments', 'Error loading task: @name', array('@name' => $task_info['name']), WATCHDOG_ERROR);
-		}
+		watchdog('environments', 'Error loading task: @name', array('@name' => $task_info['name']), WATCHDOG_ERROR);
 	}
 }
 
