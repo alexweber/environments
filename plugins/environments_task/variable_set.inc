@@ -203,7 +203,7 @@ function environments_task_variable_set_settings($form_state) {
 		),
 		'#states' => array(
 		  'visible' => array(
-		    ':input[name="settings[name]"]' => array('filled' => TRUE),
+		    ':[name="settings[name]"]' => array('!value' => ''),
 		  ),
 		),
 	);
