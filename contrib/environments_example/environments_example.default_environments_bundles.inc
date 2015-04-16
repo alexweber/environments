@@ -22,14 +22,14 @@ function environments_example_default_environments_bundles() {
   $bundle = new stdClass();
   $bundle->disabled = FALSE; /* Edit this to true to make a default bundle disabled initially */
   $bundle->api_version = 1;
-  $bundle->name = 'dev_modules';
+  $bundle->name = 'demo_modules';
   $bundle->admin_title = 'Dev Modules';
   $bundle->description = 'Enable dev modules & disable prod modules.';
   $bundle->tasks = array(
     '161c48b6cb3f2418f8bc061a1d3be2d6' => array(
       'name' => 'execute_bundle',
       'settings' => array(
-        'name' => 'disable_production_modules',
+        'name' => 'disable_demo_modules',
       ),
       '#id' => '161c48b6cb3f2418f8bc061a1d3be2d6',
       '#weight' => '-50',
@@ -37,18 +37,18 @@ function environments_example_default_environments_bundles() {
     '249c8159a9319d1e1b55d75e776fdf38' => array(
       'name' => 'execute_bundle',
       'settings' => array(
-        'name' => 'enable_dev_modules',
+        'name' => 'enable_demo_modules',
       ),
       '#id' => '249c8159a9319d1e1b55d75e776fdf38',
       '#weight' => '-49',
     ),
   );
-  $export['dev_modules'] = $bundle;
+  $export['demo_modules'] = $bundle;
 
   $bundle = new stdClass();
   $bundle->disabled = FALSE; /* Edit this to true to make a default bundle disabled initially */
   $bundle->api_version = 1;
-  $bundle->name = 'dev_variables';
+  $bundle->name = 'demo_variables';
   $bundle->admin_title = 'Dev Variables';
   $bundle->description = 'Set variables for local development.';
   $bundle->tasks = array(
@@ -123,12 +123,12 @@ function environments_example_default_environments_bundles() {
       '#weight' => '-50',
     ),
   );
-  $export['dev_variables'] = $bundle;
+  $export['demo_variables'] = $bundle;
 
   $bundle = new stdClass();
   $bundle->disabled = FALSE; /* Edit this to true to make a default bundle disabled initially */
   $bundle->api_version = 1;
-  $bundle->name = 'disable_production_modules';
+  $bundle->name = 'disable_demo_modules';
   $bundle->admin_title = 'Disable Production Modules';
   $bundle->description = 'Disable common production modules.';
   $bundle->tasks = array(
@@ -148,12 +148,12 @@ function environments_example_default_environments_bundles() {
       '#weight' => -50,
     ),
   );
-  $export['disable_production_modules'] = $bundle;
+  $export['disable_demo_modules'] = $bundle;
 
   $bundle = new stdClass();
   $bundle->disabled = FALSE; /* Edit this to true to make a default bundle disabled initially */
   $bundle->api_version = 1;
-  $bundle->name = 'enable_dev_modules';
+  $bundle->name = 'enable_demo_modules';
   $bundle->admin_title = 'Enable Dev Modules';
   $bundle->description = 'Enable common development modules.';
   $bundle->tasks = array(
@@ -178,7 +178,7 @@ function environments_example_default_environments_bundles() {
       '#weight' => '-50',
     ),
   );
-  $export['enable_dev_modules'] = $bundle;
+  $export['enable_demo_modules'] = $bundle;
 
   return $export;
 }
