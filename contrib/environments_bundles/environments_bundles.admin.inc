@@ -103,9 +103,14 @@ function environments_bundles_ajax_summary($js, $bundle) {
 
 	if ($bundle = environments_bundles_load($bundle)) {
 		foreach ($bundle->tasks as $key => $task) {
+			$identifier = isset($task['settings']['name'])
+				? "({$task['settings']['name']})"
+				: '';
+			$fieldset_title = $i++ . " - {$task['name']} {$identifier}";
+
 			$item_data = array(
 				'#type' => 'fieldset',
-				'#title' => $i++ . ' - ' . $task['name'],
+				'#title' => $fieldset_title,
 				'#collapsible' => TRUE,
 				'#collapsed' => TRUE,
 				'#attributes' => array('class' => array('collapsible', 'collapsed')),
