@@ -196,8 +196,8 @@ function environments_bundles_delete($environment) {
 /**
  * Execute a task bundle.
  *
- * @param mixed
- *   The bundle object.
+ * @param object
+ *   The task bundle object.
  */
 function environments_bundles_exec(&$bundle) {
 	$operations = array();

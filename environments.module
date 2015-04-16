@@ -119,7 +119,7 @@ function environments_form_ctools_export_ui_edit_item_form_alter(&$form, &$form_
 /**
  * Helper function to add tasks to the batch.
  *
- * @param mixed
+ * @param object
  *   Either an environment object or a task bundle object.
  * @param array
  *   The array of operations to add to the batch.
