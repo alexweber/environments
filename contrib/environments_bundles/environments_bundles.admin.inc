@@ -96,13 +96,13 @@ function environments_bundles_ajax_summary($js, $bundle) {
 	ctools_include('modal');
 
 	$page_title = t('Task Summary');
-	$list_title = t('Bundle Tasks for %name', array('%name' => $bundle));
-	$output = '';
+	$list_title = t('Bundle: %name', array('%name' => $bundle));
+	$output = "<h2>{$list_title}</h2>";
 	$items = array();
 	$i = 1;
 
-	if ($bundle = environments_bundles_load($bundle)) {
-		foreach ($bundle->tasks as $key => $task) {
+	if ($loaded_bundle = environments_bundles_load($bundle)) {
+		foreach ($loaded_bundle->tasks as $key => $task) {
 			$identifier = isset($task['settings']['name'])
 				? "({$task['settings']['name']})"
 				: '';
@@ -134,10 +134,11 @@ function environments_bundles_ajax_summary($js, $bundle) {
 			$items[$key] = drupal_render($item_data);
 		}
 
-		$output = implode('', $items);
+		$output .= implode('', $items);
 	}
 	else {
-		// @TODO display themed error message.
+		drupal_set_message(t('Error loading task bundle: @name', array('@name' => $bundle)), 'error', FALSE);
+		$output .= theme('status_messages');
 	}
 
 	if ($js) {
