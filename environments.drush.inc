@@ -10,7 +10,7 @@
  */
 function environments_drush_help($section) {
 	switch ($section) {
-		case 'environments':
+		case 'environment':
 			return 'Switches your site\'s configuration between server environment presets.';
 	}
 }
@@ -20,7 +20,7 @@ function environments_drush_help($section) {
  */
 function environments_drush_command() {
 	return array(
-		'environments' => array(
+		'environment' => array(
 			'aliases' => array('env'),
 			'callback' => '_environments_drush_env',
 			'description' => 'Switches your site\'s configuration between server environment presets. Omit the argument to list all available environments.',
@@ -33,7 +33,7 @@ function environments_drush_command() {
 				'drush env prod' => 'Put the site in production mode',
 			),
 		),
-		'environments-unset' => array(
+		'environment-unset' => array(
 			'aliases' => array('env-unset'),
 			'callback' => '_environments_drush_env_unset',
 			'description' => 'Un-sets your site\'s current environment.',
