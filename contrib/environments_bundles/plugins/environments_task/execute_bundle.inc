@@ -120,7 +120,7 @@ function environments_bundles_task_execute($settings, &$context) {
 		}
 	}
 	else {
-		$message = 'Error loading task bundle: @name()';
+		$message = 'Error loading task bundle: @name';
 		$variables = array('@name' => $bundle);
 		watchdog('environments_bundle', $message, $variables, WATCHDOG_ERROR);
 		$context['message'] = t($message, $variables);
