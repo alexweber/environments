@@ -29,6 +29,9 @@ function environments_drush_command() {
 			'arguments' => array(
 				'envname' => 'Optional. Specify the environment by it\'s machine_name or alias.',
 			),
+			'options' => array(
+				'force' => 'Force set the environment, even it it\'s already the current one.',
+			),
 			'examples' => array(
 				'drush env development' => 'Put the site in development mode (using machine_name)',
 				'drush env dev' => 'Put the site in development mode (using alias)',
@@ -92,7 +95,9 @@ function _environments_drush_env($env = NULL) {
 
 		// Proceed only if we have an environment.
 		if ($environment) {
-			if ($environment->name !== $current_env) {
+			$force = drush_get_option('force') ? TRUE : FALSE;
+
+			if ($force || $environment->name !== $current_env) {
 				if (drush_confirm(t('Are you sure you want to change your site\'s environment to: @environment?', array('@environment' => $environment->admin_title)))) {
 					environments_set($environment->name);
 					return;
