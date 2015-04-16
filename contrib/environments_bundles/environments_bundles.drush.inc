@@ -50,7 +50,7 @@ function _environments_bundles_drush_exec($bundle_name = NULL) {
 			}
 		}
 		else {
-			drush_log(t('Invalid bundle name'), 'error');
+			drush_log(t('Error loading task bundle.'), 'error');
 			drush_user_abort();
 		}
 	}
