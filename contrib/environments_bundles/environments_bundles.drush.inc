@@ -10,7 +10,7 @@
  */
 function environments_bundles_drush_help($section) {
 	switch ($section) {
-		case 'environments-bundle':
+		case 'environment-bundle':
 			return 'Executes an Environments Task Bundle.';
 	}
 }
@@ -20,7 +20,7 @@ function environments_bundles_drush_help($section) {
  */
 function environments_bundles_drush_command() {
 	return array(
-		'environments-bundle' => array(
+		'environment-bundle' => array(
 			'aliases' => array('envb'),
 			'callback' => '_environments_bundles_drush_exec',
 			'description' => 'Executes an Environments Task Bundle.',
