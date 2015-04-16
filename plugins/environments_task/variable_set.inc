@@ -115,7 +115,10 @@ function environments_task_variable_set_settings($form_state) {
 					$value_type = 'integer';
 				}
 			}
-			else if (strpos($default_value, ';') !== FALSE) {
+			else if ($default_value[0] === '{') {
+				$value_type = 'json';
+			}
+			else if (strpos($default_value, ':') !== FALSE) {
 				$value_type = 'serialized';
 			}
 		}
@@ -136,6 +139,7 @@ function environments_task_variable_set_settings($form_state) {
 			'integer' => t('Integer'),
 			'float' => t('Float'),
 			'serialized' => t('Serialized'),
+			'json' => t('JSON'),
 		),
 		'#ajax' => array(
 			'callback' => 'environments_ajax_task_settings_variable_set_value',
@@ -176,7 +180,7 @@ function environments_task_variable_set_settings($form_state) {
 		$form['value']['#size'] = 10;
 		$form['value']['#attributes']['placeholder'] = '123';
 	}
-	else if ($value_type === 'serialized') {
+	else if ($value_type === 'serialized' || $value_type === 'json') {
 		$form['value']['#type'] = 'textarea';
 	}
 	else {
@@ -232,6 +236,10 @@ function environments_task_variable_set($settings, &$context) {
 	}
 	else if ($value_type === 'serialized') {
 		$value = unserialize($value);
+		$value_display = var_export($value, TRUE);
+	}
+	else if ($value_type === 'json') {
+		$value = json_decode($value);
 		$value_display = var_export($value, TRUE);
 	}
 	else {
