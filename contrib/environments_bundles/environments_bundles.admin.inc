@@ -93,7 +93,7 @@ function environments_bundles_exec_form_submit($form, &$form_state) {
  * @see environments_bundles_task_summary()
  */
 function environments_bundles_ajax_summary($js, $bundle) {
-	ctools_include('modal');
+//	ctools_include('modal');
 
 	$page_title = t('Task Summary');
 	$list_title = t('Bundle: %name', array('%name' => $bundle));
@@ -142,7 +142,14 @@ function environments_bundles_ajax_summary($js, $bundle) {
 	}
 
 	if ($js) {
-		ctools_modal_render($page_title, $output);
+		$commands = array(
+			array(
+				'command' => 'modal_display',
+				'title' => $page_title,
+				'output' => $output,
+			)
+		);
+		print ajax_render($commands);
 	}
 	else {
 		drupal_set_title($page_title);
