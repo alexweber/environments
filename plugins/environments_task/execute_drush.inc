@@ -65,7 +65,7 @@ function environments_task_execute_drush_summary($settings) {
 	$summary = array();
 
 	$summary[] = '<strong>' . t('Command') . ':</strong> drush ' . $settings['command'];
-	$summary[] = '<strong>' . t('Verbose') . ':</strong> ' . $settings['verbose'] ? t('yes') : t('no');
+	$summary[] = '<strong>' . t('Verbose') . ':</strong> <em>' . ($settings['verbose'] ? t('yes') : t('no')) . '</em>';
 
 	return $summary;
 }
