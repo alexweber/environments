@@ -53,11 +53,12 @@ function environments_menu() {
 	);
 
 	// Environments summary page.
-	$items['admin/config/system/environments/summary'] = array(
+	$items['admin/config/development/environments/summary'] = array(
 		'title' => 'Summary',
 		'page callback' => 'environments_page_summary',
 		'access arguments' => array('administer environments'),
 		'file' => 'environments.admin.inc',
+		'type' => MENU_LOCAL_TASK,
 		'weight' =>  99,
 	);
 
