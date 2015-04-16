@@ -12,6 +12,8 @@ function environments_drush_help($section) {
 	switch ($section) {
 		case 'environment':
 			return 'Switches your site\'s configuration between server environment presets.';
+		case 'environment-unset':
+			return 'Un-sets your site\'s current environment.';
 	}
 }
 
