@@ -14,12 +14,12 @@ It inroduces 3 new concepts:
 An environment is a Drupal object (a CTools Exportable to be more specific) which represents a server environment, such
 as "production", "staging", "development" and so on.
 
-The environment object has a name, optional alias, settings and any number of tasks. All defined environments can be
+The environment object has a name, optional alias (for Drush), settings and any number of tasks. All defined environments can be
 managed in: `Administration -> Configuration -> Development -> Environments`.
 
 ### Current Environment
 
-Having defined one or more environments, you can now switch your site between them.
+Having defined one or more environments, you can now switch your site between them (and also explicitly un-set your site's environment).
 
 You can view the current environment in your site's Status Report or in the settings page:
 `Administration -> Configuration -> System -> Site Environment`
@@ -28,7 +28,7 @@ Only one environment can be active at any given time and, when an environment be
 in order.
 
 You can manually switch your site's active environment at any given time either in the Admin UI described above or by
-using the handy __Drush__ command: `drush environments`, or `drush env` for short:
+using the handy __Drush__ command: `drush environment`, or `drush env` for short:
 
 ```bash
 # View documentation.
@@ -69,21 +69,20 @@ The following tasks are available out of the box:
 
 ## Task Bundles
 
-The included "Environments Bundles" module enables _Task Bundles_, which are nothing more than one or more tasks,
-grouped together.
+The included "Environments Bundles" module enables _Task Bundles_, which are nothing more than a grouping of one or more tasks.
 
-Bundles are virtually identical to _Environments_ except for 2 major differences:
+Bundles are both architecturally and conceptually virtually identical to _Environments_ except for 2 major differences:
 
 * Bundles don't have an "active" state like Environments
 * Unlike Environments, you can execute all of a Bundle's tasks on demand (with Environments you'd have to make that
-Environment active to have it's tasks execute)
+Environment active to have it's tasks execute).
 
 Task Bundles may be executed in the Admin UI described above or by using the handy __Drush__ command:
-`drush environments-bundle`, or `drush envb` for short:
+`drush environment-bundle`, or `drush envb` for short:
 
 ```bash
 # View documentation.
-drush environments-bundle --help
+drush help environment-bundle
 
 # Execute "foo" bundle.
 drush envb foo
@@ -93,8 +92,7 @@ The Environments Bundles module also enables a new task:
 
 * Execute Task Bundle
 
-Yo dawg, I heard you like bundles, so this task can be added to Environments as well as Task Bundles, so you can have a
-bundle that executes another bundle (but not itself because that would be bundle inception).
+This task can be added to _Environments_ as well as _Task Bundles_, so you can have a bundle that executes another bundle (but not itself because that would be bundle inception).
 
 ## Drush
 
@@ -105,26 +103,24 @@ You must insert the absolute path to the executable and, if it contains spaces y
 example: `/Applications/Dev\ Desktop/drush/drush`
 
 The following documentation page from the Migrate module has pretty good instructions for getting a very similar Drush
-integration working (this one is totally ripped off theirs actually!):
+integration working (from which we):
 [https://www.drupal.org/node/1958170](https://www.drupal.org/node/1958170)
 
 All you have to do is replace the variable name `migrate_drush_path` in the instructions with ours `environments_drush`.
 In fact, if you already have Migrate configured, we will borrow from their config to initialize ours when you enable the
 module so you won't have to do anything!
 
+**PRO Tip:** You can override the path to Drush per server using `$conf['environments_drush']` in your settings.php
+
 ## Suggested Usage
 
 The optimal way of working with Environments, particularly when maintaining multiple sites, each with their own somewhat
 yet not entirely similar set of modules, is to leverage Task Bundles to create smaller, more manageable sets of tasks
-targetted at a particular functionality, module or module suite:
+targetted at a particular functionality, module or module suite. For example:
 
 		AdvAgg Production Bundle
 		 	* Enable AdvAgg + submodules
 		 	* Enable JS Compression using JSMin extension
-
-		AdvAgg Staging Bundle
-		 	* Enable AdvAgg + submodules
-		 	* Enable JS Compression using JSMin+
 
 		AdvAgg Development Bundle
 		 	* Disable AdvAgg + submodules
@@ -136,7 +132,7 @@ Grouping your tasks into targetted bundles also allows them to be more easily re
 there might be small differences (ie: no CDN) and that alone means for example that the "Production" environment of a
 site with a CDN couldn't be shared with a site that didn't use it.
 
-However, using bundles we can simple add the bundles we want to our environments and manage tasks in a much more
+However, using bundles we can simply add the bundles we want to our environments and manage tasks in a much more
 streamlined manner:
 
 		Production Environment Tasks
@@ -145,11 +141,18 @@ streamlined manner:
 			* Execute "Disable Debug Bundle"
 			* Execute "Enable Caching Bundle"
 
+		Staging Environment Tasks
+			* Execute "AdvAgg Production Bundle"
+			* Execute "Enable Caching Bundle"
+			* Enable JS Compression using JSMin+
+
 		Development Environment Tasks
 			* Execute "AdvAgg Development Bundle"
 			* Execute "CDN Development Bundle"
 			* Execute "Enable Debug Bundle"
 			* Execute "Disable Caching Bundle"
+
+**PRO Tip:** See the last task in the Staging tasks above? Instead of creating an "AdvAgg Staging" bundle which would be identical to the production one except for the JS Compression, we execute the production bundle and then add a new task immediately after it to override just that one setting.
 
 ## Environments API
 
@@ -157,7 +160,7 @@ If you are familiar with CTools Plugins, creating a new Environments Task should
 
 `@TODO write this!`
 
-... for now check out the existing tasks, they're pretty well documented!
+... for now check out the existing tasks, they're all pretty well documented!
 
 ## Videos
 
