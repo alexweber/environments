@@ -663,7 +663,7 @@ function environments_form_site_confirm($form, &$form_state, $env) {
 
   $form['environment'] = array(
     '#type' => 'value',
-    '#value' => $env
+    '#value' => $env,
   );
 
   $title = $env;
