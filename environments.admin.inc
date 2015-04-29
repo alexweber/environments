@@ -807,6 +807,60 @@ function _environments_cast_module_names($value, $selection) {
 }
 
 /**
+ * Element validation callback.
+ *
+ * Validates submitted variable name and cleans up selection mode variable.
+ *
+ * @see environments_task_variable_set_settings()
+ * @see environments_task_variable_del_settings()
+ */
+function _environments_task_variable_validate_name($element, &$form_state, $form) {
+  $name = $form_state['values']['settings']['name'];
+  if (!preg_match('/^[a-z]+[a-z0-9\_]*$/', $name)) {
+    form_error($element, t('Invalid variable name.'));
+  }
+
+  // Remove helper settings if we're submitting the form.
+  if ($form_state['submitted']) {
+    unset($form_state['values']['settings']['selection']);
+  }
+}
+
+/**
+ * Element validation callback; type-casts the submitted value.
+ *
+ * @see environments_task_variable_set_settings()
+ */
+function _environments_task_variable_set_validate_value($element, &$form_state, $form) {
+  $value_type = $form_state['values']['settings']['value_type'];
+  $original_value = $value = $form_state['values']['settings']['value'];
+
+  switch ($value_type) {
+    case 'boolean':
+      $value = (bool) $value;
+      break;
+
+    case 'integer':
+      $value = (int) $value;
+      break;
+
+    case 'float':
+      $value = (float) $value;
+      break;
+  }
+
+  // Update value if we casted it.
+  if ($original_value !== $value) {
+    form_set_value($element, $value, $form_state);
+  }
+
+  // Remove helper settings if we're submitting the form.
+  if ($form_state['submitted']) {
+    unset($form_state['values']['settings']['getvalue']);
+  }
+}
+
+/**
  * Page callback; returns the rendered markup for the Environments Summary page.
  *
  * @see environments_menu()
