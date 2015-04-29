@@ -44,7 +44,7 @@ function environments_task_migrate_import_settings(array $form_state) {
     '#name' => 'settings[enable]',
     '#type' => 'checkbox',
     '#title' => t('Enable Migrate'),
-    '#description' => t("If checked, the Migrate module will be explicitly enabled. Otherwise, it\'s up to you to make sure it's enabled when this task runs! This task will fail if Migrate is not enabled."),
+    '#description' => t("If checked, the Migrate module will be explicitly enabled. Otherwise, it's up to you to make sure it's enabled when this task runs! This task will fail if Migrate is not enabled."),
     '#default_value' => isset($task['settings']['enable']) ? $task['settings']['enable'] : TRUE,
   );
 
