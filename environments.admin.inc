@@ -877,6 +877,92 @@ function _environments_task_variable_set_validate_value($element, &$form_state, 
 }
 
 /**
+ * Helper function to return module-related task settings forms.
+ *
+ * @param object|NULL $task
+ *   The current task, if we're editing one.
+ * @param array $form_state
+ *   The form_state array.
+ *
+ * @return array
+ *   A Form API form.
+ */
+function _environments_module_task_settings_form($task, array &$form_state) {
+  $form = array();
+
+  $selection = isset($form_state['values']['settings']['selection'])
+    ? $form_state['values']['settings']['selection']
+    : 'list';
+
+  $default_value = isset($task['settings']['modules']) ? $task['settings']['modules'] : array();
+
+  // Cast value.
+  $default_value = _environments_cast_module_names($default_value, $selection);
+
+  // Also cast form inputs when switching between selection modes.
+  if (isset($form_state['values']['settings']['modules'])) {
+    $ajax_modules = $form_state['values']['settings']['modules'];
+    $ajax_selection = $form_state['values']['settings']['selection'];
+    $ajax_modules = _environments_cast_module_names($ajax_modules, $ajax_selection);
+  }
+
+  $form['selection'] = array(
+    '#title' => t('Selection mode'),
+    '#description' => t('Selecting from a list is easier, but only modules that have already been downloaded are available. You may need to flush the caches to see newly-downloaded modules in the list.'),
+    '#type' => 'select',
+    '#default_value' => $selection,
+    '#options' => array(
+      'list' => t('Select from a list'),
+      'custom' => t('Specify manually'),
+    ),
+    '#ajax' => array(
+      'callback' => 'environments_ajax_task_settings_modules',
+      'wrapper' => 'environments-module-names',
+      'method' => 'replace',
+      'effect' => 'slide',
+    ),
+  );
+
+  $form['modules'] = array(
+    '#prefix' => '<div id="environments-module-names">',
+    '#suffix' => '</div>',
+    '#name' => 'settings[modules]',
+    '#title' => t('Modules'),
+    '#default_value' => $default_value,
+    '#element_validate' => array('_environments_task_module_validate'),
+  );
+
+  if ($selection === 'list') {
+    $form['modules']['#type'] = 'select';
+    $form['modules']['#multiple'] = TRUE;
+    $form['modules']['#options'] = _environments_get_modules();
+    $form['modules']['#empty_option'] = ' -' . t('Select modules') . '- ';
+
+    if (isset($ajax_selection)) {
+      $form['modules']['#value'] = $ajax_modules;
+    }
+  }
+  elseif ($selection === 'custom') {
+    $form['modules']['#type'] = 'textfield';
+    $form['modules']['#maxlength'] = 255;
+    $form['modules']['#size'] = 80;
+    $form['modules']['#description'] = t("Separate multiple modules using a single space only. This is on you!");
+    $form['modules']['#attributes']['placeholder'] = 'module_foo module_bar';
+  }
+
+  return $form;
+}
+
+/**
+ * AJAX callback; updates the module selection input mode.
+ *
+ * @see _environments_module_task_settings_form()
+ */
+function environments_ajax_task_settings_modules($form, &$form_state) {
+  return $form['settings']['modules'];
+}
+
+/**
  * Page callback; returns the rendered markup for the Environments Summary page.
  *
  * @see environments_menu()

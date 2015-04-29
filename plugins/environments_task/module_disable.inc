@@ -25,68 +25,8 @@ $plugin = array(
  *   A Form API array of task settings.
  */
 function environments_task_module_disable_settings(array $form_state) {
-  $form = array();
   $task = isset($form_state['task']) ? $form_state['task'] : NULL;
-
-  $selection = isset($form_state['values']['settings']['selection'])
-    ? $form_state['values']['settings']['selection']
-    : 'list';
-
-  $default_value = isset($task['settings']['modules']) ? $task['settings']['modules'] : array();
-
-  // Cast value.
-  $default_value = _environments_cast_module_names($default_value, $selection);
-
-  // Also cast form inputs when switching between selection modes.
-  if (isset($form_state['values']['settings']['modules'])) {
-    $ajax_modules = $form_state['values']['settings']['modules'];
-    $ajax_selection = $form_state['values']['settings']['selection'];
-    $ajax_modules = _environments_cast_module_names($ajax_modules, $ajax_selection);
-  }
-
-  $form['selection'] = array(
-    '#title' => t('Selection mode'),
-    '#description' => t('Selecting from a list is easier, but only modules that have already been downloaded are available. You may need to flush the caches to see newly-downloaded modules in the list.'),
-    '#type' => 'select',
-    '#default_value' => $selection,
-    '#options' => array(
-      'list' => t('Select from a list'),
-      'custom' => t('Specify manually'),
-    ),
-    '#ajax' => array(
-      'callback' => 'environments_ajax_task_settings_module_disable_name',
-      'wrapper' => 'environments-module-names',
-      'method' => 'replace',
-      'effect' => 'slide',
-    ),
-  );
-
-  $form['modules'] = array(
-    '#prefix' => '<div id="environments-module-names">',
-    '#suffix' => '</div>',
-    '#name' => 'settings[modules]',
-    '#title' => t('Modules'),
-    '#default_value' => $default_value,
-    '#element_validate' => array('_environments_task_module_validate'),
-  );
-
-  if ($selection === 'list') {
-    $form['modules']['#type'] = 'select';
-    $form['modules']['#multiple'] = TRUE;
-    $form['modules']['#options'] = _environments_get_modules();
-    $form['modules']['#empty_option'] = ' -' . t('Select modules') . '- ';
-
-    if (isset($ajax_selection)) {
-      $form['modules']['#value'] = $ajax_modules;
-    }
-  }
-  elseif ($selection === 'custom') {
-    $form['modules']['#type'] = 'textfield';
-    $form['modules']['#maxlength'] = 255;
-    $form['modules']['#size'] = 80;
-    $form['modules']['#description'] = t("Separate multiple modules using a single space only. This is on you!");
-    $form['modules']['#attributes']['placeholder'] = 'module_foo module_bar';
-  }
+  $form = _environments_module_task_settings_form($task, $form_state);
 
   $form['disable_dependents'] = array(
     '#name' => 'settings[disable_dependents]',
@@ -135,13 +75,4 @@ function environments_task_module_disable(array $settings, array &$context) {
 
   // Display messages.
   $context['message'] = implode("\n", $messages);
-}
-
-/**
- * AJAX callback; updates the module selection input mode.
- *
- * @see environments_task_module_disable_settings()
- */
-function environments_ajax_task_settings_module_disable_name($form, &$form_state) {
-  return $form['settings']['modules'];
 }
