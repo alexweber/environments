@@ -573,6 +573,13 @@ function environments_form_site($form) {
     '#collapsed' => TRUE,
   );
 
+  $form['advanced']['environments_detailed_summaries'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display detailed summaries'),
+    '#description' => t("Enable this option to display bundle/module/etc machine names alongside their human names in task summaries."),
+    '#default_value' => variable_get('environments_detailed_summaries', TRUE),
+  );
+
   $form['advanced']['banner'] = array(
     '#type' => 'fieldset',
     '#title' => t('Notification banners'),
@@ -629,6 +636,7 @@ function environments_form_site_submit($form, &$form_state) {
   variable_set('environments_css', $form_state['values']['environments_css']);
   variable_set('environments_js', $form_state['values']['environments_js']);
   variable_set('environments_drush', $form_state['values']['environments_drush']);
+  variable_set('environments_detailed_summaries', $form_state['values']['environments_detailed_summaries']);
 
   // Use the same message as system_settings_form_submit().
   drupal_set_message(t('The configuration options have been saved.'), 'status', FALSE);
@@ -985,7 +993,13 @@ function _environments_module_task_summary(array $settings) {
 
     foreach ($settings['modules'] as $module) {
       if (array_key_exists($module, $module_map)) {
-        $temp[] = "{$module_map[$module]} ({$module})";
+        $temp_string = "{$module_map[$module]}";
+
+        if (variable_get('environments_detailed_summaries', TRUE)) {
+          $temp_string .= " ({$module})";
+        }
+
+        $temp[] = $temp_string;
       }
       else {
         $temp[] = $module;
