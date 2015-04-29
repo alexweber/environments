@@ -57,7 +57,7 @@ function environments_task_module_enable_settings(array $form_state) {
 
   $selection = isset($form_state['values']['settings']['selection'])
     ? $form_state['values']['settings']['selection']
-    : 'custom';
+    : 'list';
 
   $default_value = isset($task['settings']['modules']) ? $task['settings']['modules'] : array();
 
