@@ -273,10 +273,8 @@ function environments_ctools_plugin_directory($module, $type) {
   if ($type === 'export_ui') {
     return 'plugins/export_ui';
   }
-  else {
-    if ($type === 'environments_task') {
-      return 'plugins/environments_task';
-    }
+  elseif ($type === 'environments_task') {
+    return 'plugins/environments_task';
   }
 }
 
@@ -534,19 +532,15 @@ function environments_default_summary(array $task) {
           $value = "\"{$value}\"";
         }
         // Boolean values are true/false.
-        else {
-          if (is_bool($value)) {
-            $value_string = $value ? t('true') : t('false');
-            $value = "<em>{$value_string}</em>";
-          }
+        elseif (is_bool($value)) {
+          $value_string = $value ? t('true') : t('false');
+          $value = "<em>{$value_string}</em>";
         }
       }
       // Boolean settings are yes/no.
-      else {
-        if (is_bool($value)) {
-          $value_string = $value ? t('yes') : t('no');
-          $value = "<em>{$value_string}</em>";
-        }
+      elseif (is_bool($value)) {
+        $value_string = $value ? t('yes') : t('no');
+        $value = "<em>{$value_string}</em>";
       }
     }
 

@@ -66,15 +66,13 @@ function environments_task_variable_set_settings(array $form_state) {
     $form['name']['#default_value'] = isset($task['settings']['name']) ? (array) $task['settings']['name'] : array();
     $form['name']['#description'] = t('If the variable you\'re looking for isn\'t in this list, try using the "Specify manually" selection mode.');
   }
-  else {
-    if ($selection === 'custom') {
-      $form['name']['#type'] = 'textfield';
-      $form['name']['#maxlength'] = 255;
-      $form['name']['#size'] = 40;
-      $form['name']['#default_value'] = isset($task['settings']['name']) ? (string) $task['settings']['name'] : '';
-      $form['name']['#description'] = t('Variable names must start with a letter, consist only of letters, numbers and underscores and be all in lower-case.');
-      $form['name']['#attributes']['placeholder'] = 'my_awesome_variable';
-    }
+  elseif ($selection === 'custom') {
+    $form['name']['#type'] = 'textfield';
+    $form['name']['#maxlength'] = 255;
+    $form['name']['#size'] = 40;
+    $form['name']['#default_value'] = isset($task['settings']['name']) ? (string) $task['settings']['name'] : '';
+    $form['name']['#description'] = t('Variable names must start with a letter, consist only of letters, numbers and underscores and be all in lower-case.');
+    $form['name']['#attributes']['placeholder'] = 'my_awesome_variable';
   }
 
   $default_value = isset($task['settings']) && array_key_exists('value', $task['settings'])

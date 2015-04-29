@@ -31,10 +31,8 @@ function environments_enable() {
     if ($path = variable_get('migrate_drush_path')) {
       variable_set('environments_drush', $path);
     }
-    else {
-      if ($path = variable_get('wordpress_migrate_drush')) {
-        variable_set('environments_drush', $path);
-      }
+    elseif ($path = variable_get('wordpress_migrate_drush')) {
+      variable_set('environments_drush', $path);
     }
   }
 }

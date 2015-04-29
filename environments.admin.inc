@@ -318,18 +318,16 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
       );
     }
   }
-  else {
-    if ($current_task) {
-      if ($task_info = environments_get_task($current_task)) {
-        if ($callback = ctools_plugin_get_function($task_info, 'settings_callback')) {
-          // Invoke task's settings form callback.
-          $form['settings'] += call_user_func($callback, $form_state);
-        }
-        else {
-          $form['settings'] += array(
-            '#description' => t('This task has no settings.'),
-          );
-        }
+  elseif ($current_task) {
+    if ($task_info = environments_get_task($current_task)) {
+      if ($callback = ctools_plugin_get_function($task_info, 'settings_callback')) {
+        // Invoke task's settings form callback.
+        $form['settings'] += call_user_func($callback, $form_state);
+      }
+      else {
+        $form['settings'] += array(
+          '#description' => t('This task has no settings.'),
+        );
       }
     }
   }
