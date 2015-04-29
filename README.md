@@ -77,6 +77,8 @@ Bundles are both architecturally and conceptually virtually identical to _Enviro
 * Unlike Environments, you can execute all of a Bundle's tasks on demand (with Environments you'd have to make that
 Environment active to have it's tasks execute).
 
+Environments Bundles can be managed at: `Administration -> Configuration -> Development -> Environments -> Environments Bundles`.
+
 Task Bundles may be executed in the Admin UI described above or by using the handy __Drush__ command:
 `drush environment-bundle`, or `drush envb` for short:
 
