@@ -63,7 +63,8 @@ function environments_task_rules_component_settings(array $form_state) {
 function environments_task_rules_component_summary(array $settings) {
   $summary = array();
 
-  $summary[] = '<strong>' . t('Components') . ':</strong> ' . implode(', ', $settings['components']);
+  $components = _environments_rules_task_summary($settings);
+  $summary[] = '<strong>' . t('Components') . ':</strong> ' . $components;
   $summary[] = '<strong>' . t('Enable Rules') . ':</strong> ' . ($settings['enable'] ? t('Yes') : t('No'));
 
   return $summary;
@@ -126,4 +127,43 @@ function _environments_get_rules_components() {
   }
 
   return $components;
+}
+
+/**
+ * Helper function to format rules component names for task summaries.
+ *
+ * @param array $settings
+ *   An array of task settings.
+ *
+ * @return string
+ *   A formatted string.
+ *
+ * @see environments_task_rules_component_summary
+ */
+function _environments_rules_task_summary(array $settings) {
+  $return = '<em>none</em>';
+
+  if (isset($settings['components']) && is_array($settings['components']) && !empty($settings['components'])) {
+    $temp = array();
+    $rule_map = _environments_get_rules_components();
+
+    foreach ($settings['components'] as $rule) {
+      if (array_key_exists($rule, $rule_map)) {
+        $temp_string = "{$rule_map[$rule]}";
+
+        if (variable_get('environments_detailed_summaries', TRUE)) {
+          $temp_string .= " ({$rule})";
+        }
+
+        $temp[] = $temp_string;
+      }
+      else {
+        $temp[] = $rule;
+      }
+    }
+
+    $return = implode(', ', $temp);
+  }
+
+  return $return;
 }
