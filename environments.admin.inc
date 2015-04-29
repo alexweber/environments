@@ -800,10 +800,26 @@ function _environments_cast_module_names($value, $selection) {
     $value = implode(' ', $value);
   }
   elseif ($selection === 'list' && is_string($value)) {
-    $value = explode(' ', $value);
+    $value = drupal_map_assoc(explode(' ', $value));
   }
 
   return $value;
+}
+
+/**
+ * Element validation callback.
+ *
+ * Fixes module name input values.
+ *
+ * @see environments_task_features_revert_settings()
+ * @see environments_task_module_enable_settings()
+ * @see environments_task_module_disable_settings()
+ * @see environments_task_module_uninstall_settings()
+ */
+function _environments_task_module_validate($element, &$form_state, $form) {
+  if (isset($form_state['values']['op']) && !is_array($form_state['values']['settings']['modules'])) {
+    $form_state['values']['settings']['modules'] = drupal_map_assoc(explode(' ', $form_state['values']['settings']['modules']));
+  }
 }
 
 /**

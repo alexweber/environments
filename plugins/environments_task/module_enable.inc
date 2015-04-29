@@ -94,6 +94,7 @@ function environments_task_module_enable_settings(array $form_state) {
     '#name' => 'settings[modules]',
     '#title' => t('Modules'),
     '#default_value' => $default_value,
+    '#element_validate' => array('_environments_task_module_validate'),
   );
 
   if ($selection === 'list') {
