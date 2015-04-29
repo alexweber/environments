@@ -963,6 +963,42 @@ function environments_ajax_task_settings_modules($form, &$form_state) {
 }
 
 /**
+ * Helper function to format module names for task summaries.
+ *
+ * @param array $settings
+ *   An array of task settings.
+ *
+ * @return string
+ *   A formatted string.
+ *
+ * @see environments_task_features_revert_summary()
+ * @see environments_task_module_disable_summary()
+ * @see environments_task_module_enable_summary()
+ * @see environments_task_module_uninstall_summary()
+ */
+function _environments_module_task_summary(array $settings) {
+  $return = '<em>none</em>';
+
+  if (isset($settings['modules']) && is_array($settings['modules']) && !empty($settings['modules'])) {
+    $temp = array();
+    $module_map = _environments_get_modules();
+
+    foreach ($settings['modules'] as $module) {
+      if (array_key_exists($module, $module_map)) {
+        $temp[] = $module_map[$module];
+      }
+      else {
+        $temp[] = $module;
+      }
+    }
+
+    $return = implode(', ', $temp);
+  }
+
+  return $return;
+}
+
+/**
  * Page callback; returns the rendered markup for the Environments Summary page.
  *
  * @see environments_menu()
