@@ -103,35 +103,36 @@ function environments_schema() {
  * Implements hook_requirements().
  */
 function environments_requirements($phase) {
-	$return = array();
+  $return = array();
+  $t = get_t();
 
-	if ($phase === 'runtime') {
-		if ($env = variable_get('environments_env')) {
-			if ($environment = environments_load($env)) {
-				$return['environments'] = array(
-					'title' => t('Environments: Current environment'),
-					'value' => $environment->admin_title,
-					'severity' => REQUIREMENT_INFO,
-				);
-			}
-			else {
-				$return['environments'] = array(
-					'title' => t('Environments: Invalid environment'),
-					'value' => $env,
-					'severity' => REQUIREMENT_ERROR,
-				);
-			}
-		}
-		else {
-			$return['environments'] = array(
-				'title' => t('Environments: Current environment'),
-				'value' => t('No environment set'),
-				'severity' => REQUIREMENT_WARNING,
-			);
-		}
-	}
+  if ($phase === 'runtime') {
+    if ($env = variable_get('environments_env')) {
+      if ($environment = environments_load($env)) {
+        $return['environments'] = array(
+          'title' => $t('Environments: Current environment'),
+          'value' => $environment->admin_title,
+          'severity' => REQUIREMENT_INFO,
+        );
+      }
+      else {
+        $return['environments'] = array(
+          'title' => $t('Environments: Invalid environment'),
+          'value' => $env,
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
+    }
+    else {
+      $return['environments'] = array(
+        'title' => $t('Environments: Current environment'),
+        'value' => $t('No environment set'),
+        'severity' => REQUIREMENT_WARNING,
+      );
+    }
+  }
 
-	return $return;
+  return $return;
 }
 
 /**
