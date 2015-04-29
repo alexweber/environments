@@ -433,7 +433,7 @@ function environments_task_form_edit_submit($form, &$form_state) {
       $weight = -50;
       if ($object->tasks) {
         foreach ($object->tasks as $t) {
-          if ($t['#weight'] > $weight) {
+          if ($t['#weight'] >= $weight) {
             $weight = ++$t['#weight'];
           }
         }
