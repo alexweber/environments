@@ -62,13 +62,13 @@ function environments_task_module_enable_settings(array $form_state) {
   $default_value = isset($task['settings']['modules']) ? $task['settings']['modules'] : array();
 
   // Cast value.
-  _environments_cast_module_names($default_value, $selection);
+  $default_value = _environments_cast_module_names($default_value, $selection);
 
   // Also cast form inputs when switching between selection modes.
   if (isset($form_state['values']['settings']['modules'])) {
-    $ajax_modules =& $form_state['values']['settings']['modules'];
+    $ajax_modules = $form_state['values']['settings']['modules'];
     $ajax_selection = $form_state['values']['settings']['selection'];
-    _environments_cast_module_names($ajax_modules, $ajax_selection);
+    $ajax_modules = _environments_cast_module_names($ajax_modules, $ajax_selection);
   }
 
   $form['selection'] = array(
@@ -101,12 +101,17 @@ function environments_task_module_enable_settings(array $form_state) {
     $form['modules']['#multiple'] = TRUE;
     $form['modules']['#options'] = _environments_get_modules();
     $form['modules']['#empty_option'] = ' -' . t('Select modules') . '- ';
+
+    if (isset($ajax_selection)) {
+      $form['modules']['#value'] = $ajax_modules;
+    }
   }
   elseif ($selection === 'custom') {
     $form['modules']['#type'] = 'textfield';
     $form['modules']['#maxlength'] = 255;
     $form['modules']['#size'] = 80;
     $form['modules']['#description'] = t("Separate multiple modules using a single space only. This is on you!");
+    $form['modules']['#attributes']['placeholder'] = 'module_foo module_bar';
   }
 
   $form['enable_dependencies'] = array(
@@ -159,7 +164,7 @@ function environments_task_module_enable(array $settings, array &$context) {
 }
 
 /**
- * AJAX callback; updates the variable name field according to selection mode.
+ * AJAX callback; updates the module selection input mode.
  *
  * @see environments_task_module_enable_settings()
  */

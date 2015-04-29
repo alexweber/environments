@@ -791,14 +791,19 @@ function _environments_get_migrations() {
  *   The input variable.
  * @param string $selection
  *   The selection mode, one of "custom" or "list".
+ *
+ * @return mixed
+ *   The variable value casted for the given selection mode.
  */
-function _environments_cast_module_names(&$value, $selection) {
+function _environments_cast_module_names($value, $selection) {
   if ($selection === 'custom' && is_array($value)) {
-    $value = explode(' ', $value);
-  }
-  elseif ($selection === 'list' && is_string($value)) {
     $value = implode(' ', $value);
   }
+  elseif ($selection === 'list' && is_string($value)) {
+    $value = explode(' ', $value);
+  }
+
+  return $value;
 }
 
 /**
