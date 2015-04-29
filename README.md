@@ -156,6 +156,36 @@ streamlined manner:
 
 **PRO Tip:** See the last task in the Staging tasks above? Instead of creating an "AdvAgg Staging" bundle which would be identical to the production one except for the JS Compression, we execute the production bundle and then add a new task immediately after it to override just that one setting.
 
+## Task Bundles Advanced Usage
+
+We already mentioned above how task bundles are convenient ways to mass-apply configuration to a site and that it's possible to do this in a couple different ways:
+
+- Using Drush: `drush envb bundle_name -y`
+- Using the interface: `Administration -> Configuration -> Development -> Environments -> Environments Bundles` and selecting "Execute Tasks" from the operations menu.
+
+There's additionally two other more advanced ways to execute a task bundle:
+
+- Manually: `environments_bundles_exec()`
+- Via update hooks: `environments_bundles_update_exec()`
+
+This last one is particularly interesting...
+
+### Executing Task Bundles in Update Hooks
+
+Task Bundles can be conveniently executed from within an update hook, in order to streamline deploying configuration for an environment.
+
+```php
+funcion my_module_update_7100(&$sandbox) {
+  // You can either specify just the bundle name.
+  environments_bundles_update_exec('demo_bundle', $sandbox);
+
+  // You can alternatively load the bundle yourself and pass it along too.
+  if ($bundle = environments_bundles_load('demo_bundle')) {
+    environments_bundles_update_exec($bundle, $sandbox);
+  }
+}
+```
+
 ## Environments API
 
 If you are familiar with CTools Plugins, creating a new Environments Task should be pretty straight-forwards:
