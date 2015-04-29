@@ -6,133 +6,132 @@
  */
 
 $plugin = array(
-	'admin_title' => t('Revert feature(s)'),
-	'task_callback' => 'environments_task_features_revert',
-	'settings' => array(
-		'modules' => array(),
-		'enable' => TRUE,
-	),
-	'settings_callback' => 'environments_task_features_revert_settings',
-	'summary_callback' => 'environments_task_features_revert_summary',
+  'admin_title' => t('Revert feature(s)'),
+  'task_callback' => 'environments_task_features_revert',
+  'settings' => array(
+    'modules' => array(),
+    'enable' => TRUE,
+  ),
+  'settings_callback' => 'environments_task_features_revert_settings',
+  'summary_callback' => 'environments_task_features_revert_summary',
 );
 
 /**
  * Form callback; returns the settings form for this task.
  *
- * @param array
+ * @param array $form_state
  *   A copy of the form_state array.
  *
  * @return array
  *   A Form API array of task settings.
  */
-function environments_task_features_revert_settings($form_state) {
-	$form = array();
-	$task = isset($form_state['task']) ? $form_state['task'] : NULL;
+function environments_task_features_revert_settings(array $form_state) {
+  $form = array();
+  $task = isset($form_state['task']) ? $form_state['task'] : NULL;
 
-	$form['modules'] = array(
-		'#name' => 'settings[modules]',
-		'#type' => 'select',
-		'#title' => t('Features'),
-		'#description' => t('Caution: This task will fail if the Features module is not enabled.'),
-		'#multiple' => TRUE,
-		'#options' => _environments_get_features(),
-		'#empty_option' => t(' -Select features- '),
-		'#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
-	);
+  $form['modules'] = array(
+    '#name' => 'settings[modules]',
+    '#type' => 'select',
+    '#title' => t('Features'),
+    '#description' => t('Caution: This task will fail if the Features module is not enabled.'),
+    '#multiple' => TRUE,
+    '#options' => _environments_get_features(),
+    '#empty_option' => ' -' . t('Select features') . '- ',
+    '#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
+  );
 
-	$form['enable'] = array(
-		'#name' => 'settings[enable]',
-		'#type' => 'checkbox',
-		'#title' => t('Enable Features'),
-		'#description' => t('If checked, the Features module will be explicitly enabled. Otherwise, it\'s up to you to make sure it\'s enabled when this task runs! This task will fail if Features is not enabled.'),
-		'#default_value' => isset($task['settings']['enable']) ? $task['settings']['enable'] : TRUE,
-	);
+  $form['enable'] = array(
+    '#name' => 'settings[enable]',
+    '#type' => 'checkbox',
+    '#title' => t('Enable Features'),
+    '#description' => t("If checked, the Features module will be explicitly enabled. Otherwise, it\'s up to you to make sure it's enabled when this task runs! This task will fail if Features is not enabled."),
+    '#default_value' => isset($task['settings']['enable']) ? $task['settings']['enable'] : TRUE,
+  );
 
-	return $form;
+  return $form;
 }
 
 /**
  * Summary callback; format a custom summary of our task settings.
  *
- * @param array
+ * @param array $settings
  *   An array of settings.
  *
  * @return array
  *   An array containing a short summary for each setting.
  */
-function environments_task_features_revert_summary($settings) {
-	$summary = array();
+function environments_task_features_revert_summary(array $settings) {
+  $summary = array();
 
-	$summary[] = '<strong>' . t('Features') . ':</strong> ' . implode(', ', $settings['modules']);
-	$summary[] = '<strong>' . t('Enable Features') . ':</strong> ' . ($settings['enable'] ? t('yes') : t('no'));
+  $summary[] = '<strong>' . t('Features') . ':</strong> ' . implode(', ', $settings['modules']);
+  $summary[] = '<strong>' . t('Enable Features') . ':</strong> ' . ($settings['enable'] ? t('yes') : t('no'));
 
-	return $summary;
+  return $summary;
 }
 
 /**
  * Task callback.
  *
- * @param array
+ * @param array $settings
  *   An array of settings for the task.
- * @param array
- *   $context is an array that will contain information about the
- *   status of the batch. The values in $context will retain their
- *   values as the batch progresses.
+ * @param array $context
+ *   An array that will contain information about the status of the batch. The
+ *   values in $context will retain their values as the batch progresses.
  *
  * @throws Exception
  *   If the Features module is not enabled.
  */
-function environments_task_features_revert($settings, &$context) {
-	$modules = $settings['modules'];
-	$enable = $settings['enable'];
-	$messages = array();
+function environments_task_features_revert(array $settings, array &$context) {
+  $modules = $settings['modules'];
+  $enable = $settings['enable'];
+  $messages = array();
 
-	if ($enable && !module_exists('features')) {
-		module_enable(array('features'));
-	}
+  if ($enable && !module_exists('features')) {
+    module_enable(array('features'));
+  }
 
-	// Keep it simple.
-	if (!function_exists('features_get_storage')) {
-		throw new Exception(t('Features module must be enabled to execute the "features_revert" Environments task.'));
-	}
+  // Keep it simple.
+  if (!function_exists('features_get_storage')) {
+    throw new Exception(t('Features module must be enabled to execute the "features_revert" Environments task.'));
+  }
 
-	module_load_include('inc', 'features', 'features.export');
+  module_load_include('inc', 'features', 'features.export');
 
-	foreach ($modules as $module) {
-		if (module_exists($module)) {
-			$storage = features_get_storage($module);
-			if (in_array($storage, array(
-				FEATURES_OVERRIDDEN,
-				FEATURES_NEEDS_REVIEW,
-				FEATURES_REBUILDABLE
-			))) {
-				if ($feature = features_load_feature($module, TRUE)) {
-					$items[$module] = array();
+  foreach ($modules as $module) {
+    if (module_exists($module)) {
+      $storage = features_get_storage($module);
+      if (in_array($storage, array(
+        FEATURES_OVERRIDDEN,
+        FEATURES_NEEDS_REVIEW,
+        FEATURES_REBUILDABLE,
+      ))) {
+        if ($feature = features_load_feature($module, TRUE)) {
+          $items[$module] = array();
 
-					foreach (array_keys($feature->info['features']) as $component) {
-						if (features_hook($component, 'features_revert')) {
-							$items[$module][] = $component;
-						}
-					}
+          foreach (array_keys($feature->info['features']) as $component) {
+            if (features_hook($component, 'features_revert')) {
+              $items[$module][] = $component;
+            }
+          }
 
-					features_revert($items);
-					$messages[] = t('Reverted feature: @feature.', array('@feature' => $module));
-				}
-				else {
-					$messages[] = t('Error loading feature: @feature.', array('@feature' => $module));
-				}
-			}
-			else {
-				$messages[] = t('Feature already matches default state: @feature.', array('@feature' => $module));
-			}
-		}
-		else {
-			$messages[] = t('Can\'t revert a disabled feature: @feature.', array('@feature' => $module));
-		}
-	}
+          features_revert($items);
+          $messages[] = t('Reverted feature: @feature.', array('@feature' => $module));
+        }
+        else {
+          $messages[] = t('Error loading feature: @feature.', array('@feature' => $module));
+        }
+      }
+      else {
+        $messages[] = t('Feature already matches default state: @feature.', array('@feature' => $module));
+      }
+    }
+    else {
+      $messages[] = t("Can't revert a disabled feature: @feature.", array('@feature' => $module));
+    }
+  }
 
-	// Display messages.
-	$context['message'] = implode(' ', $messages);
+  // Display messages.
+  $context['message'] = implode(' ', $messages);
 }
 
 
@@ -143,15 +142,15 @@ function environments_task_features_revert($settings, &$context) {
  *   An array of module names, keyed by machine_name.
  */
 function _environments_get_features() {
-	static $features_options = array();
+  static $features_options = array();
 
-	if (empty($features)) {
-		$features = features_get_features();
+  if (empty($features)) {
+    $features = features_get_features();
 
-		foreach ($features as $name => $info) {
-			$features_options[$name] = $info->info['name'];
-		}
-	}
+    foreach ($features as $name => $info) {
+      $features_options[$name] = $info->info['name'];
+    }
+  }
 
-	return $features_options;
+  return $features_options;
 }
