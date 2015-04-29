@@ -13,6 +13,7 @@ $plugin = array(
     'disable_dependents' => TRUE,
   ),
   'settings_callback' => 'environments_task_module_disable_settings',
+  'summary_callback' => 'environments_task_module_disable_summary',
 );
 
 /**
@@ -37,6 +38,25 @@ function environments_task_module_disable_settings(array $form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Summary callback; format a custom summary of our task settings.
+ *
+ * @param array $settings
+ *   An array of settings.
+ *
+ * @return array
+ *   An array containing a short summary for each setting.
+ */
+function environments_task_module_disable_summary(array $settings) {
+  $summary = array();
+
+  $module_summary = _environments_module_task_summary($settings);
+  $summary[] = '<strong>' . t('Modules') . ':</strong> ' . $module_summary;
+  $summary[] = '<strong>' . t('Disable dependents') . ':</strong> <em>' . ($settings['disable_dependents'] ? t('yes') : t('no')) . '</em>';
+
+  return $summary;
 }
 
 /**

@@ -5,41 +5,15 @@
  * Contains the "module_enable" Environments Task.
  */
 
-/**
- * Define this Task plugin.
- */
 $plugin = array(
-  // Title for Admin UI.
   'admin_title' => t('Enable module(s)'),
-  // Batch API callback to execute. You can also define this using the
-  // alternative method below.
   'task_callback' => 'environments_task_module_enable',
-  // Batch API callback to execute. This is an alternative implementation that
-  // gives you more control over where your callback lives and what it's called.
-  // Which callback to use is automatically determined by CTools.
-//  'task_callback' => array(
-//    'file' => '',
-//    'path' => '',
-//    'function' => '',
-//  ),
-
-  // Define any settings your task might implement.
-  // It's ok to have no settings. If, however, you *do* have some, make sure
-  // you create a settings_callback to allow these values to be changed.
   'settings' => array(
     'modules' => array(),
     'enable_dependencies' => TRUE,
   ),
-  // Optional Form callback for settings form. You can also define this using
-  // a similar alternative method as with the batch callbacks.
   'settings_callback' => 'environments_task_module_enable_settings',
-  // Optional Form callback for settings form. This is the alternative method.
-  // Refer to the explanation for "task_callback" above for more information.
-//  'settings_callback' => array(
-//    'file' => '',
-//    'path' => '',
-//    'function' => '',
-//  ),
+  'summary_callback' => 'environments_task_module_enable_summary',
 );
 
 /**
@@ -64,6 +38,25 @@ function environments_task_module_enable_settings(array $form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Summary callback; format a custom summary of our task settings.
+ *
+ * @param array $settings
+ *   An array of settings.
+ *
+ * @return array
+ *   An array containing a short summary for each setting.
+ */
+function environments_task_module_enable_summary(array $settings) {
+  $summary = array();
+
+  $module_summary = _environments_module_task_summary($settings);
+  $summary[] = '<strong>' . t('Modules') . ':</strong> ' . $module_summary;
+  $summary[] = '<strong>' . t('Enable dependencies') . ':</strong> <em>' . ($settings['enable_dependencies'] ? t('yes') : t('no')) . '</em>';
+
+  return $summary;
 }
 
 /**

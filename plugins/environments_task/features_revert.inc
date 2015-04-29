@@ -68,8 +68,9 @@ function environments_task_features_revert_settings(array $form_state) {
 function environments_task_features_revert_summary(array $settings) {
   $summary = array();
 
-  $summary[] = '<strong>' . t('Features') . ':</strong> ' . implode(', ', $settings['modules']);
-  $summary[] = '<strong>' . t('Enable Features') . ':</strong> ' . ($settings['enable'] ? t('yes') : t('no'));
+  $module_summary = _environments_module_task_summary($settings);
+  $summary[] = '<strong>' . t('Features') . ':</strong> ' . $module_summary;
+  $summary[] = '<strong>' . t('Enable Features module') . ':</strong> ' . ($settings['enable'] ? t('yes') : t('no'));
 
   return $summary;
 }
