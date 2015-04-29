@@ -55,15 +55,58 @@ function environments_task_module_enable_settings(array $form_state) {
   $form = array();
   $task = isset($form_state['task']) ? $form_state['task'] : NULL;
 
-  $form['modules'] = array(
-    '#name' => 'settings[modules]',
+  $selection = isset($form_state['values']['settings']['selection'])
+    ? $form_state['values']['settings']['selection']
+    : 'custom';
+
+  $default_value = isset($task['settings']['modules']) ? $task['settings']['modules'] : array();
+
+  // Cast value.
+  if ($selection === 'custom' && is_array($default_value)) {
+    $default_value = explode(' ', $default_value);
+  }
+  elseif ($selection === 'list' && is_string($default_value)) {
+    $default_value = implode(' ', $default_value);
+  }
+
+  $form['selection'] = array(
+    '#title' => t('Selection mode'),
+    '#description' => t('Selecting from a list is easier, but only modules that have already been downloaded are available. You may need to flush the caches to see newly-downloaded modules in the list.'),
     '#type' => 'select',
-    '#title' => t('Modules'),
-    '#multiple' => TRUE,
-    '#options' => _environments_get_modules(),
-    '#empty_option' => ' -' . t('Select modules') . '- ',
-    '#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
+    '#default_value' => $selection,
+    '#options' => array(
+      'list' => t('Select from a list'),
+      'custom' => t('Specify manually'),
+    ),
+    '#ajax' => array(
+      'callback' => 'environments_ajax_task_settings_module_enable_name',
+      'wrapper' => 'environments-module-names',
+      'method' => 'replace',
+      'effect' => 'slide',
+    ),
   );
+
+  $form['modules'] = array(
+    '#prefix' => '<div id="environments-module-names">',
+    '#suffix' => '</div>',
+    '#name' => 'settings[modules]',
+    '#title' => t('Modules'),
+    '#default_value' => $default_value,
+  );
+
+  if ($selection === 'list') {
+    $form['modules']['#type'] = 'select';
+    $form['modules']['#multiple'] = TRUE;
+    $form['modules']['#options'] = _environments_get_modules();
+    $form['modules']['#empty_option'] = ' -' . t('Select modules') . '- ';
+  }
+  elseif ($selection === 'custom') {
+    $form['modules']['#type'] = 'textfield';
+    $form['modules']['#maxlength'] = 255;
+    $form['modules']['#size'] = 80;
+    $form['modules']['#description'] = t("Separate multiple modules using a single space only. This is on you!");
+  }
+
   $form['enable_dependencies'] = array(
     '#name' => 'settings[enable_dependencies]',
     '#type' => 'checkbox',
@@ -111,4 +154,13 @@ function environments_task_module_enable(array $settings, array &$context) {
 
   // Display messages.
   $context['message'] = implode("\n", $messages);
+}
+
+/**
+ * AJAX callback; updates the variable name field according to selection mode.
+ *
+ * @see environments_task_module_enable_settings()
+ */
+function environments_ajax_task_settings_module_enable_name($form, &$form_state) {
+  return $form['settings']['modules'];
 }
