@@ -26,25 +26,30 @@ $plugin = array(
  *   A Form API array of task settings.
  */
 function environments_task_features_revert_settings(array $form_state) {
-  $form = array();
   $task = isset($form_state['task']) ? $form_state['task'] : NULL;
+  $form = _environments_module_task_settings_form($task, $form_state);
 
-  $form['modules'] = array(
-    '#name' => 'settings[modules]',
-    '#type' => 'select',
-    '#title' => t('Features'),
-    '#description' => t('Caution: This task will fail if the Features module is not enabled.'),
-    '#multiple' => TRUE,
-    '#options' => _environments_get_features(),
-    '#empty_option' => ' -' . t('Select features') . '- ',
-    '#default_value' => isset($task['settings']['modules']) ? $task['settings']['modules'] : array(),
-  );
+  // This one is a bit different than the module_* tasks so change some stuff.
+  $form['selection']['#description'] = $form['selection']['#selection'] . ' ' . t('<strong>Caution</strong>: This task will fail if the Features module is not enabled.');
+  $form['modules']['#title'] = t('Features');
+
+  $selection = isset($form_state['values']['settings']['selection'])
+    ? $form_state['values']['settings']['selection']
+    : 'list';
+
+  if ($selection === 'list') {
+    $form['modules']['#options'] = _environments_get_features();
+    $form['modules']['#empty_option'] = ' -' . t('Select features') . '- ';
+  }
+  else {
+    $form['modules']['#attributes']['placeholder'] = 'my_awesome_feature original_blog_feature';
+  }
 
   $form['enable'] = array(
     '#name' => 'settings[enable]',
     '#type' => 'checkbox',
     '#title' => t('Enable Features'),
-    '#description' => t("If checked, the Features module will be explicitly enabled. Otherwise, it\'s up to you to make sure it's enabled when this task runs! This task will fail if Features is not enabled."),
+    '#description' => t("If checked, the Features module will be explicitly enabled. Otherwise, it's up to you to make sure it's enabled when this task runs! This task will fail if Features is not enabled."),
     '#default_value' => isset($task['settings']['enable']) ? $task['settings']['enable'] : TRUE,
   );
 
