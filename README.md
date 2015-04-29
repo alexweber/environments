@@ -158,11 +158,44 @@ streamlined manner:
 
 ## Environments API
 
-If you are familiar with CTools Plugins, creating a new Environments Task should be pretty straight-forwards!
+If you are familiar with CTools Plugins, creating a new Environments Task should be pretty straight-forwards:
 
-`@TODO write this!`
+```php
+$plugin = array(
+  // Title for Admin UI.
+  'admin_title' => t('My Cool Task'),
 
-... for now check out the existing tasks, they're all pretty well documented!
+  // Batch API callback to execute. You can also define this using the
+  // alternative method below.
+  'task_callback' => 'foo_task_callback',
+  // Batch API callback to execute. This is an alternative implementation that
+  // gives you more control over where your callback lives and what it's called.
+  // Which callback to use is automatically determined by CTools.
+//  'task_callback' => array(
+//    'file' => '',
+//    'path' => '',
+//    'function' => '',
+//  ),
+
+  // Define any settings your task might implement.
+  // It's ok to have no settings. If, however, you *do* have some, make sure
+  // you create a settings_callback to allow these values to be changed.
+  'settings' => array(
+    'modules' => array(),
+    'enable_dependencies' => TRUE,
+  ),
+
+  // Optional Form callback for settings form. You can also define this using
+  // a similar alternative method as with the batch callbacks.
+  'settings_callback' => 'environments_task_module_enable_settings',
+
+  // Optional Form callback for summary text. You can also define this using
+  // a similar alternative method as with the batch callbacks.
+  'summary_callback' => 'environments_task_module_enable_summary',
+);
+```
+
+The existing tasks are all well-documented too so check them out.
 
 ## Videos
 
