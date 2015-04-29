@@ -54,7 +54,7 @@ function environments_task_module_enable_summary(array $settings) {
 
   $module_summary = _environments_module_task_summary($settings);
   $summary[] = '<strong>' . t('Modules') . ':</strong> ' . $module_summary;
-  $summary[] = '<strong>' . t('Enable dependencies') . ':</strong> <em>' . ($settings['enable_dependencies'] ? t('yes') : t('no')) . '</em>';
+  $summary[] = '<strong>' . t('Enable dependencies') . ':</strong> <em>' . ($settings['enable_dependencies'] ? t('Yes') : t('No')) . '</em>';
 
   return $summary;
 }

@@ -64,7 +64,7 @@ function environments_task_migrate_rollback_summary(array $settings) {
   $summary = array();
 
   $summary[] = '<strong>' . t('Migrations') . ':</strong> ' . implode(', ', $settings['migrations']);
-  $summary[] = '<strong>' . t('Enable Migrate') . ':</strong> ' . ($settings['enable'] ? t('yes') : t('no'));
+  $summary[] = '<strong>' . t('Enable Migrate') . ':</strong> ' . ($settings['enable'] ? t('Yes') : t('No'));
 
   return $summary;
 }

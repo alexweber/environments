@@ -70,7 +70,7 @@ function environments_task_features_revert_summary(array $settings) {
 
   $module_summary = _environments_module_task_summary($settings);
   $summary[] = '<strong>' . t('Features') . ':</strong> ' . $module_summary;
-  $summary[] = '<strong>' . t('Enable Features module') . ':</strong> ' . ($settings['enable'] ? t('yes') : t('no'));
+  $summary[] = '<strong>' . t('Enable Features module') . ':</strong> ' . ($settings['enable'] ? t('Yes') : t('No'));
 
   return $summary;
 }

@@ -62,8 +62,8 @@ function environments_task_module_uninstall_summary(array $settings) {
 
   $module_summary = _environments_module_task_summary($settings);
   $summary[] = '<strong>' . t('Modules') . ':</strong> ' . $module_summary;
-  $summary[] = '<strong>' . t('Uninstall dependents') . ':</strong> <em>' . ($settings['uninstall_dependents'] ? t('yes') : t('no')) . '</em>';
-  $summary[] = '<strong>' . t('Disable enabled modules') . ':</strong> <em>' . ($settings['uninstall_enabled'] ? t('yes') : t('no')) . '</em>';
+  $summary[] = '<strong>' . t('Uninstall dependents') . ':</strong> <em>' . ($settings['uninstall_dependents'] ? t('Yes') : t('No')) . '</em>';
+  $summary[] = '<strong>' . t('Disable enabled modules') . ':</strong> <em>' . ($settings['uninstall_enabled'] ? t('Yes') : t('No')) . '</em>';
 
   return $summary;
 }

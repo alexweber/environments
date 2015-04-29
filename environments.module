@@ -479,13 +479,13 @@ function environments_default_summary(array $task) {
         }
         // Boolean values are true/false.
         elseif (is_bool($value)) {
-          $value_string = $value ? t('true') : t('false');
+          $value_string = $value ? t('True') : t('False');
           $value = "<em>{$value_string}</em>";
         }
       }
       // Boolean settings are yes/no.
       elseif (is_bool($value)) {
-        $value_string = $value ? t('yes') : t('no');
+        $value_string = $value ? t('Yes') : t('No');
         $value = "<em>{$value_string}</em>";
       }
     }

@@ -64,7 +64,7 @@ function environments_task_rules_component_summary(array $settings) {
   $summary = array();
 
   $summary[] = '<strong>' . t('Components') . ':</strong> ' . implode(', ', $settings['components']);
-  $summary[] = '<strong>' . t('Enable Rules') . ':</strong> ' . ($settings['enable'] ? t('yes') : t('no'));
+  $summary[] = '<strong>' . t('Enable Rules') . ':</strong> ' . ($settings['enable'] ? t('Yes') : t('No'));
 
   return $summary;
 }
