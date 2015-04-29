@@ -146,9 +146,19 @@ function environments_bundles_task_summary($settings) {
 	// Prepare modal link.
 	$url = "environments_bundles/nojs/summary/{$settings['name']}";
 	$summarylink = ctools_ajax_text_button(t('View tasks'), $url, '', 'ctools-use-modal');
+	$bundle_name = $settings['name'];
+
+	// Load human bundle name.
+	if ($bundle = environments_bundles_load($bundle_name)) {
+		$bundle_name = $bundle->admin_title;
+	}
+
+	if (variable_get('environments_detailed_summaries', TRUE)) {
+		$bundle_name .= " ({$settings['name']})";
+	}
 
 	$summary = array();
-	$summary[] = '<strong>' . t('Name') . ':</strong> ' . $settings['name'];
+	$summary[] = '<strong>' . t('Name') . ':</strong> ' . $bundle_name;
 	$summary[] = '<strong>' . t('Tasks') . ':</strong> ' . $summarylink;
 
 	return $summary;
