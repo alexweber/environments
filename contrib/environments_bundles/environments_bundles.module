@@ -230,3 +230,27 @@ function environments_bundles_exec($bundle) {
   batch_set($batch);
   _environments_process_batch($batch, "admin/config/development/environments-bundles/list/{$bundle->name}");
 }
+
+/**
+ * Helper function to execute a task bundle within an update hook.
+ *
+ * @param string|object $bundle
+ *   The task bundle name or a fully-loaded bundle object.
+ * @param array $sandbox
+ *   The $sandbox variable available in hook_update_N().
+ *
+ * @throws DrupalUpdateException
+ *   If an invalid bundle name was specified.
+ */
+function environments_bundles_update_exec($bundle, array &$sandbox) {
+  if (is_string($bundle)) {
+    $bundle_name = $bundle;
+    $bundle = environments_bundles_load($bundle_name);
+
+    if (!$bundle) {
+      throw new DrupalUpdateException(t("Attempting to execute invalid bundle: %name.", array('%name' => $bundle_name)));
+    }
+  }
+
+  // @TODO
+}
