@@ -985,7 +985,7 @@ function _environments_module_task_summary(array $settings) {
 
     foreach ($settings['modules'] as $module) {
       if (array_key_exists($module, $module_map)) {
-        $temp[] = $module_map[$module];
+        $temp[] = "{$module_map[$module]} ({$module})";
       }
       else {
         $temp[] = $module;
