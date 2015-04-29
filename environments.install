@@ -9,94 +9,96 @@
  * Implements hook_uninstall().
  */
 function environments_uninstall() {
-	// Delete our variables.
-	variable_del('environments_env');
-	variable_del('environments_css');
-	variable_del('environments_js');
+  // Delete our variables.
+  variable_del('environments_env');
+  variable_del('environments_css');
+  variable_del('environments_js');
 }
 
 /**
  * Implements hook_enable().
  */
 function environments_enable() {
-	// Display a message and link to the configuration page if we're doing this
-	// through the UI.
-	if (php_sapi_name() !== 'cli') {
-		drupal_set_message(t('You\'ve enabled the Environments module. Click <a href="!url">here</a> to configure up your site environments and tasks.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE)))), 'status', FALSE);
-	}
+  // Display a message and link to the configuration page if we're doing this
+  // through the UI.
+  if (php_sapi_name() !== 'cli') {
+    drupal_set_message(t('You\'ve enabled the Environments module. Click <a href="!url">here</a> to configure up your site environments and tasks.', array('!url' => url('admin/config/development/environments', array('absolute' => TRUE)))), 'status', FALSE);
+  }
 
-	// If we don't happen to already have this variable set, try to figure it out
-	// from ther modules which also use Drush.
-	if (!variable_get('environments_drush', '')) {
-		if ($path = variable_get('migrate_drush_path')) {
-			variable_set('environments_drush', $path);
-		}
-		else if ($path = variable_get('wordpress_migrate_drush')) {
-			variable_set('environments_drush', $path);
-		}
-	}
+  // If we don't happen to already have this variable set, try to figure it out
+  // from ther modules which also use Drush.
+  if (!variable_get('environments_drush', '')) {
+    if ($path = variable_get('migrate_drush_path')) {
+      variable_set('environments_drush', $path);
+    }
+    else {
+      if ($path = variable_get('wordpress_migrate_drush')) {
+        variable_set('environments_drush', $path);
+      }
+    }
+  }
 }
 
 /**
  * Implements hook_schema().
  */
 function environments_schema() {
-	$schema = array();
+  $schema = array();
 
-	$schema['environments'] = array(
-		'description' => 'Site Environments.',
-		'export' => array(
-			'key' => 'name',
-			'identifier' => 'environment',
-			'default hook' => 'default_environments_environments',
-			'api' => array(
-				'owner' => 'environments',
-				'api' => 'default_environments_environments',
-				'minimum_version' => 1,
-				'current_version' => 1,
-			),
-		),
-		'fields' => array(
-			'name' => array(
-				'description' => 'The environment\'s machine-readable name.',
-				'type' => 'varchar',
-				'length' => 255,
-				'not null' => TRUE,
-			),
-			'admin_title' => array(
-				'description' => 'The environment\'s human-readable title.',
-				'type' => 'varchar',
-				'length' => 255,
-				'not null' => TRUE,
-			),
-			'alias' => array(
-				'description' => 'The environment\'s alias, to use with Drush.',
-				'type' => 'char',
-				// This isn't available here so hard-code it.
-//				'length' => ENVIRONMENTS_ALIAS_MAXLENGTH,
-				'length' => 12,
-				'not null' => FALSE,
-			),
-			'settings' => array(
-				'description' => 'The environment\'s extra settings.',
-				'type' => 'blob',
-				'size' => 'big',
-				'serialize' => TRUE,
-			),
-			'tasks' => array(
-				'description' => 'The environment\'s tasks.',
-				'type' => 'blob',
-				'size' => 'big',
-				'serialize' => TRUE,
-			),
-		),
-		'primary key' => array('name'),
-		'index' => array(
-			'alias' => array('alias'),
-		),
-	);
+  $schema['environments'] = array(
+    'description' => 'Site Environments.',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'environment',
+      'default hook' => 'default_environments_environments',
+      'api' => array(
+        'owner' => 'environments',
+        'api' => 'default_environments_environments',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'name' => array(
+        'description' => 'The environment\'s machine-readable name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'admin_title' => array(
+        'description' => 'The environment\'s human-readable title.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'alias' => array(
+        'description' => 'The environment\'s alias, to use with Drush.',
+        'type' => 'char',
+        // This isn't available here so hard-code it.
+        // 'length' => ENVIRONMENTS_ALIAS_MAXLENGTH,
+        'length' => 12,
+        'not null' => FALSE,
+      ),
+      'settings' => array(
+        'description' => 'The environment\'s extra settings.',
+        'type' => 'blob',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+      'tasks' => array(
+        'description' => 'The environment\'s tasks.',
+        'type' => 'blob',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+    'index' => array(
+      'alias' => array('alias'),
+    ),
+  );
 
-	return $schema;
+  return $schema;
 }
 
 /**
@@ -139,35 +141,35 @@ function environments_requirements($phase) {
  * Fix Environments schema indices.
  */
 function environments_update_7100() {
-	// If either of these fail, our schema is probably already ok so don't let
-	// the update hook fail. Do, however, run them independently to give them both
-	// a chance.
-	try {
-		db_drop_unique_key('environments', 'alias');
-	}
-	catch (Exception $e) {
-		watchdog('environments', $e->getMessage(), array(), WATCHDOG_NOTICE);
-	}
+  // If either of these fail, our schema is probably already ok so don't let
+  // the update hook fail. Do, however, run them independently to give them both
+  // a chance.
+  try {
+    db_drop_unique_key('environments', 'alias');
+  }
+  catch (Exception $e) {
+    watchdog('environments', $e->getMessage(), array(), WATCHDOG_NOTICE);
+  }
 
-	try {
-		db_add_index('environments', 'alias', array('alias'));
-	}
-	catch (Exception $e) {
-		watchdog('environments', $e->getMessage(), array(), WATCHDOG_NOTICE);
-	}
+  try {
+    db_add_index('environments', 'alias', array('alias'));
+  }
+  catch (Exception $e) {
+    watchdog('environments', $e->getMessage(), array(), WATCHDOG_NOTICE);
+  }
 }
 
 /**
  * Fix Environment aliases.
  */
 function environments_update_7101() {
-	try {
-		db_update('environments')
-			->fields(array('alias' => NULL))
-			->condition('alias', '', '=')
-			->execute();
-	}
-	catch (Exception $e) {
-		watchdog('environments', $e->getMessage(), array(), WATCHDOG_ERROR);
-	}
+  try {
+    db_update('environments')
+      ->fields(array('alias' => NULL))
+      ->condition('alias', '', '=')
+      ->execute();
+  }
+  catch (Exception $e) {
+    watchdog('environments', $e->getMessage(), array(), WATCHDOG_ERROR);
+  }
 }

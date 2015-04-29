@@ -9,48 +9,48 @@
  * Implements hook_schema().
  */
 function environments_bundles_schema() {
-	$schema = array();
+  $schema = array();
 
-	$schema['environments_bundles'] = array(
-		'description' => 'Environment Task Bundles.',
-		'export' => array(
-			'key' => 'name',
-			'identifier' => 'bundle',
-			'default hook' => 'default_environments_bundles',
-			'api' => array(
-				'owner' => 'environments_bundles',
-				'api' => 'default_environments_bundles',
-				'minimum_version' => 1,
-				'current_version' => 1,
-			),
-		),
-		'fields' => array(
-			'name' => array(
-				'description' => 'The bundle\'s machine-readable name.',
-				'type' => 'varchar',
-				'length' => 255,
-				'not null' => TRUE,
-			),
-			'admin_title' => array(
-				'description' => 'The bundle\'s human-readable title.',
-				'type' => 'varchar',
-				'length' => 255,
-				'not null' => TRUE,
-			),
-			'description' => array(
-				'description' => 'The bundle\'s description.',
-				'type' => 'text',
-				'size' => 'big',
-			),
-			'tasks' => array(
-				'description' => 'The bundle\'s tasks.',
-				'type' => 'blob',
-				'size' => 'big',
-				'serialize' => TRUE,
-			),
-		),
-		'primary key' => array('name'),
-	);
+  $schema['environments_bundles'] = array(
+    'description' => 'Environment Task Bundles.',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'bundle',
+      'default hook' => 'default_environments_bundles',
+      'api' => array(
+        'owner' => 'environments_bundles',
+        'api' => 'default_environments_bundles',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'name' => array(
+        'description' => 'The bundle\'s machine-readable name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'admin_title' => array(
+        'description' => 'The bundle\'s human-readable title.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'description' => array(
+        'description' => 'The bundle\'s description.',
+        'type' => 'text',
+        'size' => 'big',
+      ),
+      'tasks' => array(
+        'description' => 'The bundle\'s tasks.',
+        'type' => 'blob',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  );
 
-	return $schema;
+  return $schema;
 }

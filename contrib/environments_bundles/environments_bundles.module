@@ -9,167 +9,174 @@
  * Implements hook_permission().
  */
 function environments_bundles_permission() {
-	return array(
-		'execute environments bundles' => array(
-			'title' => t('Manually execute environments task bundles'),
-			'description' => t('Environments Task Bundles may be added to evironment tasks and executed as part of an environment switch. Users with this permission will be able to manually execute individual task bundles.'),
-			'restrict access' => TRUE,
-		),
-	);
+  return array(
+    'execute environments bundles' => array(
+      'title' => t('Manually execute environments task bundles'),
+      'description' => t('Environments Task Bundles may be added to evironment tasks and executed as part of an environment switch. Users with this permission will be able to manually execute individual task bundles.'),
+      'restrict access' => TRUE,
+    ),
+  );
 }
 
 /**
  * Implements hook_help().
  */
 function environments_bundles_help($path, $arg) {
-	switch ($path) {
-		case 'admin/config/development/environments-bundles':
-			return t('Here you can manage your task bundles. Task bundles are groups of tasks that can be imported, exported and executed as a unit.');
-		case 'admin/config/development/environments-bundles/list/%/tasks':
-			return t('Here you can add to and manage all of a bundle\'s tasks. <strong>NOTE</strong>: The order in which tasks appear is the exact order in which they will run. Use the handles on the left of each one to drag them around and re-order them and then press the "Update Order" button to save the changes.');
-	}
+  switch ($path) {
+    case 'admin/config/development/environments-bundles':
+      return t('Here you can manage your task bundles. Task bundles are groups of tasks that can be imported, exported and executed as a unit.');
+
+    case 'admin/config/development/environments-bundles/list/%/tasks':
+      return t('Here you can add to and manage all of a bundle\'s tasks. <strong>NOTE</strong>: The order in which tasks appear is the exact order in which they will run. Use the handles on the left of each one to drag them around and re-order them and then press the "Update Order" button to save the changes.');
+  }
 }
 
 /**
  * Implements hook_ctools_plugin_directory().
  */
 function environments_bundles_ctools_plugin_directory($module, $type) {
-	if ($type === 'export_ui') {
-		return 'plugins/export_ui';
-	}
-	else {
-		if ($type === 'environments_task') {
-			return 'plugins/environments_task';
-		}
-	}
+  if ($type === 'export_ui') {
+    return 'plugins/export_ui';
+  }
+  else {
+    if ($type === 'environments_task') {
+      return 'plugins/environments_task';
+    }
+  }
 }
 
 /**
  * Implements hook_menu().
  */
 function environments_bundles_menu() {
-	$items = array();
+  $items = array();
 
-	// Bundle task summary.
-	$items['environments_bundles/%ctools_js/summary/%'] = array(
-		'title' => 'Task Summary',
-		'page callback' => 'environments_bundles_ajax_summary',
-		'page arguments' => array(1, 3),
-		'file' => 'environments_bundles.admin.inc',
-		'access arguments' => array('administer environments'),
-		'type' => MENU_CALLBACK,
-	);
+  // Bundle task summary.
+  $items['environments_bundles/%ctools_js/summary/%'] = array(
+    'title' => 'Task Summary',
+    'page callback' => 'environments_bundles_ajax_summary',
+    'page arguments' => array(1, 3),
+    'file' => 'environments_bundles.admin.inc',
+    'access arguments' => array('administer environments'),
+    'type' => MENU_CALLBACK,
+  );
 
-	// Shortcut to Bundles on Environments page.
-	$items['admin/config/development/environments/task-bundles'] = array(
-		'title' => 'Task Bundles',
-		'page callback' => 'drupal_goto',
-		'page arguments' => array('admin/config/development/environments-bundles'),
-		'access arguments' => array('administer environments'),
-		'type' => MENU_LOCAL_TASK,
-	);
+  // Shortcut to Bundles on Environments page.
+  $items['admin/config/development/environments/task-bundles'] = array(
+    'title' => 'Task Bundles',
+    'page callback' => 'drupal_goto',
+    'page arguments' => array('admin/config/development/environments-bundles'),
+    'access arguments' => array('administer environments'),
+    'type' => MENU_LOCAL_TASK,
+  );
 
-	// Shortcut back to Environments on Bundles page.
-	$items['admin/config/development/environments-bundles/environments'] = array(
-		'title' => 'Environments',
-		'page callback' => 'drupal_goto',
-		'page arguments' => array('admin/config/development/environments'),
-		'access arguments' => array('administer environments'),
-		'type' => MENU_LOCAL_TASK,
-		'weight' => -50,
-	);
+  // Shortcut back to Environments on Bundles page.
+  $items['admin/config/development/environments-bundles/environments'] = array(
+    'title' => 'Environments',
+    'page callback' => 'drupal_goto',
+    'page arguments' => array('admin/config/development/environments'),
+    'access arguments' => array('administer environments'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -50,
+  );
 
-	return $items;
+  return $items;
 }
 
 /**
  * Implements hook_menu_alter().
  */
 function environments_bundles_menu_alter(&$items) {
-	if (isset($items['admin/config/development/environments-bundles/list'])) {
-		$items['admin/config/development/environments-bundles/list']['title'] = t('Task Bundles');
-	}
+  if (isset($items['admin/config/development/environments-bundles/list'])) {
+    $items['admin/config/development/environments-bundles/list']['title'] = t('Task Bundles');
+  }
 }
 
 /**
- * Create a new task bundle object
+ * Create a new task bundle object.
  *
  * Note that this function does not save the bundle to the database.
+ *
+ * @param array $values
+ *   An array of values which which to initialize this task bundle.
  *
  * @see environments_bundles_form_edit()
  * @see environments_bundles_save()
  */
 function environments_bundles_create($values = array()) {
-	ctools_include('export');
-	$bundle = ctools_export_crud_new('environments_bundles');
+  ctools_include('export');
+  $bundle = ctools_export_crud_new('environments_bundles');
 
-	// Default name.
-	if (isset($values['name'])) {
-		$bundle->name = $values['name'];
-	}
+  // Default name.
+  if (isset($values['name'])) {
+    $bundle->name = $values['name'];
+  }
 
-	// Default title.
-	if (isset($values['admin_title'])) {
-		$bundle->admin_title = $values['admin_title'];
-	}
+  // Default title.
+  if (isset($values['admin_title'])) {
+    $bundle->admin_title = $values['admin_title'];
+  }
 
-	// Default description.
-	if (isset($values['description'])) {
-		$bundle->description = $values['description'];
-	}
+  // Default description.
+  if (isset($values['description'])) {
+    $bundle->description = $values['description'];
+  }
 
-	// Default tasks.
-	$bundle->tasks = array();
+  // Default tasks.
+  $bundle->tasks = array();
 
-	if (isset($values['tasks']) and is_array($values['tasks'])) {
-		$bundle->tasks = array_merge($values['tasks'], $bundle->tasks);
-	}
+  if (isset($values['tasks']) and is_array($values['tasks'])) {
+    $bundle->tasks = array_merge($values['tasks'], $bundle->tasks);
+  }
 
-	return $bundle;
+  return $bundle;
 }
 
 /**
- * Fetches all environments bundles from the database and returns them as an
- * associative array.
+ * Fetches all task bundles from the database and returns them as an array.
+ *
+ * @return array
+ *   An associative array.
  */
 function environments_bundles_load_all() {
-	ctools_include('export');
-	return ctools_export_crud_load_all('environments_bundles');
+  ctools_include('export');
+  return ctools_export_crud_load_all('environments_bundles');
 }
 
 /**
  * Load a given environment bundle.
  *
- * @param string
+ * @param string $bundle_name
  *   The environment bundle's name.
  *
  * @return stdClass|NULL
- *   The fully-loaded environment bundle object or NULL if it couldn't be loaded.
+ *   A fully-loaded environment bundle object or NULL if it couldn't be loaded.
  */
 function environments_bundles_load($bundle_name) {
-	ctools_include('export');
-	return ctools_export_crud_load('environments_bundles', $bundle_name);
+  ctools_include('export');
+  return ctools_export_crud_load('environments_bundles', $bundle_name);
 }
 
 /**
  * Checks whether an environment bundle with the given name already exists.
  *
- * @param string
+ * @param string $bundle_name
  *   The environment bundle's name.
- * @return boolean
+ *
+ * @return bool
  *   TRUE if there exists an environment bundle with the give name, FALSE
  *   otherwise.
  */
 function environments_bundles_exists($bundle_name) {
-	ctools_include('export');
-	$bundle = ctools_export_crud_load('environments_bundles', $bundle_name);
-	return isset($bundle->name);
+  ctools_include('export');
+  $bundle = ctools_export_crud_load('environments_bundles', $bundle_name);
+  return isset($bundle->name);
 }
 
 /**
  * Saves the given environment to the database.
  *
- * @param object
+ * @param object $environment
  *   The environment to save.
  *
  * @return object|boolean
@@ -178,50 +185,50 @@ function environments_bundles_exists($bundle_name) {
  *   $object parameter contains values for any serial fields defined.
  */
 function environments_bundles_save(&$environment) {
-	ctools_include('export');
-	return ctools_export_crud_save('environments_bundles', $environment);
+  ctools_include('export');
+  return ctools_export_crud_save('environments_bundles', $environment);
 }
 
 /**
  * Deletes the given environment from the database.
  *
- * @param object
+ * @param object $environment
  *   The environment object to delete.
  */
 function environments_bundles_delete($environment) {
-	ctools_include('export');
-	return ctools_export_crud_delete('environments_bundles', $environment);
+  ctools_include('export');
+  return ctools_export_crud_delete('environments_bundles', $environment);
 }
 
 /**
  * Execute a task bundle.
  *
- * @param object
+ * @param object $bundle
  *   The task bundle object.
  */
 function environments_bundles_exec(&$bundle) {
-	$operations = array();
+  $operations = array();
 
-	// Process our tasks.
-	_environments_process_tasks($bundle, $operations);
+  // Process our tasks.
+  _environments_process_tasks($bundle, $operations);
 
-	// Always run our cleanup operation last to set the context for status
-	// messages and then flush caches for the grand finale.
-	$operations[] = array(
-		'_environments_task_cleanup',
-		array(t('Cleaning up.'), $bundle)
-	);
+  // Always run our cleanup operation last to set the context for status
+  // messages and then flush caches for the grand finale.
+  $operations[] = array(
+    '_environments_task_cleanup',
+    array(t('Cleaning up.'), $bundle),
+  );
 
-	$batch = array(
-		'title' => t('Processing task bundle.'),
-		'operations' => $operations,
-		'finished' => '_environments_bundles_task_finished',
-		'init_message' => t('Preparing to execute task bundle.'),
-		'progress_message' => t('Processed @current out of @total tasks.'),
-		'error_message' => t('Error executing task bundle.'),
-		'file' => drupal_get_path('module', 'environments') . '/environments.batch.inc',
-	);
+  $batch = array(
+    'title' => t('Processing task bundle.'),
+    'operations' => $operations,
+    'finished' => '_environments_bundles_task_finished',
+    'init_message' => t('Preparing to execute task bundle.'),
+    'progress_message' => t('Processed @current out of @total tasks.'),
+    'error_message' => t('Error executing task bundle.'),
+    'file' => drupal_get_path('module', 'environments') . '/environments.batch.inc',
+  );
 
-	batch_set($batch);
-	_environments_process_batch($batch, "admin/config/development/environments-bundles/list/{$bundle->name}");
+  batch_set($batch);
+  _environments_process_batch($batch, "admin/config/development/environments-bundles/list/{$bundle->name}");
 }
