@@ -62,11 +62,7 @@ function environments_task_module_enable_settings(array $form_state) {
   $default_value = isset($task['settings']['modules']) ? $task['settings']['modules'] : array();
 
   // Cast value.
-  if ($selection === 'custom' && is_array($default_value)) {
-    $default_value = explode(' ', $default_value);
-  }
-  elseif ($selection === 'list' && is_string($default_value)) {
-    $default_value = implode(' ', $default_value);
+  _environments_cast_module_names($default_value, $selection);
   }
 
   $form['selection'] = array(

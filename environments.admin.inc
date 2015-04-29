@@ -782,6 +782,26 @@ function _environments_get_migrations() {
 }
 
 /**
+ * Helper function to cast string to array values and vice versa.
+ *
+ * This is used in the module_* tasks in order to convert user inputs between
+ * select lists and textfields when switching the input mode via AJAX.
+ *
+ * @param mixed $value
+ *   The input variable.
+ * @param string $selection
+ *   The selection mode, one of "custom" or "list".
+ */
+function _environments_cast_module_names(&$value, $selection) {
+  if ($selection === 'custom' && is_array($value)) {
+    $value = explode(' ', $value);
+  }
+  elseif ($selection === 'list' && is_string($value)) {
+    $value = implode(' ', $value);
+  }
+}
+
+/**
  * Page callback; returns the rendered markup for the Environments Summary page.
  *
  * @see environments_menu()
