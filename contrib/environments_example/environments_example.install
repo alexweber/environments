@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks.
+ */
+
+/**
+ * Example update hook to demonstrate executing a task bundle.
+ */
+function environments_example_update_7100(&$sandbox) {
+  // You can either specify just the bundle name.
+  environments_bundles_update_exec('demo_bundle', $sandbox);
+
+  // You can alternatively load the bundle yourself and pass it along too.
+  if ($bundle = environments_bundles_load('demo_bundle')) {
+    environments_bundles_update_exec($bundle, $sandbox);
+  }
+}
