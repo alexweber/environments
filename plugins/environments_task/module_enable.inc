@@ -119,7 +119,7 @@ function environments_task_module_enable_settings(array $form_state) {
     '#name' => 'settings[enable_dependencies]',
     '#type' => 'checkbox',
     '#title' => t('Enable dependencies'),
-    '#description' => t('If TRUE, dependent modules will automatically be enabled in the correct order.'),
+    '#description' => t('If TRUE, dependency modules will automatically be enabled in the correct order.'),
     '#default_value' => isset($task['settings']['enable_dependencies']) ? $task['settings']['enable_dependencies'] : TRUE,
   );
 
