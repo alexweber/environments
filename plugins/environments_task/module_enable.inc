@@ -63,6 +63,12 @@ function environments_task_module_enable_settings(array $form_state) {
 
   // Cast value.
   _environments_cast_module_names($default_value, $selection);
+
+  // Also cast form inputs when switching between selection modes.
+  if (isset($form_state['values']['settings']['modules'])) {
+    $ajax_modules =& $form_state['values']['settings']['modules'];
+    $ajax_selection = $form_state['values']['settings']['selection'];
+    _environments_cast_module_names($ajax_modules, $ajax_selection);
   }
 
   $form['selection'] = array(
