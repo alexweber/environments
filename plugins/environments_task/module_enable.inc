@@ -91,6 +91,10 @@ function environments_task_module_enable(array $settings, array &$context) {
       // Display this message before all others.
       array_unshift($messages, t('Enabled modules: @modules.', array('@modules' => implode(', ', array_values($modules_filtered)))));
     }
+    else {
+      // @TODO fail task?
+      $messages[] = t("@module couldn't be enabled due to missing dependencies.", array('@module' => $module));
+    }
   }
 
   // Display messages.
