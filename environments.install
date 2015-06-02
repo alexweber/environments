@@ -26,8 +26,8 @@ function environments_enable() {
   }
 
   // If we don't happen to already have this variable set, try to figure it out
-  // from ther modules which also use Drush.
-  if (!variable_get('environments_drush', '')) {
+  // from other modules which also use Drush.
+  if (!variable_get('environments_drush', FALSE)) {
     if ($path = variable_get('migrate_drush_path')) {
       variable_set('environments_drush', $path);
     }
