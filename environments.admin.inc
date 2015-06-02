@@ -245,8 +245,9 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
   $form_state['object'] = $object;
   $current_task = !empty($form_state['values']['task']) ? $form_state['values']['task'] : '';
 
-  ctools_include('export');
-  $plugin = ctools_get_export_ui($object->table);
+  // Load plugin definition.
+  ctools_include('plugins');
+  $plugin = ctools_get_plugins('ctools', 'export_ui', $object->table);
 
   // Set better page title.
   $op = isset($task) ? t('Edit Task') : t('Add Task');
