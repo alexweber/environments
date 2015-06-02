@@ -245,6 +245,18 @@ function environments_task_form_edit($form, &$form_state, $object, $task = NULL)
   $form_state['object'] = $object;
   $current_task = !empty($form_state['values']['task']) ? $form_state['values']['task'] : '';
 
+  ctools_include('export');
+  $plugin = ctools_get_export_ui($object->table);
+
+  // Set better page title.
+  $op = isset($task) ? t('Edit Task') : t('Add Task');
+  $page_title = t('!op !type @name', array(
+    '!op' => $op,
+    '!type' => $plugin['title singular proper'],
+    '@name' => $object->admin_title,
+  ));
+  drupal_set_title($page_title, PASS_THROUGH);
+
   // Prepare task info if editing.
   if (isset($task) && array_key_exists($task, $object->tasks)) {
     // Grab task instance info.
