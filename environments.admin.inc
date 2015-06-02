@@ -69,6 +69,14 @@ function environments_task_form($form, &$form_state, $object) {
 
   ctools_include('export');
   $plugin = ctools_get_export_ui($export_ui_name);
+
+  // Set better page title.
+  $page_title = t('Manage Tasks !type @name', array(
+    '!type' => $plugin['title singular proper'],
+    '@name' => $object->admin_title,
+  ));
+  drupal_set_title($page_title, PASS_THROUGH);
+
   // List tasks.
   if (is_object($object) && !empty($object->tasks)) {
     $all_tasks = environments_get_tasks();
