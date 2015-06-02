@@ -82,10 +82,10 @@ $plugin = array(
     ),
   ),
   // Define user interface texts.
-  'title singular' => t('Task bundle'),
-  'title plural' => t('Task bundles'),
-  'title singular proper' => t('Task Bundle'),
-  'title plural proper' => t('Task Bundles'),
+  'title singular' => t('Environments Task bundle'),
+  'title plural' => t('Environments Task bundles'),
+  'title singular proper' => t('Environments Task Bundle'),
+  'title plural proper' => t('Environments Task Bundles'),
   // Define the names of the functions that provide the add/edit forms.
   'form' => array(
     'settings' => 'environments_bundles_ctools_export_ui_form',
