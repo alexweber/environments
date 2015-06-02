@@ -67,6 +67,8 @@ function environments_task_form($form, &$form_state, $object) {
 
   $form_state['object'] = $object;
 
+  ctools_include('export');
+  $plugin = ctools_get_export_ui($export_ui_name);
   // List tasks.
   if (is_object($object) && !empty($object->tasks)) {
     $all_tasks = environments_get_tasks();
@@ -92,8 +94,6 @@ function environments_task_form($form, &$form_state, $object) {
         $settings_summary = environments_default_summary($task);
       }
 
-      ctools_include('export');
-      $plugin = ctools_get_export_ui($export_ui_name);
       $path = ctools_export_ui_plugin_menu_path($plugin, 'tasks', $object->name);
       $destination = drupal_get_destination();
 
