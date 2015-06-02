@@ -28,16 +28,23 @@ function environments_enable() {
   // If we don't happen to already have this variable set, try to figure it out
   // from other modules which also use Drush.
   if (!variable_get('environments_drush', FALSE)) {
-    if ($path = variable_get('migrate_drush_path')) {
-      variable_set('environments_drush', $path);
+    // Start with a sensible default.
+    $path = '/usr/local/bin/drush';
+
+    // Migrate module has this setting.
+    if ($migrate_drush = variable_get('migrate_drush_path')) {
+      if (file_exists($migrate_drush)) {
+        $path = $migrate_drush;
+      }
     }
-    elseif ($path = variable_get('wordpress_migrate_drush')) {
-      variable_set('environments_drush', $path);
+    // So does Wordpress Migrate.
+    elseif ($wp_migrate_drush = variable_get('wordpress_migrate_drush')) {
+      if (file_exists($wp_migrate_drush)) {
+        $path = $wp_migrate_drush;
+      }
     }
-    // Apply a sensible default.
-    else {
-      variable_set('environments_drush', '/usr/local/bin/drush');
-    }
+
+    variable_set('environments_drush', $path);
   }
 }
 
