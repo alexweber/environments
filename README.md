@@ -105,7 +105,7 @@ You must insert the absolute path to the executable and, if it contains spaces y
 example: `/Applications/Dev\ Desktop/drush/drush`
 
 The following documentation page from the Migrate module has pretty good instructions for getting a very similar Drush
-integration working (from which we):
+integration working (in fact, our implementation is totally based on theirs!):
 [https://www.drupal.org/node/1958170](https://www.drupal.org/node/1958170)
 
 All you have to do is replace the variable name `migrate_drush_path` in the instructions with ours `environments_drush`.
@@ -154,7 +154,7 @@ streamlined manner:
 			* Execute "Enable Debug Bundle"
 			* Execute "Disable Caching Bundle"
 
-**PRO Tip:** See the last task in the Staging tasks above? Instead of creating an "AdvAgg Staging" bundle which would be identical to the production one except for the JS Compression, we execute the production bundle and then add a new task immediately after it to override just that one setting.
+**Pro Tip:** See the last task in the Staging tasks above? Instead of creating an "AdvAgg Staging" bundle which would be identical to the production one except for the JS Compression, we execute the production bundle and then add a new task immediately after it to override just that one setting.
 
 ## Task Bundles Advanced Usage
 

@@ -31,12 +31,12 @@ function environments_drush_command() {
         'envname' => 'Optional. Specify the environment by it\'s machine_name or alias.',
       ),
       'options' => array(
-        'force' => 'Force set the environment, even it it\'s already the current one.',
+        'force' => 'Force setting the environment, even it it\'s already set.',
       ),
       'examples' => array(
         'drush env development' => 'Put the site in development mode (using machine_name)',
         'drush env dev' => 'Put the site in development mode (using alias)',
-        'drush env prod' => 'Put the site in production mode',
+        'drush env prod' => 'Put the site in production mode (using alias)',
       ),
     ),
     'environment-unset' => array(
