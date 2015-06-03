@@ -60,9 +60,28 @@ function environments_bundles_exec_form($form, &$form_state, $bundle) {
     exit;
   }
 
+  $all_tasks = environments_get_tasks();
+
   foreach (element_children($bundle->tasks, TRUE) as $key) {
     $task = $bundle->tasks[$key];
-    $tasks_summary[] = $task['name'];
+    // Prevent warnings.
+    $plugin_def = isset($all_tasks[$task['name']])
+      ? $all_tasks[$task['name']]
+      : NULL;
+
+    if ($callback = ctools_plugin_get_function($plugin_def, 'summary_callback')) {
+      $task_summary = (array) call_user_func($callback, $task['settings']);
+    }
+    else {
+      $task_summary = environments_default_summary($task);
+    }
+
+    // We want the summary on a single line.
+    if (is_array($task_summary)) {
+      $task_summary = implode(', ', $task_summary);
+    }
+
+    $tasks_summary[] = "{$task['name']} ({$task_summary})";
   }
 
   $tasks = theme_item_list(array(
