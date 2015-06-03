@@ -670,7 +670,7 @@ function environments_form_site_submit($form, &$form_state) {
 
   if (isset($new_environment) && $new_environment !== $old_environment) {
     // If we're just removing the environment, do it.
-    if (empty($new_environment)) {
+    if (empty($new_environment) && !empty($old_environment)) {
       environments_unset();
       drupal_set_message(t("The site's environment has been unset."), 'status', FALSE);
     }
