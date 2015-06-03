@@ -33,23 +33,7 @@ function environments_enable() {
   // If we don't happen to already have this variable set, try to figure it out
   // from other modules which also use Drush.
   if (!variable_get('environments_drush', FALSE)) {
-    // Start with a sensible default.
-    $path = '/usr/local/bin/drush';
-
-    // Migrate module has this setting.
-    if ($migrate_drush = variable_get('migrate_drush_path')) {
-      if (file_exists($migrate_drush)) {
-        $path = $migrate_drush;
-      }
-    }
-    // So does Wordpress Migrate.
-    elseif ($wp_migrate_drush = variable_get('wordpress_migrate_drush')) {
-      if (file_exists($wp_migrate_drush)) {
-        $path = $wp_migrate_drush;
-      }
-    }
-
-    variable_set('environments_drush', $path);
+    _environments_drush_setup();
   }
 }
 
@@ -149,6 +133,29 @@ function environments_requirements($phase) {
   }
 
   return $return;
+}
+
+/**
+ * Helper function to setup path to Drush.
+ */
+function _environments_drush_setup() {
+  // Start with a sensible default.
+  $path = '/usr/local/bin/drush';
+
+  // Migrate module has this setting.
+  if ($migrate_drush = variable_get('migrate_drush_path')) {
+    if (file_exists($migrate_drush)) {
+      $path = $migrate_drush;
+    }
+  }
+  // So does Wordpress Migrate.
+  elseif ($wp_migrate_drush = variable_get('wordpress_migrate_drush')) {
+    if (file_exists($wp_migrate_drush)) {
+      $path = $wp_migrate_drush;
+    }
+  }
+
+  variable_set('environments_drush', $path);
 }
 
 /**
