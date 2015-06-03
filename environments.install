@@ -194,3 +194,16 @@ function environments_update_7101() {
     watchdog('environments', $e->getMessage(), array(), WATCHDOG_ERROR);
   }
 }
+
+/**
+ * Fix Environments Drush path.
+ */
+function environments_update_7102() {
+  // Older code didn't check whether the migrate drush path was valid so we
+  // borrowed broken config in some cases.
+  $path = variable_get('environments_drush', FALSE);
+
+  if (!$path || !file_exists($path)) {
+    _environments_drush_setup();
+  }
+}
