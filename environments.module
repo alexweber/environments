@@ -488,3 +488,117 @@ function environments_default_summary(array $task) {
 
   return $settings_summary;
 }
+
+/**
+ * Helper function to format module names for task summaries.
+ *
+ * @param array $settings
+ *   An array of task settings.
+ *
+ * @return string
+ *   A formatted string.
+ *
+ * @see environments_task_features_revert_summary()
+ * @see environments_task_module_disable_summary()
+ * @see environments_task_module_enable_summary()
+ * @see environments_task_module_uninstall_summary()
+ */
+function _environments_module_task_summary(array $settings) {
+  $return = '<em>none</em>';
+
+  if (isset($settings['modules']) && is_array($settings['modules']) && !empty($settings['modules'])) {
+    $temp = array();
+    $module_map = _environments_get_modules();
+
+    foreach ($settings['modules'] as $module) {
+      if (array_key_exists($module, $module_map)) {
+        $temp_string = "{$module_map[$module]}";
+
+        if (variable_get('environments_detailed_summaries', TRUE)) {
+          $temp_string .= " ({$module})";
+        }
+
+        $temp[] = $temp_string;
+      }
+      else {
+        $temp[] = $module;
+      }
+    }
+
+    $return = implode(', ', $temp);
+  }
+
+  return $return;
+}
+
+/**
+ * Returns all available Drupal modules.
+ *
+ * Used by the "module_enable" and "module_disable" tasks. This is as a
+ * lightweight replacement for using Drupal core APIs.
+ *
+ * @return array
+ *   An array of module names, keyed by machine_name.
+ */
+function _environments_get_modules() {
+  static $modules = array();
+
+  if (empty($modules)) {
+    // No value added by using DBTNG.
+    $result = db_query("SELECT name, info FROM {system} ORDER BY name ASC");
+    foreach ($result->fetchAll() as $row) {
+      $info = unserialize($row->info);
+
+      if (!isset($info['hidden']) || !$info['hidden']) {
+        $modules[$row->name] = $info['name'];
+      }
+    }
+  }
+
+  return $modules;
+}
+
+/**
+ * Returns all defined Drupal variables.
+ *
+ * Used by the "variable_set" and "variable_del" tasks. This is as a lightweight
+ * replacement for using Drupal core APIs.
+ *
+ * @return array
+ *   An array of variable names.
+ */
+function _environments_get_variables() {
+  static $variables = array();
+
+  if (empty($variables)) {
+    // No value added by using DBTNG.
+    $result = db_query("SELECT name FROM {variable} ORDER BY name ASC");
+    $result = $result->fetchAllAssoc('name');
+    $variables = array_keys($result);
+  }
+
+  return $variables;
+}
+
+/**
+ * Returns all available Migrations.
+ *
+ * Used by the "migrate_import" and "migrate_rollback" tasks.
+ *
+ * @return array
+ *   An array of migration names, keyed by machine_name.
+ */
+function _environments_get_migrations() {
+  static $migrations = array();
+
+  if (empty($migrations) && function_exists('migrate_migrations')) {
+    // Load all available migrations.
+    $loaded_migrations = migrate_migrations(TRUE);
+
+    foreach ($loaded_migrations as $machine_name => $migration) {
+      $migrations[$machine_name] = $machine_name;
+    }
+  }
+
+  return $migrations;
+}
