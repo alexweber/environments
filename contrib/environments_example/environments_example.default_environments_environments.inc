@@ -19,7 +19,26 @@ function environments_example_default_environments_environments() {
   $environment->settings = array(
     'notify' => 1,
   );
-  $environment->tasks = '';
+  $environment->tasks = array(
+    'a9a39b307fe325b6888d88d9a1ba46f0' => array(
+      'name' => 'execute_bundle',
+      'settings' => array(
+        'name' => 'demo_bundle',
+      ),
+      '#id' => 'a9a39b307fe325b6888d88d9a1ba46f0',
+      '#weight' => '-50',
+    ),
+    'cdebf2c0350bb2cf9dd4c77a2b6774e7' => array(
+      'name' => 'variable_set',
+      'settings' => array(
+        'name' => 'foo',
+        'value' => 123,
+        'value_type' => 'integer',
+      ),
+      '#id' => 'cdebf2c0350bb2cf9dd4c77a2b6774e7',
+      '#weight' => '-49',
+    ),
+  );
   $export['demo_environment'] = $environment;
 
   return $export;
