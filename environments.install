@@ -9,10 +9,15 @@
  * Implements hook_uninstall().
  */
 function environments_uninstall() {
-  // Delete our variables.
-  variable_del('environments_env');
-  variable_del('environments_css');
-  variable_del('environments_js');
+  // Remove all of our variables.
+  $result = db_select('variable', 'v')
+    ->fields('v', array('name'))
+    ->condition('name', 'environments_%', 'LIKE')
+    ->execute();
+
+  foreach ($result as $row) {
+    variable_del($row->name);
+  }
 }
 
 /**
