@@ -12,17 +12,17 @@ function environments_form_delete($form, &$form_state, $environment) {
   $form_state['environment'] = &$environment;
 
   // Deleting an export in code will revert it.
-  $op = ($environment->export_type & EXPORT_IN_CODE) ? 'Revert' : 'Delete';
+  $op = ($environment->export_type & EXPORT_IN_CODE) ? t('Revert') : t('Delete');
 
   return confirm_form(
     $form,
     t('Are you sure you want to @action the environment %admin_title?', array(
-      '@action' => t(drupal_strtolower($op)),
+      '@action' => drupal_strtolower($op),
       '%admin_title' => $environment->admin_title,
     )),
     'admin/config/development/environments',
     NULL,
-    t($op), t('Cancel')
+    $op, t('Cancel')
   );
 }
 

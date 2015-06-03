@@ -12,17 +12,17 @@ function environments_bundles_form_delete($form, &$form_state, $bundle) {
   $form_state['bundle'] = &$bundle;
 
   // Deleting an export in code will revert it.
-  $op = ($bundle->export_type & EXPORT_IN_CODE) ? 'Revert' : 'Delete';
+  $op = ($bundle->export_type & EXPORT_IN_CODE) ? t('Revert') : t('Delete');
 
   return confirm_form(
     $form,
     t('Are you sure you want to @action the task bundle %admin_title?', array(
-      '@action' => t(drupal_strtolower($op)),
+      '@action' => drupal_strtolower($op),
       '%admin_title' => $bundle->admin_title,
     )),
     'admin/config/development/environments-bundles',
     NULL,
-    t($op), t('Cancel')
+    $op, t('Cancel')
   );
 }
 
