@@ -99,6 +99,9 @@ function environments_help($path, $arg) {
 
     case 'admin/config/development/environments/list/%/tasks':
       return t('Here you can add to and manage all of an environment\'s tasks. <strong>NOTE</strong>: The order in which tasks appear is the exact order in which they will run. Use the handles on the left of each one to drag them around and re-order them and then press the "Update Order" button to save the changes.');
+
+    case 'admin/config/development/environments/summary':
+      return t("Here you can get a bird's eye view if your current site Environment and all available Environments and Task Bundles.");
   }
 }
 
