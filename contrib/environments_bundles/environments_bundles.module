@@ -78,6 +78,15 @@ function environments_bundles_menu() {
     'weight' => -50,
   );
 
+  // Shortcut to Summary on Bundles page.
+  $items['admin/config/development/environments-bundles/summary'] = array(
+    'title' => 'Summary',
+    'page callback' => 'drupal_goto',
+    'page arguments' => array('admin/config/development/environments/summary'),
+    'access arguments' => array('administer environments'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
   return $items;
 }
 
