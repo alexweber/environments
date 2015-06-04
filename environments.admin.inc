@@ -989,6 +989,7 @@ function environments_page_summary() {
 
     // Tasks.
     $env_tasks = array();
+    $i = 1;
     foreach ($env->tasks as $task) {
       // Prevent warnings.
       $plugin_def = isset($all_tasks[$task['name']])
@@ -1007,11 +1008,12 @@ function environments_page_summary() {
       $task_name_str = isset($all_tasks[$task['name']]) ? $all_tasks[$task['name']]['admin_title'] : $task['name'];
       $env_task_info = array(
         '#theme' => 'item_list',
-        '#title' => $task_name_str,
+        '#title' => "{$i} - {$task_name_str}",
         '#type' => 'ul',
         '#items' => $settings_summary,
       );
       $env_tasks[] = drupal_render($env_task_info);
+      ++$i;
     }
     $tasks = implode('', $env_tasks);
 
@@ -1023,10 +1025,11 @@ function environments_page_summary() {
     );
   }
 
-  $build['all'] = array(
+  $build['environments'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#caption' => t('Environments'),
   );
 
   // Allow others (namely Environments Bundles) to alter this.
