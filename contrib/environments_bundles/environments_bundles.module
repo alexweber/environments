@@ -328,9 +328,9 @@ function environments_bundles_environments_summary_alter(&$build) {
   }
 
   $build['environments_bundles'] = array(
+    '#prefix' => '<h3>' . t('Environments Bundles') . '</h3>',
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#caption' => t('Environments Bundles'),
   );
 }

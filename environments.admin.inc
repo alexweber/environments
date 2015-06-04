@@ -946,8 +946,8 @@ function environments_page_summary() {
 
   // Current Environment comes first.
   $build['current'] = array(
-    '#prefix' => '<h3>',
-    '#suffix' => '</h3>',
+    '#prefix' => '<h2>',
+    '#suffix' => '</h2><br>',
     '#markup' => t('Current Environment: %current', array('%current' => $env_string)),
   );
 
@@ -1029,7 +1029,7 @@ function environments_page_summary() {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#caption' => t('Environments'),
+    '#prefix' => '<h3>' . t('Environments') . '</h3>',
   );
 
   // Allow others (namely Environments Bundles) to alter this.
