@@ -1026,10 +1026,10 @@ function environments_page_summary() {
   }
 
   $build['environments'] = array(
+    '#prefix' => '<h3>' . t('Environments') . '</h3>',
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#prefix' => '<h3>' . t('Environments') . '</h3>',
   );
 
   // Allow others (namely Environments Bundles) to alter this.
