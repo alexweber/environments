@@ -925,11 +925,110 @@ function environments_ajax_task_settings_modules($form, &$form_state) {
  * @see environments_menu()
  */
 function environments_page_summary() {
-  drupal_set_title(t('Environments Summary'), PASS_THROUGH);
-
   $build = array();
+  drupal_set_title(t('Environments Summary'), PASS_THROUGH);
+  $all_environments = environments_load_all();
+  $detailed = variable_get('environments_detailed_summaries', TRUE);
 
+  // Determine current Environment.
+  if ($env = variable_get('environments_env', '')) {
+    if (array_key_exists($env, $all_environments)) {
+     $env_string = $all_environments[$env]->admin_title;
+    }
+    else {
+      $env_string = $env;
+    }
+  }
+  else {
+    $env_string = t('<none>');
+  }
 
+  // Current Environment comes first.
+  $build['current'] = array(
+    '#prefix' => '<h3>',
+    '#suffix' => '</h3>',
+    '#markup' => t('Current Environment: %current', array('%current' => $env_string)),
+  );
+
+  // Display all environments in a table.
+  $header = array(
+    t('Name'),
+    t('Alias'),
+    t('Settings'),
+    t('Tasks'),
+    t('Operations'),
+  );
+  $rows = array();
+  foreach ($all_environments as $env) {
+    // Title.
+    $title = $env->admin_title;
+    if ($detailed) {
+      $title .= " ({$env->name})";
+    }
+
+    // Settings.
+    $env_settings = array();
+    ctools_include('plugins');
+    $plugin = ctools_get_plugins('ctools', 'export_ui', 'environments');
+    foreach ($env->settings as $name => $value) {
+      $name_str = drupal_ucfirst($name);
+
+      if ($name === 'notify') {
+        $val_str = $value ? t('Yes') : t('No');
+      }
+      else {
+        $val_str = $value;
+      }
+
+      $env_settings[] = "{$name_str}: " . $val_str;
+    }
+    $settings = implode('<br>', $env_settings);
+
+    // Tasks.
+    $env_tasks = array();
+    foreach ($env->tasks as $task) {
+
+    }
+    $tasks = implode('<br>', $env_tasks);
+
+    // Operations.
+    $path = ctools_export_ui_plugin_menu_path($plugin, 'tasks', $env->name);
+    $destination = drupal_get_destination();
+
+    // Prepare operations links.
+    $operations_links = array(
+      'edit' => array(
+        'title' => t('Edit'),
+        'href' => "{$path}/{$env->name}/edit",
+        'query' => $destination,
+      ),
+      'tasks' => array(
+        'title' => t('Manage Tasks'),
+        'href' => "{$path}/{$env->name}/tasks",
+        'query' => $destination,
+      ),
+    );
+    $operations = array(
+      '#theme' => 'links__ctools_dropbutton',
+      '#links' => $operations_links,
+      '#attributes' => array('class' => array('links', 'inline')),
+    );
+    $operations = drupal_render($operations);
+
+    $rows[] = array(
+      $title,
+      $env->alias,
+      $settings,
+      $tasks,
+      $operations,
+    );
+  }
+
+  $build['all'] = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+  );
 
   // Allow others (namely Environments Bundles) to alter this.
   drupal_alter('environments_summary', $build);
