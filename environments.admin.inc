@@ -928,12 +928,13 @@ function environments_page_summary() {
   $build = array();
   drupal_set_title(t('Environments Summary'), PASS_THROUGH);
   $all_environments = environments_load_all();
+  $all_tasks = environments_get_tasks();
   $detailed = variable_get('environments_detailed_summaries', TRUE);
 
   // Determine current Environment.
   if ($env = variable_get('environments_env', '')) {
     if (array_key_exists($env, $all_environments)) {
-     $env_string = $all_environments[$env]->admin_title;
+      $env_string = $all_environments[$env]->admin_title;
     }
     else {
       $env_string = $env;
@@ -956,7 +957,6 @@ function environments_page_summary() {
     t('Alias'),
     t('Settings'),
     t('Tasks'),
-    t('Operations'),
   );
   $rows = array();
   foreach ($all_environments as $env) {
@@ -968,8 +968,6 @@ function environments_page_summary() {
 
     // Settings.
     $env_settings = array();
-    ctools_include('plugins');
-    $plugin = ctools_get_plugins('ctools', 'export_ui', 'environments');
     foreach ($env->settings as $name => $value) {
       $name_str = drupal_ucfirst($name);
 
@@ -982,45 +980,46 @@ function environments_page_summary() {
 
       $env_settings[] = "{$name_str}: " . $val_str;
     }
-    $settings = implode('<br>', $env_settings);
+    $settings = array(
+      '#theme' => 'item_list',
+      '#type' => 'ul',
+      '#items' => $env_settings,
+    );
+    $settings = drupal_render($settings);
 
     // Tasks.
     $env_tasks = array();
     foreach ($env->tasks as $task) {
+      // Prevent warnings.
+      $plugin_def = isset($all_tasks[$task['name']])
+        ? $all_tasks[$task['name']]
+        : NULL;
 
+      // If the task has a custom summary callback, use it.
+      if ($callback = ctools_plugin_get_function($plugin_def, 'summary_callback')) {
+        $settings_summary = (array) call_user_func($callback, $task['settings']);
+      }
+      // If not, generate a default summary as best we can.
+      else {
+        $settings_summary = environments_default_summary($task);
+      }
+
+      $task_name_str = isset($all_tasks[$task['name']]) ? $all_tasks[$task['name']]['admin_title'] : $task['name'];
+      $env_task_info = array(
+        '#theme' => 'item_list',
+        '#title' => $task_name_str,
+        '#type' => 'ul',
+        '#items' => $settings_summary,
+      );
+      $env_tasks[] = drupal_render($env_task_info);
     }
-    $tasks = implode('<br>', $env_tasks);
-
-    // Operations.
-    $path = ctools_export_ui_plugin_menu_path($plugin, 'tasks', $env->name);
-    $destination = drupal_get_destination();
-
-    // Prepare operations links.
-    $operations_links = array(
-      'edit' => array(
-        'title' => t('Edit'),
-        'href' => "{$path}/{$env->name}/edit",
-        'query' => $destination,
-      ),
-      'tasks' => array(
-        'title' => t('Manage Tasks'),
-        'href' => "{$path}/{$env->name}/tasks",
-        'query' => $destination,
-      ),
-    );
-    $operations = array(
-      '#theme' => 'links__ctools_dropbutton',
-      '#links' => $operations_links,
-      '#attributes' => array('class' => array('links', 'inline')),
-    );
-    $operations = drupal_render($operations);
+    $tasks = implode('', $env_tasks);
 
     $rows[] = array(
       $title,
       $env->alias,
       $settings,
       $tasks,
-      $operations,
     );
   }
 
