@@ -272,5 +272,65 @@ function environments_bundles_update_exec($bundle, array &$sandbox) {
  * @see environments_page_summary()
  */
 function environments_bundles_environments_summary_alter(&$build) {
-  // @TODO
+  $all_tasks = environments_get_tasks();
+  $detailed = variable_get('environments_detailed_summaries', TRUE);
+  $all_bundles = environments_bundles_load_all();
+
+  // Display all environments in a table.
+  $header = array(
+    t('Name'),
+    t('Description'),
+    t('Tasks'),
+  );
+  $rows = array();
+  foreach ($all_bundles as $bundle) {
+    // Title.
+    $title = $bundle->admin_title;
+    if ($detailed) {
+      $title .= " ({$bundle->name})";
+    }
+
+    // Tasks.
+    $bundle_tasks = array();
+    $i = 1;
+    foreach ($bundle->tasks as $task) {
+      // Prevent warnings.
+      $plugin_def = isset($all_tasks[$task['name']])
+        ? $all_tasks[$task['name']]
+        : NULL;
+
+      // If the task has a custom summary callback, use it.
+      if ($callback = ctools_plugin_get_function($plugin_def, 'summary_callback')) {
+        $settings_summary = (array) call_user_func($callback, $task['settings']);
+      }
+      // If not, generate a default summary as best we can.
+      else {
+        $settings_summary = environments_default_summary($task);
+      }
+
+      $task_name_str = isset($all_tasks[$task['name']]) ? $all_tasks[$task['name']]['admin_title'] : $task['name'];
+      $bundle_task_info = array(
+        '#theme' => 'item_list',
+        '#title' => "{$i} - {$task_name_str}",
+        '#type' => 'ul',
+        '#items' => $settings_summary,
+      );
+      $bundle_tasks[] = drupal_render($bundle_task_info);
+      ++$i;
+    }
+    $tasks = implode('', $bundle_tasks);
+
+    $rows[] = array(
+      $title,
+      $bundle->description,
+      $tasks,
+    );
+  }
+
+  $build['environments_bundles'] = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#caption' => t('Environments Bundles'),
+  );
 }
