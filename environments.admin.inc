@@ -925,9 +925,14 @@ function environments_ajax_task_settings_modules($form, &$form_state) {
  * @see environments_menu()
  */
 function environments_page_summary() {
+  drupal_set_title(t('Environments Summary'), PASS_THROUGH);
+
   $build = array();
 
-  // @TODO build summary
+
+
+  // Allow others (namely Environments Bundles) to alter this.
+  drupal_alter('environments_summary', $build);
 
   return drupal_render($build);
 }

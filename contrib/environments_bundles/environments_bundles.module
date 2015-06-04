@@ -263,3 +263,14 @@ function environments_bundles_update_exec($bundle, array &$sandbox) {
 
   // @TODO
 }
+
+/**
+ * Implements hook_environments_summary_alter().
+ *
+ * Complement the Environments summary with bundle info.
+ *
+ * @see environments_page_summary()
+ */
+function environments_bundles_environments_summary_alter(&$build) {
+  // @TODO
+}
