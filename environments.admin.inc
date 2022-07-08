@@ -85,7 +85,7 @@ function environments_task_form($form, &$form_state, $object) {
       '#tree' => TRUE,
     );
 
-    foreach (element_children($object->tasks) as $id) {
+    foreach (element_children($object->tasks, TRUE) as $id) {
       $task = $object->tasks[$id];
 
       // Prevent warnings.
